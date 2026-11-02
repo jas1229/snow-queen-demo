@@ -74,8 +74,6 @@ button{font:inherit;color:inherit}
 #frame.pad-on .prompt{bottom:96px}
 #below .dialog{position:relative;left:auto;bottom:auto;top:auto;transform:none;width:100%}
 @keyframes bob{50%{transform:translateY(2px)}}
-.dialog.in{animation:dlgIn .4s ease both}
-@keyframes dlgIn{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}
 
 /* 章节卡、标题、结尾 */
 .card{position:absolute;inset:0;background:var(--night);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;opacity:0;transition:opacity .9s ease;cursor:pointer}
@@ -1326,29 +1324,19 @@ const nextFrame = () => new Promise(r => frameWaiters.push(r));
 function flushFrames() { while (frameWaiters.length) frameWaiters.shift()(); }
 
 // ---------- 对话、卡片、提示 ----------
-// 节奏放慢：字一个一个出来（中文每秒 16 个，西文每秒 42 个），逗号、句号处各停一下；
-// 一句打完要停够一小会儿才能翻页，免得连点两下跳过一句
 const dlg = $('dialog'), dlgName = $('dlgName'), dlgText = $('dlgText');
-let dlgFull = '', dlgShown = 0, dlgTyping = false, dlgPending = null, dlgAt = 0, dlgWait = 0, dlgN = 0;
-const PAUSE = { '，': .16, '、': .12, '；': .22, '：': .2, '。': .38, '！': .38, '？': .38, '…': .14, '—': .12, ',': .12, ';': .18, ':': .16, '.': .3, '!': .3, '?': .3 };
-const typeSpeed = () => reduced ? 600 : lang === 'zh' ? 16 : 42;
-const ADV_GAP = 300;
+let dlgFull = '', dlgShown = 0, dlgTyping = false, dlgPending = null, dlgAt = 0;
 function showDialog(name, text, isNarr) {
-  const appear = dlg.hidden;
   dlg.hidden = false; dlg.classList.toggle('narr', !!isNarr);
-  dlgName.textContent = t(name || ''); dlgFull = t(text); dlgShown = 0; dlgN = 0; dlgText.textContent = '';
-  dlgWait = reduced ? 0 : appear ? .3 : .1;
+  dlgName.textContent = t(name || ''); dlgFull = t(text); dlgShown = 0; dlgText.textContent = '';
   dlgTyping = true; dlg.classList.add('typing'); dlgAt = performance.now();
-  if (appear && !reduced) { dlg.classList.remove('in'); void dlg.offsetWidth; dlg.classList.add('in'); }
 }
-function finishType() { dlgShown = dlgN = dlgFull.length; dlgText.textContent = dlgFull; dlgTyping = false; dlgWait = 0; dlg.classList.remove('typing'); dlgAt = performance.now(); }
+function finishType() { dlgShown = dlgFull.length; dlgText.textContent = dlgFull; dlgTyping = false; dlg.classList.remove('typing'); }
 function typeStep(dt) {
   if (!dlgTyping) return;
-  if (dlgWait > 0) { dlgWait -= dt; return; }
-  dlgShown += dt * typeSpeed();
-  let n = Math.min(dlgFull.length, Math.floor(dlgShown));
-  if (!reduced) for (let i = dlgN; i < n; i++) { const p = PAUSE[dlgFull[i]]; if (p && i < dlgFull.length - 1) { n = i + 1; dlgShown = n; dlgWait = p; break; } }
-  if (n !== dlgN) { dlgN = n; dlgText.textContent = dlgFull.slice(0, n); }
+  dlgShown += dt * (reduced ? 600 : lang === 'zh' ? 44 : 80);
+  const n = Math.min(dlgFull.length, Math.floor(dlgShown));
+  dlgText.textContent = dlgFull.slice(0, n);
   if (n >= dlgFull.length) finishType();
 }
 function hideDialog() { dlg.hidden = true; }
@@ -2589,7 +2577,7 @@ function update(dt) {
   stepTimers(dt);
   if (dlgPending) {
     if (window.__sq && window.__sq.auto) { if (dlgTyping) finishType(); const p = dlgPending; dlgPending = null; if (!p()) dlgPending = p; }
-    else if (advHit && performance.now() - dlgAt > ADV_GAP) { if (dlgPending()) dlgPending = null; }
+    else if (advHit && performance.now() - dlgAt > 140) { if (dlgPending()) dlgPending = null; }
   }
   typeStep(dt);
   if (toastT > 0) { toastT -= dt; if (toastT <= 0) toastEl.hidden = true; }
