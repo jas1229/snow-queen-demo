@@ -1,0 +1,30 @@
+{
+  "name": "船尾的冰雪女王",
+  "short_name": "冰雪女王",
+  "description": "世代船上的《冰雪女王》：格尔达从船头走到船尾，哈开结霜的舷窗找回忆，去冷舱把加伊带回家。一个能玩的小 demo。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#0a0f1c",
+  "theme_color": "#0a0f1c",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
