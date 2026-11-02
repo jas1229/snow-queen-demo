@@ -118,11 +118,28 @@ button{font:inherit;color:inherit}
 /* 触屏按钮 */
 .pad{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex:none}
 .pad.overlay{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;pointer-events:none}
-.pad.overlay button{pointer-events:auto}
+.pad.overlay button{pointer-events:auto;background:rgba(14,20,34,.45)}
+.pad.overlay button.big{background:rgba(234,164,92,.18)}
 .pad-l,.pad-r{display:flex;gap:10px;align-items:center}
 .pad button{width:58px;height:58px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(14,20,34,.72);font-size:16px;touch-action:none;cursor:pointer}
 .pad button.big{width:72px;height:72px;background:rgba(234,164,92,.22);border-color:rgba(234,164,92,.6);font-family:var(--f-title);letter-spacing:.1em}
 .pad button.on{background:rgba(234,164,92,.45)}
+
+/* 手机：竖屏时顶栏、提示、对话都挪到画面下面那块，画面里只留游戏 */
+body{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+#game{touch-action:none}
+#below{display:flex;flex-direction:column;gap:8px;overflow:hidden}
+#below .hud{position:static;padding:0;pointer-events:auto;flex-wrap:wrap;row-gap:4px}
+#below .hud-left{display:contents}
+#below .hud-right{order:1;flex:1 1 100%;justify-content:flex-end}
+#below .chapter{order:2;flex:1 1 100%;background:none;padding:2px 2px 0;white-space:normal;font-size:15px}
+#below .goal{order:3;flex:1 1 100%;background:none;padding:0 2px;font-size:13px}
+#below .prompt{position:static;transform:none;align-self:center;pointer-events:auto;font-size:14px;padding:8px 18px}
+#below .mempop{position:static;width:100%}
+#app.portrait .book{position:fixed;z-index:20}
+.touch .chip{padding:6px 12px;font-size:13px}
+.touch .warm{font-size:12px;padding:6px 10px}
+.touch .prompt{pointer-events:auto;cursor:pointer}
 
 @media (prefers-reduced-motion: reduce){ .card{transition:none} .dlg-more{animation:none} }
 </style>
@@ -201,7 +218,8 @@ const VIEW_H = 540, MIN_W = 640, FLOOR = 430;
 const ZOOM = 1.22, OY = FLOOR - 452 / ZOOM;
 let viewW = 960, scale = 1, dpr = 1, portrait = false;
 const VWZ = () => viewW / ZOOM;
-const touchy = matchMedia('(pointer: coarse)').matches;
+// 一开始按媒体查询判断是不是触屏；有的手机浏览器报不准，那就等第一次手指点屏幕再切过去
+let touchy = matchMedia('(pointer: coarse)').matches;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function layout() {
@@ -211,7 +229,7 @@ function layout() {
   portrait = touchy && ah > aw * 1.05;
   let fw, fh;
   if (portrait) {
-    fw = aw; fh = Math.max(200, Math.min(aw * VIEW_H / 500, ah - 300));
+    fw = aw; fh = Math.max(200, Math.min(aw * VIEW_H / 460, ah - 330));
     scale = fh / VIEW_H; viewW = fw / scale;
   } else {
     fw = aw; fh = ah; scale = fh / VIEW_H; viewW = aw / scale;
@@ -224,9 +242,11 @@ function layout() {
   dpr = Math.min(2, window.devicePixelRatio || 1);
   cvs.width = Math.round(fw * dpr); cvs.height = Math.round(fh * dpr);
   document.documentElement.style.setProperty('--fs', clamp(fh * 0.03, 13, 19).toFixed(1) + 'px');
-  const dlg = $('dialog');
-  if (portrait) { if (dlg.parentNode !== below) below.appendChild(dlg); below.hidden = false; }
-  else { if (dlg.parentNode !== frame) frame.appendChild(dlg); below.hidden = true; }
+  const dlg = $('dialog'), hudEl = $('hud'), promptBox = $('prompt'), memBox = $('memPop'), cardEl = $('card');
+  if (portrait) { if (hudEl.parentNode !== below) below.append(hudEl, promptBox, dlg, memBox); below.hidden = false; }
+  else { if (hudEl.parentNode !== frame) for (const el of [hudEl, promptBox, $('toast'), memBox, dlg]) frame.insertBefore(el, cardEl); below.hidden = true; }
+  document.body.classList.toggle('touch', touchy);
+  if (touchy) $('keysHint').textContent = '左下角走路，右下角按住「哈气」，点「互动」说话、翻页' + (portrait ? '。手机横过来玩，画面更大。' : '');
   pad.hidden = !touchy;
   frame.classList.toggle('pad-on', touchy && !portrait);
   pad.classList.toggle('overlay', touchy && !portrait);
@@ -884,7 +904,7 @@ function hud() {
   const n = [...state.mem].filter(id => !state.faded.has(id) && !state.used.has(id)).length;
   $('memCount').textContent = n;
 }
-const KEY_BREATH = touchy ? '按住「哈气」' : '按住空格';
+let KEY_BREATH = touchy ? '按住「哈气」' : '按住空格';
 
 // ---------- 脚本 ----------
 let scriptOn = false;
@@ -2000,8 +2020,12 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { const k = KEYMAP[e.code]; if (k) keys[k] = false; });
 addEventListener('blur', () => { keys.left = keys.right = keys.breath = false; });
-frame.addEventListener('pointerdown', e => { if (e.target.closest('button') || e.target.closest('.book')) return; if (dlgPending) advHit = true; });
-below.addEventListener('pointerdown', () => { if (dlgPending) advHit = true; });
+frame.addEventListener('pointerdown', e => { if (e.target.closest('button') || e.target.closest('.book') || e.target.closest('.prompt')) return; if (dlgPending) advHit = true; });
+below.addEventListener('pointerdown', e => { if (e.target.closest('button') || e.target.closest('.prompt')) return; if (dlgPending) advHit = true; });
+// 第一次用手指点屏幕就切到触屏操作（有些手机浏览器的媒体查询报不准）
+addEventListener('pointerdown', e => { if (e.pointerType === 'touch' && !touchy) { touchy = true; KEY_BREATH = '按住「哈气」'; layout(); } }, true);
+// 触屏上，底下那个「互动」提示条本身也能点
+promptEl.addEventListener('pointerdown', e => { if (!touchy) return; e.preventDefault(); actHit = true; });
 pad.querySelectorAll('button').forEach(b => {
   const k = b.dataset.k;
   const down = e => { e.preventDefault(); try { b.setPointerCapture(e.pointerId); } catch (_) {} b.classList.add('on'); audioInit(); if (k === 'act') { actHit = true; advHit = true; } else { keys[k] = true; if (k === 'breath') advHit = true; } };
@@ -2288,7 +2312,6 @@ $('btnNew').addEventListener('click', () => startGame(null));
 $('btnCont').addEventListener('click', () => { const s = loadSave(); startGame(s); });
 $('btnAgain').addEventListener('click', () => { state.mode = 'cut'; startGame(null); });
 $('btnEndBook').addEventListener('click', () => { renderBook(); bookEl.hidden = false; $('bookClose').focus(); });
-if (touchy) $('keysHint').textContent = '左下角走路，右下角按住「哈气」，点「互动」说话、翻页';
 
 // ---------- 主循环 ----------
 let last = performance.now();
