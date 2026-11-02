@@ -1,0 +1,2329 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>船尾的冰雪女王</title><meta name="description" content="世代船上的《冰雪女王》：格尔达从船头走到船尾，哈开结霜的舷窗找回忆，去冷舱把加伊带回家。一个能玩的小 demo。"><meta property="og:title" content="船尾的冰雪女王"><meta property="og:description" content="世代船上的《冰雪女王》：格尔达从船头走到船尾，哈开结霜的舷窗找回忆，去冷舱把加伊带回家。一个能玩的小 demo。"><link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Ctext%20y%3D%27.9em%27%20font-size%3D%2790%27%3E%E2%9D%84%3C/text%3E%3C/svg%3E"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style></head><body><meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500&family=Noto+Serif+SC:wght@400;600&family=ZCOOL+XiaoWei&display=swap" media="print" onload="this.media='all'">
+<style>
+/* 版式：一整条横剖的船舱，格尔达从左边的船头一路走到右边的船尾；人说的话写在米白的纸条上。
+   单一夜色：舱里是深蓝，热的东西发琥珀光，越往船尾越白、越冷。 */
+:root{
+  color-scheme: dark;
+  --night:#0a0f1c;
+  --line:#2c3852;
+  --paper:#efe6d2;
+  --paper-2:#d9cbb0;
+  --paper-ink:#2a221c;
+  --paper-ink-2:#5a4c40;
+  --ink:#ece6da;
+  --ink-2:#aeb3bf;
+  --ink-3:#7a8396;
+  --ember:#eaa45c;
+  --rose:#b83f52;
+  --ice:#86b6da;
+  --scrim:rgba(6,9,18,.84);
+  --chip:rgba(8,12,22,.62);
+  --f-title:"ZCOOL XiaoWei","Songti SC","STSong",serif;
+  --f-body:"Noto Serif SC","Songti SC","STSong","SimSun",serif;
+  --f-num:"Cormorant Garamond","Iowan Old Style","Palatino Linotype",serif;
+  --fs:16px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;background:var(--night)}
+body{color:var(--ink);font-family:var(--f-body);overflow:hidden;-webkit-font-smoothing:antialiased;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+button{font:inherit;color:inherit}
+#app{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px}
+#frame{position:relative;overflow:hidden;border-radius:10px;background:#000;box-shadow:0 0 0 1px var(--line),0 18px 50px rgba(0,0,0,.45);flex:none;font-size:var(--fs)}
+#game{display:block;width:100%;height:100%}
+#below{width:100%;flex:1 1 auto;min-height:0;font-size:15px}
+#app.portrait{justify-content:flex-start}
+#frame.small .s-credit{display:none}
+#frame.small .s-name{font-size:2em}
+#frame.small .screen{padding-bottom:5%;gap:7px}
+#frame.small .screen.top{padding-top:4%}
+
+/* 顶栏 */
+.hud{position:absolute;inset:0 0 auto 0;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:10px 12px;pointer-events:none}
+.hud-left{display:flex;flex-direction:column;gap:5px;min-width:0}
+.chapter{font-family:var(--f-title);font-size:.95em;letter-spacing:.06em;background:var(--chip);padding:3px 10px;border-radius:6px;width:fit-content;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.goal{font-size:.8em;color:var(--ink-2);background:var(--chip);padding:2px 10px;border-radius:6px;width:fit-content;max-width:100%}
+.goal.blur{filter:blur(2.5px);opacity:.7}
+.hud-right{display:flex;align-items:center;gap:8px;pointer-events:auto;flex:none}
+.warm{display:flex;align-items:center;gap:6px;background:var(--chip);border-radius:999px;padding:3px 10px;font-size:.75em;color:var(--ink-2)}
+.warm span{display:block;width:54px;height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
+.warm i{display:block;height:100%;width:100%;background:var(--wc,var(--ember))}
+.chip{background:var(--chip);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:3px 10px;font-size:.78em;cursor:pointer}
+.chip:hover{border-color:var(--ember)}
+.chip b{font-family:var(--f-num);font-weight:500;font-style:italic;font-size:1.2em;color:var(--ember);margin-left:2px}
+.chip:focus-visible,.btn:focus-visible,.pad button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+
+/* 提示、纸条 */
+.prompt{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);background:rgba(8,12,22,.74);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 14px;font-size:.82em;white-space:nowrap;pointer-events:none}
+.prompt b{color:var(--ember);font-weight:600;margin-right:8px}
+.toast{position:absolute;left:50%;top:50px;transform:translateX(-50%);background:var(--paper);color:var(--paper-ink);padding:5px 14px;border-radius:3px;font-size:.82em;line-height:1.6;box-shadow:0 6px 18px rgba(0,0,0,.4);width:max-content;max-width:calc(100% - 28px);text-align:center;pointer-events:none}
+.mempop{position:absolute;right:12px;top:48px;width:min(300px,calc(100% - 24px));background:var(--paper);color:var(--paper-ink);border-radius:4px;padding:10px 14px 12px;box-shadow:0 10px 26px rgba(0,0,0,.45);font-size:.8em;line-height:1.7;pointer-events:none}
+.mempop .k{font-family:var(--f-title);color:var(--rose);letter-spacing:.14em;font-size:.9em}
+.mempop .t{font-family:var(--f-title);font-size:1.25em;margin:1px 0 3px}
+.dialog{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:min(760px,calc(100% - 28px));background:var(--paper);color:var(--paper-ink);border-radius:4px;padding:12px 20px 14px;box-shadow:0 2px 0 var(--paper-2),0 10px 30px rgba(0,0,0,.45);line-height:1.8;cursor:pointer}
+.dialog::before{content:"";position:absolute;inset:4px;border:1px dashed rgba(42,34,28,.16);border-radius:2px;pointer-events:none}
+.dlg-name{font-family:var(--f-title);color:var(--rose);font-size:1.02em;letter-spacing:.1em}
+.dialog.narr .dlg-name{display:none}
+.dialog.narr .dlg-text{color:var(--paper-ink-2)}
+.dlg-more{position:absolute;right:12px;bottom:4px;color:var(--rose);font-size:.8em;animation:bob 1s ease-in-out infinite}
+.dialog.typing .dlg-more{visibility:hidden}
+#frame.pad-on .dialog{bottom:auto;top:44px}
+#frame.pad-on .prompt{bottom:96px}
+#below .dialog{position:relative;left:auto;bottom:auto;top:auto;transform:none;width:100%}
+@keyframes bob{50%{transform:translateY(2px)}}
+
+/* 章节卡、标题、结尾 */
+.card{position:absolute;inset:0;background:var(--night);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;opacity:0;transition:opacity .6s ease;cursor:pointer}
+.card.on{opacity:1}
+.card-kicker{font-family:var(--f-title);color:var(--ember);letter-spacing:.3em;font-size:.95em}
+.card-title{font-family:var(--f-title);font-size:2em;letter-spacing:.12em;text-wrap:balance}
+.card-text{max-width:30em;font-size:1.02em;line-height:2.05;text-wrap:pretty}
+.card-hint{color:var(--ink-3);font-size:.75em;margin-top:6px}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:10px;text-align:center;padding:20px 20px 9%;background:linear-gradient(180deg,rgba(10,15,28,0) 25%,rgba(10,15,28,.82) 62%)}
+.screen.top{justify-content:flex-start;padding:7% 20px 20px;background:linear-gradient(180deg,rgba(10,15,28,.86) 0%,rgba(10,15,28,.6) 40%,rgba(10,15,28,0) 64%)}
+.screen.top .s-name{font-size:2.2em}
+.s-kicker{font-family:var(--f-title);color:var(--ember);letter-spacing:.32em;font-size:.9em}
+.s-name{margin:0;font-family:var(--f-title);font-weight:400;font-size:2.7em;letter-spacing:.14em;color:var(--paper);text-shadow:0 2px 18px rgba(0,0,0,.6);text-wrap:balance}
+.s-sub{margin:0;color:var(--ink-2);font-size:.9em}
+.s-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:6px}
+.btn{background:var(--paper);color:var(--paper-ink);border:0;border-radius:4px;padding:8px 24px;font-family:var(--f-title);font-size:1.05em;letter-spacing:.14em;cursor:pointer;box-shadow:0 2px 0 var(--paper-2)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}
+.s-keys{color:var(--ink-3);font-size:.75em;line-height:2}
+.s-keys kbd{font-family:var(--f-body);background:rgba(255,255,255,.08);border-radius:3px;padding:0 5px;color:var(--ink-2);margin:0 1px}
+.s-credit{color:var(--ink-3);font-size:.7em;margin-top:4px}
+.s-credit i{font-family:var(--f-num);font-size:1.15em}
+
+/* 小册子 */
+.book{position:absolute;inset:0;background:var(--scrim);display:flex;align-items:center;justify-content:center;padding:14px}
+.book-in{background:var(--paper);color:var(--paper-ink);border-radius:6px;width:min(820px,100%);max-height:100%;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.book-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:14px 18px 8px;border-bottom:1px solid rgba(42,34,28,.15)}
+.book-head h2{margin:0;font-family:var(--f-title);font-weight:400;font-size:1.25em;letter-spacing:.1em}
+.book-head .n{font-family:var(--f-num);font-style:italic;font-size:1.15em;color:var(--rose)}
+.book-list{overflow:auto;padding:12px 18px 16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.mem{display:grid;grid-template-columns:60px 1fr;gap:10px;align-items:start;min-width:0}
+.mem canvas{width:60px;height:60px;border-radius:6px;box-shadow:0 2px 6px rgba(42,34,28,.3);transform:rotate(-2.5deg)}
+.mem:nth-child(even) canvas{transform:rotate(2deg)}
+.mem.used canvas{filter:saturate(.25);opacity:.55}
+.mem.used h3,.mem.used p{color:#9a8f80}
+.mem h3{margin:0 0 2px;font-family:var(--f-title);font-weight:400;font-size:.98em}
+.mem p{margin:0;font-size:.78em;line-height:1.7;color:var(--paper-ink-2)}
+.mem.miss h3,.mem.miss p{color:#9a8f80}
+.mem.faded canvas{filter:grayscale(1);opacity:.5}
+.mem.faded h3,.mem.faded p{color:#9a8f80}
+.book-foot{padding:8px 18px 14px;display:flex;justify-content:flex-end}
+
+/* 触屏按钮 */
+.pad{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex:none}
+.pad.overlay{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;pointer-events:none}
+.pad.overlay button{pointer-events:auto}
+.pad-l,.pad-r{display:flex;gap:10px;align-items:center}
+.pad button{width:58px;height:58px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(14,20,34,.72);font-size:16px;touch-action:none;cursor:pointer}
+.pad button.big{width:72px;height:72px;background:rgba(234,164,92,.22);border-color:rgba(234,164,92,.6);font-family:var(--f-title);letter-spacing:.1em}
+.pad button.on{background:rgba(234,164,92,.45)}
+
+@media (prefers-reduced-motion: reduce){ .card{transition:none} .dlg-more{animation:none} }
+</style>
+
+<div id="app">
+  <div id="frame">
+    <canvas id="game" aria-label="游戏画面：格尔达在世代船里从船头走向船尾"></canvas>
+    <div id="hud" class="hud" hidden>
+      <div class="hud-left">
+        <div id="chapter" class="chapter"></div>
+        <div id="goal" class="goal"></div>
+      </div>
+      <div class="hud-right">
+        <div class="warm" title="暖和程度">暖<span><i id="warmI"></i></span></div>
+        <button id="bookBtn" class="chip" type="button">小册子<b id="memCount">0</b></button>
+        <button id="soundBtn" class="chip" type="button" aria-pressed="true">声音 开</button>
+      </div>
+    </div>
+    <div id="prompt" class="prompt" hidden></div>
+    <div id="toast" class="toast" hidden></div>
+    <div id="memPop" class="mempop" hidden><div class="k">想起来了</div><div class="t" id="mpT"></div><div id="mpX"></div></div>
+    <div id="dialog" class="dialog" hidden aria-live="polite"><div id="dlgName" class="dlg-name"></div><div id="dlgText" class="dlg-text"></div><div class="dlg-more" aria-hidden="true">▾</div></div>
+    <div id="card" class="card" hidden>
+      <div id="cardKicker" class="card-kicker"></div>
+      <div id="cardTitle" class="card-title"></div>
+      <div id="cardText" class="card-text"></div>
+      <div id="cardHint" class="card-hint" hidden>点一下，或按 E 继续</div>
+    </div>
+    <div id="title" class="screen">
+      <div class="s-kicker">世代船 白鹳号</div>
+      <h1 class="s-name">船尾的冰雪女王</h1>
+      <p class="s-sub">七个故事 · demo</p>
+      <div class="s-actions"><button class="btn" id="btnNew" type="button">开始</button><button class="btn ghost" id="btnCont" type="button" hidden>接着玩</button></div>
+      <div class="s-keys" id="keysHint"><kbd>←</kbd><kbd>→</kbd> 走路　<kbd>空格</kbd> 按住哈气　<kbd>E</kbd> 互动 / 继续　<kbd>B</kbd> 小册子　<kbd>M</kbd> 音乐</div>
+      <div class="s-credit">改编自安徒生《冰雪女王》（1844） · <i>after H. C. Andersen</i></div>
+    </div>
+    <div id="end" class="screen top" hidden>
+      <div class="s-kicker">demo 到这里结束</div>
+      <h2 class="s-name">船尾的冰雪女王</h2>
+      <p class="s-sub" id="endStat"></p>
+      <div class="s-actions"><button class="btn" id="btnAgain" type="button">从头再玩</button><button class="btn ghost" id="btnEndBook" type="button">翻开小册子</button></div>
+      <div class="s-credit">改编自安徒生《冰雪女王》（1844）。画面、文字和声音都还是草稿。<br>配乐是莫扎特、帕赫贝尔、格里格、佩措尔德、勃拉姆斯、巴赫、萨蒂、德沃夏克的曲子，用合成器弹的。</div>
+    </div>
+    <div id="book" class="book" hidden role="dialog" aria-label="格尔达的小册子">
+      <div class="book-in">
+        <div class="book-head"><h2>格尔达的小册子</h2><span class="n" id="bookN"></span></div>
+        <div class="book-list" id="bookList"></div>
+        <div class="book-foot"><button class="btn" id="bookClose" type="button">合上</button></div>
+      </div>
+    </div>
+  </div>
+  <div id="below" hidden></div>
+  <div id="pad" class="pad" hidden>
+    <div class="pad-l"><button type="button" data-k="left" aria-label="向左走">◀</button><button type="button" data-k="right" aria-label="向右走">▶</button></div>
+    <div class="pad-r"><button type="button" data-k="act">互动</button><button type="button" data-k="breath" class="big">哈气</button></div>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+const TAU = Math.PI * 2;
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const lerp = (a, b, t) => a + (b - a) * t;
+const easeIO = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+const linear = t => t;
+const R = (a, b) => a + Math.random() * (b - a);
+const $ = id => document.getElementById(id);
+const FONT_C = '"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",serif';
+
+// ---------- 画布与版面 ----------
+const cvs = $('game'), ctx = cvs.getContext('2d');
+const app = $('app'), frame = $('frame'), below = $('below'), pad = $('pad');
+const VIEW_H = 540, MIN_W = 640, FLOOR = 430;
+// 镜头拉近一点：地板落在画面 452 的位置，世界坐标按 ZOOM 放大
+const ZOOM = 1.22, OY = FLOOR - 452 / ZOOM;
+let viewW = 960, scale = 1, dpr = 1, portrait = false;
+const VWZ = () => viewW / ZOOM;
+const touchy = matchMedia('(pointer: coarse)').matches;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function layout() {
+  const cs = getComputedStyle(app);
+  const aw = app.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const ah = app.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  portrait = touchy && ah > aw * 1.05;
+  let fw, fh;
+  if (portrait) {
+    fw = aw; fh = Math.max(200, Math.min(aw * VIEW_H / 500, ah - 300));
+    scale = fh / VIEW_H; viewW = fw / scale;
+  } else {
+    fw = aw; fh = ah; scale = fh / VIEW_H; viewW = aw / scale;
+    if (viewW < MIN_W) { scale = aw / MIN_W; viewW = MIN_W; fh = VIEW_H * scale; }
+    if (viewW > 1500) { viewW = 1500; fw = viewW * scale; }
+  }
+  frame.style.width = fw + 'px'; frame.style.height = fh + 'px';
+  frame.classList.toggle('small', fh < 430);
+  app.classList.toggle('portrait', portrait);
+  dpr = Math.min(2, window.devicePixelRatio || 1);
+  cvs.width = Math.round(fw * dpr); cvs.height = Math.round(fh * dpr);
+  document.documentElement.style.setProperty('--fs', clamp(fh * 0.03, 13, 19).toFixed(1) + 'px');
+  const dlg = $('dialog');
+  if (portrait) { if (dlg.parentNode !== below) below.appendChild(dlg); below.hidden = false; }
+  else { if (dlg.parentNode !== frame) frame.appendChild(dlg); below.hidden = true; }
+  pad.hidden = !touchy;
+  frame.classList.toggle('pad-on', touchy && !portrait);
+  pad.classList.toggle('overlay', touchy && !portrait);
+  if (touchy && !portrait) { if (pad.parentNode !== frame) frame.appendChild(pad); }
+  else if (pad.parentNode !== app) app.appendChild(pad);
+  frostPat = ctx.createPattern(frostCv, 'repeat');
+}
+
+// ---------- 声音 ----------
+const AC = window.AudioContext || window.webkitAudioContext;
+let ac = null, master = null, noiseBuf = null, soundOn = true, breathNode = null;
+function audioInit() {
+  if (ac || !AC) return;
+  try {
+    ac = new AC(); master = ac.createGain(); master.gain.value = soundOn ? 0.5 : 0; master.connect(ac.destination);
+    noiseBuf = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate);
+    const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    musicInit();
+  } catch (e) { ac = null; }
+}
+function tone(freq, t0, dur, type, vol) {
+  if (!ac || !soundOn) return;
+  const o = ac.createOscillator(), g = ac.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(master); o.start(t0); o.stop(t0 + dur + 0.05);
+}
+function noise(dur, freq, vol, type) {
+  if (!ac || !soundOn) return;
+  const s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain(), t = ac.currentTime;
+  s.buffer = noiseBuf; f.type = type || 'bandpass'; f.frequency.value = freq; g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t + dur + 0.05);
+}
+const sfx = {
+  chime() { if (!ac) return; const t = ac.currentTime; [659.25, 830.61, 987.77, 1318.5].forEach((f, i) => tone(f, t + i * 0.09, 1.3, 'sine', 0.11)); },
+  give() { if (!ac) return; const t = ac.currentTime; tone(523.25, t, .5, 'triangle', .09); tone(783.99, t + .1, .7, 'triangle', .09); },
+  crack() { noise(.35, 2600, .25, 'highpass'); if (ac) tone(1760, ac.currentTime, .3, 'sine', .05); },
+  shatter() { noise(.6, 3200, .3, 'highpass'); if (ac) { const t = ac.currentTime; [2093, 2637, 3136].forEach((f, i) => tone(f, t + i * .04, .5, 'sine', .04)); } },
+  prick() { if (ac) tone(1975, ac.currentTime, .25, 'square', .03); },
+  thud() { noise(.25, 180, .4, 'lowpass'); },
+  splash() { noise(.5, 700, .25, 'bandpass'); },
+  bell() { if (!ac) return; const t = ac.currentTime; [523.25, 392, 523.25].forEach((f, i) => { tone(f, t + i * .9, 2.8, 'sine', .07); tone(f * 2.76, t + i * .9, 1.2, 'sine', .018); tone(f * 5.4, t + i * .9, .4, 'sine', .008); }); },
+  chirp() {
+    if (!ac || !soundOn) return; const t = ac.currentTime;
+    for (let i = 0; i < 2; i++) { const o = ac.createOscillator(), g = ac.createGain(), s = t + i * .13; o.type = 'sine'; o.frequency.setValueAtTime(2600, s); o.frequency.exponentialRampToValueAtTime(3900, s + .07); g.gain.setValueAtTime(.0001, s); g.gain.exponentialRampToValueAtTime(.022, s + .01); g.gain.exponentialRampToValueAtTime(.0001, s + .09); o.connect(g); g.connect(master); o.start(s); o.stop(s + .12); }
+  },
+  hoof() { noise(.12, 260, .22, 'lowpass'); },
+  bloom() { if (!ac) return; const t = ac.currentTime; tone(1046.5, t, .5, 'sine', .05); tone(1318.5, t + .07, .6, 'sine', .04); },
+};
+function breathSound(on) {
+  if (!ac) return;
+  if (on && soundOn && !breathNode) {
+    const s = ac.createBufferSource(), f = ac.createBiquadFilter(), g = ac.createGain();
+    s.buffer = noiseBuf; s.loop = true; f.type = 'bandpass'; f.frequency.value = 850; f.Q.value = .7;
+    g.gain.setValueAtTime(0.0001, ac.currentTime); g.gain.exponentialRampToValueAtTime(0.08, ac.currentTime + .12);
+    s.connect(f); f.connect(g); g.connect(master); s.start(); breathNode = { s, g };
+  } else if ((!on || !soundOn) && breathNode) {
+    const { s, g } = breathNode, t = ac.currentTime;
+    g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(Math.max(0.0001, g.gain.value), t); g.gain.exponentialRampToValueAtTime(0.0001, t + .18);
+    s.stop(t + .2); breathNode = null;
+  }
+}
+// ---------- 背景音乐 ----------
+// 全是公有领域的古典曲子，音符照谱子一个个敲进来，再用合成器弹。
+// 写法：音名+八度:拍数，和弦用 + 连，r 是休止；拍数不写就沿用上一个。
+let musicOut = null, musicOn = true, bgmCur = null, bgmWant = null, bgmTimer = 0;
+const SEMI = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+function nf(n, tr) {
+  const m = /^([A-G])([#b]?)(\d)$/.exec(n); if (!m) return 0;
+  return 440 * Math.pow(2, (SEMI[m[1]] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0) + (+m[3] + 1) * 12 + (tr || 0) - 69) / 12);
+}
+function parseLine(str, tr) {
+  const ev = []; let t = 0, d = 1;
+  for (const tok of str.trim().split(/\s+/)) {
+    if (!tok || tok === '|') continue;
+    const k = tok.indexOf(':'), n = k < 0 ? tok : tok.slice(0, k);
+    if (k >= 0) d = +tok.slice(k + 1);
+    if (n !== 'r') ev.push({ t, d, f: n.split('+').map(x => nf(x, tr)) });
+    t += d;
+  }
+  return { ev, len: t };
+}
+const rep = (s, n) => Array(n).fill(s).join(' ');
+// 巴赫《平均律》第一首前奏曲的前十九小节：每小节一个和弦，照原谱的分解方式弹两遍
+const BACH = ['C3 E3 G3 C4 E4', 'C3 D3 A3 D4 F4', 'B2 D3 G3 D4 F4', 'C3 E3 G3 C4 E4', 'C3 E3 A3 E4 A4', 'C3 D3 F#3 A3 D4', 'B2 D3 G3 D4 G4', 'B2 C3 E3 G3 C4', 'A2 C3 E3 G3 C4', 'D2 A2 D3 F#3 C4', 'G2 B2 D3 G3 B3', 'G2 Bb2 E3 G3 C#4', 'F2 A2 D3 A3 D4', 'F2 Ab2 D3 F3 B3', 'E2 G2 C3 G3 C4', 'E2 F2 A2 C3 F3', 'D2 F2 A2 C3 F3', 'G1 D2 G2 B2 F3', 'C2 E2 G2 C3 E3']
+  .map(ch => { const [a, b, c, d, e] = ch.split(' '), h = [a, b, c, d, e, c, d, e].join(' '); return h + ' ' + h; }).join(' ');
+const TW = 'C5:1 C5 G5 G5 A5 A5 G5:2 F5:1 F5 E5 E5 D5 D5 C5:2 G5:1 G5 F5 F5 E5 E5 D5:2 G5:1 G5 F5 F5 E5 E5 D5:2 C5:1 C5 G5 G5 A5 A5 G5:2 F5:1 F5 E5 E5 D5 D5 C5:2';
+const TW_PAD_A = 'C4+E4+G4:4 F3+A3+C4:2 C4+E4+G4:2 B3+D4+F4:2 A3+C4+E4:2 F3+A3+C4:1 G3+B3+D4:1 C4+E4+G4:2';
+const TW_BASS_A = 'C3:4 F2:2 C3:2 G2:2 A2:2 F2:1 G2:1 C3:2';
+const CV1 = 'F#5:1 E5 D5 C#5 B4 A4 B4 C#5', CV2 = 'D5:1 C#5 B4 A4 G4 F#4 G4 E4', CV3 = 'D4:.5 F#4 A4 G4 F#4 D4 F#4 E4 D4 B3 D4 A4 G4 B4 A4 G4';
+const MM = 'B5:1 G#5 F#5 E5 F#5 G#5 B5 G#5 F#5 E5 F#5 G#5 F#5 G#5 F#5 G#5 B5 G#5 B5 C#6 B5 C#6 G#5 C#6 B5 G#5 F#5 E5:3 r:6';
+const HK = 'B3:.5 C#4 D4 E4 F#4 D4 F#4:1 F4:.5 C#4 F4:1 E4:.5 C4 E4:1 B3:.5 C#4 D4 E4 F#4 D4 F#4 B4 A4 F#4 D4 F#4 A4:2';
+const LUC = 'C3:1 E3+G3 E3+G3', LUG = 'G2:1 F3+B3 F3+B3', LUF = 'F2:1 A3+C4 A3+C4';
+const LARGO = 'E4:1.5 G4:.5 G4:2 E4:1.5 D4:.5 C4:2 D4:1 E4 G4 E4 D4:4 E4:1.5 G4:.5 G4:2 E4:1.5 D4:.5 C4:2 D4:1 E4 D4 C4 C4:4';
+const GYM = 'r:12 r:1 F#5:1 A5 G5 F#5 C#5 B4 C#5 D5 A4:3 F#4:12';
+const SONGS = {
+  // 莫扎特《啊，妈妈，我要告诉你》的主题，就是《小星星》
+  twinkle: { bpm: 84, parts: [['box', .075, TW], ['box', .04, 'C3:1 C4 E4 C4 F4 C4 E4 C4 D4 B3 C4 A3 F3 G3 C3:2 E3:1 C4 D3 B3 C3 A3 G2 B3 E3 C4 D3 B3 C3 A3 G2 B3 C3 C4 E4 C4 F4 C4 E4 C4 D4 B3 C4 A3 F3 G3 C3:2']] },
+  twinkleWarm: { bpm: 72, parts: [['piano', .06, TW],
+    ['pad', .016, [TW_PAD_A, rep('C4+E4+G4:2 B3+D4+F4:2 A3+C4+E4:2 G3+B3+D4:2', 2), TW_PAD_A].join(' ')],
+    ['bass', .04, [TW_BASS_A, rep('C3:2 G2:2 A2:2 G2:2', 2), TW_BASS_A].join(' ')]] },
+  // 帕赫贝尔《D 大调卡农》：低音八个音来回走，上面两个声部一前一后进来
+  canon: { bpm: 60, parts: [['harp', .05, rep('D3:1 A2 B2 F#2 G2 D2 G2 A2', 6)], ['flute', .042, ['r:8', CV1, CV2, CV3, CV1, CV2].join(' ')], ['celesta', .04, ['r:16', CV1, CV2, CV3, 'r:8'].join(' ')]] },
+  // 格里格《培尔·金特》里的《晨景》，长笛吹一遍，双簧管低八度再吹一遍
+  morning: { bpm: 150, parts: [['flute', .042, MM + ' r:36'], ['oboe', .036, 'r:36 ' + MM, -12],
+    ['pad', .018, rep('E3+B3+G#4:18 E3+A3+C#4+E4:6 E3+B3+G#4:6 B2+F#3+B3+D#4:6', 2)], ['bass', .042, rep('E2:18 A2:6 E2:6 B2:6', 2)]] },
+  // 《G 大调小步舞曲》（《安娜·玛格达琳娜·巴赫曲集》，佩措尔德）
+  minuet: { bpm: 100, vol: 1.3, parts: [
+    ['pluck', .042, 'D5:1 G4:.5 A4 B4 C5 D5:1 G4 G4 E5:1 C5:.5 D5 E5 F#5 G5:1 G4 G4 C5:1 D5:.5 C5 B4 A4 B4:1 C5:.5 B4 A4 G4 F#4:1 G4:.5 A4 B4 G4 B4:1 A4:2 D5:1 G4:.5 A4 B4 C5 D5:1 G4 G4 E5:1 C5:.5 D5 E5 F#5 G5:1 G4 G4 C5:1 D5:.5 C5 B4 A4 B4:1 C5:.5 B4 A4 G4 A4:1 B4:.5 A4 G4 F#4 G4:3'],
+    ['pluck', .032, 'G3+B3:2 A3:1 B3:3 C4:3 B3:3 A3:3 G3:3 D4:1 B3 G3 D4:1 D3:.5 C4 B3 A3 B3:2 A3:1 G3:1 B3 G3 C4:3 B3:1 C4:.5 B3 A3 G3 A3:2 F#3:1 G3:2 B3:1 C4:1 D4 D3 G3:2 G2:1']] },
+  // 格里格《在山大王的宫殿里》
+  mountain: { bpm: 92, parts: [['bassoon', .06, HK + ' ' + HK], ['pizz', .06, rep('B2:1 F#2 B2 F#2', 3) + ' D3 A2 D3 A2 ' + rep('B2 F#2 B2 F#2', 3) + ' D3 A2 D3 A2']] },
+  // 勃拉姆斯《摇篮曲》
+  lullaby: { bpm: 76, parts: [
+    ['box', .058, 'r:2 E5:.5 E5 G5:1.5 E5:.5 E5:1 G5:2 E5:.5 G5 C6:1 B5:1.5 A5:.5 A5:1 G5 D5:.5 E5 F5:1 D5 D5:.5 E5 F5:2 D5:.5 F5 B5:.5 A5 G5:1 B5 C6:2 C5:.5 C5 C6:2 A5:.5 F5 G5:2 E5:.5 C5 F5:1 G5 A5 G5:2 C5:.5 C5 C6:2 A5:.5 F5 G5:2 E5:.5 C5 F5:1 E5 D5 C5:2 r:1'],
+    ['harp', .028, ['r:3', LUC, LUC, LUC, LUG, LUG, LUG, LUG, LUC, LUF, LUC, LUF, LUC, LUF, LUC, LUG, LUC].join(' ')]] },
+  // 巴赫《C 大调前奏曲》BWV 846，这里一拍是一个十六分音符
+  prelude: { bpm: 264, parts: [['harp', .03, BACH, 12]] },
+  // 萨蒂《第一号裸体歌舞》
+  gymno: { bpm: 64, vol: 1.4, parts: [['glass', .04, GYM], ['celesta', .018, GYM], ['piano', .028, rep('G2:1 B3+D4+F#4:2 D2:1 A3+C#4+F#4:2', 6)]] },
+  // 德沃夏克《自新大陆》第二乐章，后来填了词，就是《念故乡》
+  largo: { bpm: 48, parts: [['oboe', .05, LARGO + ' r:32'], ['flute', .038, 'r:32 ' + LARGO, 12],
+    ['pad', .018, rep('C3+G3+E4:4 A2+E3+C4:4 G2+D3+B3:4 G2+D3+B3:4 C3+G3+E4:4 A2+E3+C4:4 D3+A3+C4+F4:2 G2+D3+B3+F4:2 C3+G3+E4:4', 2)],
+    ['bass', .042, rep('C3:4 A2:4 G2:4 G2:4 C3:4 A2:4 D3:2 G2:2 C3:4', 2)]] },
+};
+const songCache = {};
+function song(id) {
+  if (songCache[id]) return songCache[id];
+  const s = SONGS[id]; if (!s) return null;
+  const parts = s.parts.map(([inst, vol, str, tr]) => Object.assign({ inst, vol }, parseLine(str, tr)));
+  return (songCache[id] = { id, bpm: s.bpm, vol: s.vol || 1, parts, len: Math.max(...parts.map(p => p.len)) });
+}
+// 一个音：起音、保持、衰减，可选低通和颤音
+function blip(type, f, t, a, peak, hold, rel, out, o) {
+  o = o || {};
+  const g = ac.createGain(), end = t + a + hold + rel;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a);
+  if (hold > 0) g.gain.linearRampToValueAtTime(peak * (o.sus || 1), t + a + hold);
+  g.gain.exponentialRampToValueAtTime(0.0001, end);
+  if (o.lp) { const fl = ac.createBiquadFilter(); fl.type = 'lowpass'; fl.Q.value = o.q || .7; fl.frequency.setValueAtTime(o.lp, t); if (o.lpTo) fl.frequency.exponentialRampToValueAtTime(o.lpTo, end); g.connect(fl); fl.connect(out); }
+  else g.connect(out);
+  const os = ac.createOscillator(); os.type = type; os.frequency.value = f; if (o.det) os.detune.value = o.det;
+  if (o.vib) { const l = ac.createOscillator(), lg = ac.createGain(); l.frequency.value = o.vib; lg.gain.value = f * (o.vd || .004); l.connect(lg); lg.connect(os.frequency); l.start(t); l.stop(end + .05); }
+  os.connect(g); os.start(t); os.stop(end + .05);
+}
+const INST = {
+  box(f, t, d, v, out) { blip('sine', f, t, .004, v, 0, 1 + 160 / f, out); blip('sine', f * 3.01, t, .003, v * .1, 0, .3, out); blip('sine', f * 5.4, t, .002, v * .05, 0, .07, out); },
+  celesta(f, t, d, v, out) { blip('sine', f, t, .003, v, 0, 1.5, out); blip('sine', f * 4, t, .003, v * .12, 0, .45, out); },
+  glass(f, t, d, v, out) { blip('sine', f, t, .16, v, Math.max(.05, d * .85), .9, out, { vib: 4.6, vd: .003, sus: .75 }); blip('sine', f * 2, t, .16, v * .16, Math.max(.05, d * .7), .5, out); },
+  harp(f, t, d, v, out) { blip('triangle', f, t, .005, v, 0, 1.8, out, { lp: 3000, lpTo: 700 }); blip('sine', f, t, .005, v * .5, 0, 2.2, out); },
+  pluck(f, t, d, v, out) { blip('sawtooth', f, t, .003, v, 0, .8, out, { lp: 3200, lpTo: 500, q: 1 }); },
+  pizz(f, t, d, v, out) { blip('triangle', f, t, .004, v, 0, .32, out, { lp: 1400, lpTo: 350 }); },
+  piano(f, t, d, v, out) { blip('triangle', f, t, .005, v, 0, Math.min(2.6, .7 + d * 1.2), out, { lp: 2400, lpTo: 600 }); blip('sine', f * 2, t, .005, v * .14, 0, .5, out); },
+  flute(f, t, d, v, out) { const h = Math.max(.05, d - .14); blip('sine', f, t, .07, v, h, .18, out, { vib: 5, vd: .0035, sus: .85 }); blip('triangle', f * 2, t, .07, v * .05, h, .14, out); },
+  oboe(f, t, d, v, out) { blip('sawtooth', f, t, .05, v, Math.max(.05, d - .12), .16, out, { lp: 1500, q: 2, vib: 5.2, vd: .003, sus: .9 }); },
+  bassoon(f, t, d, v, out) { blip('sawtooth', f, t, .02, v, Math.max(.03, d * .5), .09, out, { lp: 650, q: 1.4 }); },
+  pad(f, t, d, v, out) { const h = Math.max(.1, d - .6); blip('sawtooth', f, t, .6, v, h, 1, out, { lp: 850, det: -7, sus: .9 }); blip('sawtooth', f, t, .6, v, h, 1, out, { lp: 850, det: 7, sus: .9 }); },
+  bass(f, t, d, v, out) { blip('triangle', f, t, .012, v, Math.max(.05, d * .7), .45, out, { lp: 800, sus: .6 }); },
+};
+function musicInit() {
+  musicOut = ac.createGain(); musicOut.gain.value = soundOn && musicOn ? 1.5 : 0;
+  const dry = ac.createGain(); dry.gain.value = .85; musicOut.connect(dry); dry.connect(master);
+  try {
+    const len = Math.floor(ac.sampleRate * 2.4), ir = ac.createBuffer(2, len, ac.sampleRate);
+    for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
+    const cv = ac.createConvolver(); cv.buffer = ir; const wet = ac.createGain(); wet.gain.value = .3;
+    musicOut.connect(cv); cv.connect(wet); wet.connect(master);
+  } catch (e) {}
+  if (bgmWant) bgm(bgmWant, true);
+}
+// 换曲子：旧的淡出，新的淡入；同一首就接着放
+function bgm(id, force) {
+  id = id || null;
+  if (!force && id === bgmWant && (bgmCur || !ac)) return;
+  bgmWant = id;
+  if (!ac || !musicOut) return;
+  if (bgmCur && bgmCur.id === id) return;
+  const now = ac.currentTime;
+  if (bgmCur) {
+    const g = bgmCur.g; g.gain.cancelScheduledValues(now); g.gain.setValueAtTime(Math.max(.0001, g.gain.value), now); g.gain.linearRampToValueAtTime(.0001, now + 1.8);
+    setTimeout(() => { try { g.disconnect(); } catch (e) {} }, 4500); bgmCur = null;
+  }
+  const s = id && song(id); if (!s) return;
+  const g = ac.createGain(); g.gain.setValueAtTime(.0001, now); g.gain.linearRampToValueAtTime(s.vol, now + 2.2); g.connect(musicOut);
+  bgmCur = { id, g, spb: 60 / s.bpm, len: s.len, parts: s.parts.map(p => ({ p, i: 0, base: now + .4 })) };
+  if (!bgmTimer) bgmTimer = setInterval(bgmTick, 200);
+  bgmTick();
+}
+function bgmTick() {
+  const tr = bgmCur; if (!tr || !ac) return;
+  const now = ac.currentTime, until = now + 1.5, loop = tr.len * tr.spb;
+  for (const st of tr.parts) {
+    const evs = st.p.ev; if (!evs.length) continue;
+    if (st.base + loop < now - .05) { st.base += Math.floor((now - st.base) / loop) * loop; st.i = 0; }
+    for (let n = 0; n < 400; n++) {
+      const e = evs[st.i], t = st.base + e.t * tr.spb;
+      if (t > until) break;
+      if (t >= now - .05) for (const fq of e.f) if (fq) INST[st.p.inst](fq, Math.max(t, now), e.d * tr.spb, st.p.vol, tr.g);
+      if (++st.i >= evs.length) { st.i = 0; st.base += loop; }
+    }
+  }
+}
+// 声音按钮三档：全开、只留音效、全关；M 键单独开关音乐
+let audioMode = 0;
+try { audioMode = clamp(parseInt(localStorage.getItem('snowqueen-audio') || '0', 10) || 0, 0, 2); } catch (e) {}
+function applyAudio(keep) {
+  soundOn = audioMode < 2; musicOn = audioMode === 0;
+  const b = $('soundBtn'); b.textContent = ['声音 开', '只留音效', '声音 关'][audioMode]; b.setAttribute('aria-pressed', String(audioMode === 0));
+  if (ac) { const t = ac.currentTime; master.gain.setTargetAtTime(soundOn ? .5 : 0, t, .08); if (musicOut) musicOut.gain.setTargetAtTime(musicOn ? 1.5 : 0, t, .25); }
+  if (!soundOn) breathSound(false);
+  if (keep) try { localStorage.setItem('snowqueen-audio', String(audioMode)); } catch (e) {}
+}
+applyAudio();
+
+// ---------- 霜 ----------
+const frostCv = document.createElement('canvas'); frostCv.width = frostCv.height = 192;
+let frostPat = null;
+(function () {
+  const c = frostCv.getContext('2d'); let s = 11;
+  const r = () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+  c.fillStyle = 'rgba(208,226,241,0.9)'; c.fillRect(0, 0, 192, 192);
+  for (let i = 0; i < 900; i++) { c.fillStyle = 'rgba(255,255,255,' + (r() * .4).toFixed(3) + ')'; c.fillRect(r() * 192, r() * 192, 1.5, 1.5); }
+  c.strokeStyle = 'rgba(255,255,255,.6)'; c.lineWidth = .8;
+  const br = (x, y, a, len, dep) => {
+    if (dep <= 0 || len < 2) return;
+    const x2 = x + Math.cos(a) * len, y2 = y + Math.sin(a) * len;
+    c.beginPath(); c.moveTo(x, y); c.lineTo(x2, y2); c.stroke();
+    for (let k = 1; k <= 2; k++) { const px = x + (x2 - x) * k / 3, py = y + (y2 - y) * k / 3; br(px, py, a + .9, len * .45, dep - 1); br(px, py, a - .9, len * .45, dep - 1); }
+  };
+  for (let i = 0; i < 16; i++) br(r() * 192, r() * 192, r() * TAU, 18 + r() * 26, 3);
+})();
+
+// ---------- 小画笔 ----------
+function circ(c, x, y, r) { c.beginPath(); c.arc(x, y, Math.max(.1, r), 0, TAU); }
+function ell(c, x, y, rx, ry, rot) { c.beginPath(); c.ellipse(x, y, Math.max(.1, rx), Math.max(.1, ry), rot || 0, 0, TAU); }
+function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+function paper(on) { if (on) { ctx.shadowColor = 'rgba(0,0,0,.32)'; ctx.shadowOffsetY = 3; } else { ctx.shadowColor = 'rgba(0,0,0,0)'; ctx.shadowOffsetY = 0; } }
+function rose(c, x, y, r) {
+  c.fillStyle = '#c4475a'; circ(c, x, y, r); c.fill();
+  c.fillStyle = '#e06a7c'; circ(c, x - r * .25, y - r * .25, r * .55); c.fill();
+  c.strokeStyle = '#8f2c3d'; c.lineWidth = Math.max(.6, r * .14); c.beginPath(); c.arc(x, y, r * .45, 0, Math.PI * 1.4); c.stroke();
+}
+function glow(c, x, y, r, col) { const g = c.createRadialGradient(x, y, 2, x, y, r); g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(x - r, y - r, 2 * r, 2 * r); }
+
+// ---------- 回忆 ----------
+const MEMS = [
+  { id: 'm1', title: '窗上的小孔', text: '冬天，窗子冻上了。你们把铜钱放在暖气片上烤热，按在玻璃上，烫出一个圆孔。孔那头有一只眼睛眨了一下，是加伊。' },
+  { id: 'm2', title: '玫瑰箱', text: '夏天，两只小板凳摆在玫瑰箱旁边。奶奶说，这株玫瑰是从地球上带来的那一株分出来的，传到你们手里，已经是第四代了。' },
+  { id: 'm3', title: '雪橇', text: '加伊有一架小雪橇，是他爸爸拿旧货架改的。在船尾那条长坡道上，他拉着你往下滑，你一路尖叫，他笑得从雪橇上翻了下去。' },
+  { id: 'm4', title: '玻璃珠', text: '你七岁生日那天，加伊送你一颗玻璃珠，说是从舷窗外面捞上来的星星。你知道是假的，还是揣在兜里揣了一整年。' },
+  { id: 'm5', title: '门缝里的画', text: '有一年你发高烧，加伊每天放学都从门缝里塞一张画进来。第三张画的是你，头顶冒着热气，像一壶刚烧开的水。' },
+  { id: 'm6', title: '缺齿的梳子', text: '奶奶每天在暖气片边上给你梳头。那把梳子是塑料的，缺了两个齿，梳到打结的地方，她就停一停，用手指慢慢捻开。' },
+  { id: 'm7', title: '咯吱咯吱', text: '加伊的新靴子是拿他爸爸的旧靴子改的，走起来咯吱咯吱响。他在走廊里来回走了十几趟，就为了让你听见。' },
+  { id: 'm8', title: '星图课', text: '星图课上，老师问白鹳号要开多少年。加伊举手说三百二十年，又转过来小声跟你说：到的时候我们早没了，所以船上得一直有小孩。全班都听见了。' },
+  { id: 'm9', title: '掰断的蜡笔', text: '你们也吵过架。有一回他把你的蜡笔全掰成两半，说这样就有两盒了。你哭了一下午。第二天他拿来一盒新的，是拿攒了一个月的饭票换的。' },
+  { id: 'm10', title: '敲三下', text: '有一阵船上限电，走廊夜里不开灯。加伊说他不怕黑，可每天晚上都要在你们两家之间的墙上敲三下。你也敲三下，他才肯睡。' },
+  { id: 'm11', title: '小黄点', text: '观测舱的大屏上有一个小黄点，是白鹳号要去的地方。加伊踮着脚数了半天，说还有一百一十年。你说那也太久了。他说没关系，我们的孙子会替我们踩第一脚草。' },
+];
+const MEM = Object.fromEntries(MEMS.map(m => [m.id, m]));
+
+function memBg(c, x, y, r, a, b) { const g = c.createRadialGradient(x, y - r * .45, r * .08, x, y, r * 1.25); g.addColorStop(0, a); g.addColorStop(1, b); c.fillStyle = g; c.fillRect(x - r - 2, y - r - 2, 2 * r + 4, 2 * r + 4); }
+const VIG = {
+  m1(c, x, y, r, t) {
+    memBg(c, x, y, r, '#f4c784', '#9a5634');
+    c.fillStyle = '#e9bb95'; circ(c, x, y + r * .3, r * .98); c.fill();
+    c.fillStyle = '#c9a25e'; ell(c, x, y - r * .72, r, r * .42); c.fill();
+    if (Math.sin(t * 1.9) > .965) { c.strokeStyle = '#5a3a24'; c.lineWidth = Math.max(1, r * .05); c.beginPath(); c.moveTo(x - r * .3, y); c.quadraticCurveTo(x, y + r * .08, x + r * .3, y); c.stroke(); }
+    else { c.fillStyle = '#fdfaf4'; ell(c, x, y, r * .34, r * .17); c.fill(); c.fillStyle = '#4b6c93'; circ(c, x + r * .05, y, r * .13); c.fill(); c.fillStyle = '#18202b'; circ(c, x + r * .05, y, r * .065); c.fill(); c.fillStyle = '#fff'; circ(c, x + r * .1, y - r * .05, r * .03); c.fill(); }
+    c.strokeStyle = '#8a5a34'; c.lineWidth = Math.max(1, r * .07); c.beginPath(); c.arc(x, y + r * .05, r * .46, Math.PI * 1.22, Math.PI * 1.78); c.stroke();
+  },
+  m2(c, x, y, r) {
+    memBg(c, x, y, r, '#fbe0a0', '#c07a45');
+    c.fillStyle = '#9b6a45'; c.fillRect(x - r, y + r * .45, 2 * r, r * .6);
+    c.fillStyle = '#7a4a2c'; c.fillRect(x - r * .78, y + r * .05, r * .86, r * .42);
+    c.strokeStyle = '#4f8a46'; c.lineWidth = Math.max(1, r * .05);
+    for (let i = 0; i < 4; i++) { const sx = x - r * .65 + i * r * .22, top = y - r * .3 - (i % 2) * r * .12; c.beginPath(); c.moveTo(sx, y + r * .05); c.lineTo(sx + r * .03, top); c.stroke(); rose(c, sx + r * .03, top, r * .1); }
+    c.fillStyle = '#b58553';
+    for (const sx of [x + r * .22, x + r * .56]) { c.fillRect(sx, y + r * .2, r * .26, r * .07); c.fillRect(sx + r * .03, y + r * .27, r * .04, r * .18); c.fillRect(sx + r * .19, y + r * .27, r * .04, r * .18); }
+  },
+  m3(c, x, y, r) {
+    memBg(c, x, y, r, '#cfe0f0', '#6f86a8');
+    c.fillStyle = '#f4f1ec'; c.beginPath(); c.moveTo(x - r, y - r * .25); c.lineTo(x + r, y + r * .55); c.lineTo(x + r, y + r); c.lineTo(x - r, y + r); c.closePath(); c.fill();
+    c.save(); c.translate(x - r * .05, y + r * .12); c.rotate(.38);
+    c.fillStyle = '#8a5a34'; c.fillRect(-r * .3, -r * .06, r * .6, r * .1);
+    c.fillStyle = '#c4475a'; circ(c, -r * .12, -r * .18, r * .1); c.fill(); c.fillStyle = '#3e5f8e'; circ(c, r * .12, -r * .2, r * .1); c.fill();
+    c.restore();
+    c.strokeStyle = 'rgba(80,100,130,.6)'; c.lineWidth = Math.max(1, r * .03);
+    for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(x - r * .75, y - r * .28 + i * r * .1); c.lineTo(x - r * .45, y - r * .17 + i * r * .1); c.stroke(); }
+  },
+  m4(c, x, y, r) {
+    memBg(c, x, y, r, '#f2d7a8', '#8d5f43');
+    c.fillStyle = '#efc6a2'; ell(c, x, y + r * .55, r * .8, r * .4); c.fill();
+    const g = c.createRadialGradient(x - r * .1, y - r * .12, r * .05, x, y, r * .34); g.addColorStop(0, '#e8f6ff'); g.addColorStop(1, '#4f82ad'); c.fillStyle = g; circ(c, x, y, r * .34); c.fill();
+    c.fillStyle = '#ffe27a'; c.beginPath(); for (let i = 0; i < 8; i++) { const a = i / 8 * TAU, rr2 = i % 2 ? r * .05 : r * .14; c.lineTo(x + Math.cos(a) * rr2, y + Math.sin(a) * rr2); } c.closePath(); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.7)'; circ(c, x - r * .12, y - r * .14, r * .06); c.fill();
+  },
+  m5(c, x, y, r) {
+    memBg(c, x, y, r, '#f6d79c', '#a8673f');
+    c.save(); c.translate(x, y); c.rotate(-.12); c.fillStyle = '#fbf6ea'; c.fillRect(-r * .6, -r * .55, r * 1.2, r * 1.1);
+    c.strokeStyle = '#c4475a'; c.lineWidth = Math.max(1, r * .045); c.lineCap = 'round';
+    circ(c, 0, r * .02, r * .14); c.stroke();
+    c.beginPath(); c.moveTo(0, r * .16); c.lineTo(0, r * .4); c.moveTo(-r * .16, r * .26); c.lineTo(r * .16, r * .26); c.moveTo(0, r * .4); c.lineTo(-r * .12, r * .52); c.moveTo(0, r * .4); c.lineTo(r * .12, r * .52); c.stroke();
+    c.strokeStyle = '#6f8fb0';
+    for (let i = -1; i <= 1; i++) { c.beginPath(); c.moveTo(i * r * .1, -r * .16); c.quadraticCurveTo(i * r * .1 + r * .06, -r * .26, i * r * .1, -r * .34); c.quadraticCurveTo(i * r * .1 - r * .06, -r * .42, i * r * .1, -r * .5); c.stroke(); }
+    c.restore();
+  },
+  m6(c, x, y, r) {
+    memBg(c, x, y, r, '#f7d9a0', '#a0603a');
+    c.strokeStyle = '#6b4430'; c.lineWidth = Math.max(1, r * .03);
+    for (let i = 0; i < 6; i++) { c.beginPath(); c.moveTo(x - r * .7, y + r * (.25 + i * .06)); c.quadraticCurveTo(x, y + r * (.05 + i * .08), x + r * .75, y + r * (.35 + i * .05)); c.stroke(); }
+    c.fillStyle = '#e08f9f'; rr(c, x - r * .55, y - r * .32, r * 1.1, r * .16, r * .06); c.fill();
+    for (let i = 0; i < 12; i++) { if (i === 4 || i === 8) continue; c.fillRect(x - r * .5 + i * r * .09, y - r * .17, r * .045, r * .26); }
+  },
+  m7(c, x, y, r) {
+    memBg(c, x, y, r, '#f2cf93', '#8f5a3a');
+    c.fillStyle = '#5b3d2a';
+    for (const sx of [x - r * .32, x + r * .12]) { c.fillRect(sx, y - r * .3, r * .22, r * .5); c.beginPath(); c.moveTo(sx, y + r * .2); c.lineTo(sx + r * .42, y + r * .2); c.quadraticCurveTo(sx + r * .46, y + r * .34, sx + r * .38, y + r * .34); c.lineTo(sx, y + r * .34); c.closePath(); c.fill(); }
+    c.strokeStyle = 'rgba(60,40,30,.7)'; c.lineWidth = Math.max(1, r * .035);
+    for (let i = 0; i < 3; i++) { c.beginPath(); c.arc(x + r * .62, y - r * .1, r * (.1 + i * .1), -.7, .7); c.stroke(); }
+  },
+  m8(c, x, y, r) {
+    memBg(c, x, y, r, '#e9d3a0', '#7c5a3e');
+    c.fillStyle = '#2f4a3c'; c.fillRect(x - r * .75, y - r * .6, r * 1.5, r * .9);
+    c.fillStyle = '#f2f2e6'; [[-.5, -.4], [-.25, -.15], [.05, -.35], [.3, -.1], [.5, -.42], [-.4, .05]].forEach(([a, b]) => { c.fillRect(x + a * r, y + b * r, r * .04, r * .04); });
+    c.strokeStyle = 'rgba(242,242,230,.8)'; c.setLineDash([r * .05, r * .05]); c.lineWidth = Math.max(1, r * .025); c.beginPath(); c.moveTo(x - r * .6, y + r * .1); c.quadraticCurveTo(x, y - r * .6, x + r * .5, y - r * .1); c.stroke(); c.setLineDash([]);
+    c.fillStyle = '#ffd34d'; circ(c, x + r * .5, y - r * .1, r * .06); c.fill();
+    c.fillStyle = '#efc6a2'; c.fillRect(x + r * .55, y + r * .35, r * .07, r * .45); circ(c, x + r * .585, y + r * .34, r * .07); c.fill();
+  },
+  m9(c, x, y, r) {
+    memBg(c, x, y, r, '#f4dcaa', '#9a6a46');
+    const cols = ['#c4475a', '#e2a33b', '#4f8a46', '#3e5f8e', '#7d5ab0'];
+    cols.forEach((col, i) => { c.fillStyle = col; const yy = y - r * .4 + i * r * .17; c.fillRect(x - r * .62, yy, r * .48, r * .1); c.fillRect(x - r * .08, yy + r * .03, r * .44, r * .1); });
+    c.strokeStyle = '#6a4a30'; c.lineWidth = Math.max(1, r * .03); c.strokeRect(x + r * .42, y - r * .2, r * .3, r * .5);
+  },
+  m10(c, x, y, r) {
+    memBg(c, x, y, r, '#3a4a72', '#141b30');
+    c.fillStyle = '#4a5674'; c.fillRect(x - r, y - r, r * .9, 2 * r);
+    c.strokeStyle = 'rgba(234,164,92,.85)'; c.lineWidth = Math.max(1, r * .03);
+    for (let k = 0; k < 3; k++) { const yy = y - r * .3 + k * r * .3; for (let i = 1; i <= 2; i++) { c.beginPath(); c.arc(x - r * .1, yy, r * .08 * i, -1, 1); c.stroke(); } }
+    c.fillStyle = '#efc6a2'; ell(c, x + r * .2, y + r * .3, r * .12, r * .09); c.fill();
+  },
+  m11(c, x, y, r) {
+    memBg(c, x, y, r, '#26304e', '#0d1222');
+    c.fillStyle = '#0a0f1e'; c.fillRect(x - r * .8, y - r * .7, r * 1.6, r * 1.0);
+    c.fillStyle = 'rgba(255,255,255,.75)'; for (let i = 0; i < 18; i++) c.fillRect(x - r * .75 + ((i * 37) % 100) / 100 * r * 1.5, y - r * .65 + ((i * 53) % 100) / 100 * r * .9, r * .02, r * .02);
+    glow(c, x + r * .2, y - r * .25, r * .2, 'rgba(255,214,90,.7)'); c.fillStyle = '#ffd65a'; circ(c, x + r * .2, y - r * .25, r * .05); c.fill();
+    c.fillStyle = '#1e1a1a'; circ(c, x - r * .25, y + r * .45, r * .13); c.fill(); circ(c, x + r * .05, y + r * .5, r * .11); c.fill();
+    c.fillRect(x - r * .36, y + r * .55, r * .22, r * .5); c.fillRect(x - r * .04, y + r * .58, r * .18, r * .5);
+  },
+};
+function spaceView(c, x, y, r, s) {
+  const g = c.createLinearGradient(x, y - r, x, y + r); g.addColorStop(0, '#0b1430'); g.addColorStop(1, '#1d1b3c'); c.fillStyle = g; c.fillRect(x - r, y - r, 2 * r, 2 * r);
+  let k = (Math.floor(s * 13.7) % 997) + 3; const pr = () => { k = (k * 9301 + 49297) % 233280; return k / 233280; };
+  for (let i = 0; i < 18; i++) { const big = pr() < .2; c.fillStyle = 'rgba(255,255,255,' + (.4 + pr() * .6).toFixed(2) + ')'; c.fillRect(x - r + pr() * 2 * r, y - r + pr() * 2 * r, big ? 2 : 1.2, big ? 2 : 1.2); }
+}
+
+// ---------- 人物 ----------
+function feet(c, x, y, kind) {
+  if (kind === 'red') { c.fillStyle = '#d23b45'; ell(c, x + 1.5, y, 4.2, 2.3); c.fill(); }
+  else if (kind === 'boots') { c.fillStyle = '#5b3d2a'; c.fillRect(x - 2.8, y - 7, 5.6, 7); ell(c, x + 1.5, y, 4.5, 2.4); c.fill(); }
+  else { c.fillStyle = '#f0c9a8'; ell(c, x + 1.2, y, 3.6, 1.9); c.fill(); }
+}
+function kid(c, x, y, o) {
+  const f = o.face || 1, ph = o.walk || 0, sw = o.moving ? Math.sin(ph) * 4.5 : 0, bob = o.moving ? Math.abs(Math.sin(ph)) * 1.2 : 0;
+  const skin = o.skin || '#f0c9a8', coat = o.coat || '#a7373f', hair = o.hair || '#6b4430';
+  c.save(); c.translate(x, y); if (o.scale) c.scale(o.scale, o.scale);
+  if (!o.noShadow) { c.fillStyle = 'rgba(0,0,0,.22)'; ell(c, 0, 0, 13, 3); c.fill(); }
+  c.scale(f, 1); c.translate(o.shiver ? (Math.random() - .5) * 1.4 : 0, -bob);
+  c.fillStyle = o.pants || '#3b2f2a';
+  if (o.sit) {
+    c.fillRect(-4, -14, 17, 6); c.fillRect(9, -14, 4.4, 12); feet(c, 11, -1, o.feet); c.translate(0, -9);
+  } else {
+    c.save(); c.translate(-3, -15); c.rotate(sw * .06); c.fillRect(-2.2, 0, 4.4, 13); c.restore();
+    c.save(); c.translate(3, -15); c.rotate(-sw * .06); c.fillRect(-2.2, 0, 4.4, 13); c.restore();
+    feet(c, -3 + sw * .8, -1, o.feet); feet(c, 3 - sw * .8, -1, o.feet);
+  }
+  c.fillStyle = coat; c.beginPath(); c.moveTo(-9, -15); c.lineTo(9, -15); c.lineTo(6.5, -41); c.quadraticCurveTo(0, -45, -6.5, -41); c.closePath(); c.fill();
+  c.fillStyle = 'rgba(0,0,0,.12)'; c.fillRect(-9, -19, 18, 3);
+  if (o.vest) { c.fillStyle = o.vest; c.beginPath(); c.moveTo(-7, -17); c.lineTo(-2, -17); c.lineTo(-1, -40); c.lineTo(-5.5, -40); c.closePath(); c.fill(); }
+  const arm = o.hug ? -1.25 : o.reach ? -1.05 : (o.moving ? sw * .08 : .15);
+  c.save(); c.translate(1, -38); c.rotate(arm); c.fillStyle = coat; c.fillRect(-2.3, 0, 4.6, 15);
+  if (o.mittens) { c.fillStyle = '#8d8a84'; circ(c, 0, 16, 4.6); c.fill(); } else { c.fillStyle = skin; circ(c, 0, 16, 2.6); c.fill(); }
+  if (o.magnifier) { c.strokeStyle = '#d8c58a'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(0, 17); c.lineTo(4, 22); c.stroke(); c.strokeStyle = '#e9f3f9'; circ(c, 6.5, 25, 4); c.stroke(); }
+  c.restore();
+  if (o.muff) { c.fillStyle = '#f2ece2'; rr(c, 2, -26, 11, 8, 4); c.fill(); }
+  if (o.knife) { c.fillStyle = '#c9ced6'; c.fillRect(-8, -22, 2, 9); c.fillStyle = '#5a3a24'; c.fillRect(-8.5, -24, 3, 3); }
+  const hy = -52;
+  c.fillStyle = skin; circ(c, 1, hy, 10.5); c.fill();
+  c.fillStyle = hair;
+  c.beginPath(); c.arc(.5, hy - 1, 11.3, Math.PI, 0); c.lineTo(11.8, hy - 2); c.quadraticCurveTo(5, hy - 8, -1, hy - 5); c.lineTo(-10.6, hy + (o.girl ? 9 : 5)); c.lineTo(-11, hy - 1); c.closePath(); c.fill();
+  if (o.girl) { c.beginPath(); c.moveTo(-11, hy - 1); c.quadraticCurveTo(-13.5, hy + 8, -8.5, hy + 12); c.lineTo(-5, hy + 3); c.closePath(); c.fill(); }
+  if (o.wild) { c.strokeStyle = hair; c.lineWidth = 2.2; c.lineCap = 'round'; for (let i = 0; i < 7; i++) { const a = Math.PI + i / 6 * Math.PI; c.beginPath(); c.moveTo(Math.cos(a) * 9, hy + Math.sin(a) * 9); c.lineTo(Math.cos(a) * 15, hy + Math.sin(a) * 14); c.stroke(); } }
+  if (o.cap) { c.fillStyle = o.cap; c.beginPath(); c.arc(.5, hy - 3, 11.6, Math.PI * 1.02, Math.PI * 1.98); c.closePath(); c.fill(); c.fillRect(1, hy - 5.5, 15, 3.2); }
+  if (o.eyesShut) { c.strokeStyle = '#2a1f1a'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(4, hy + 1); c.lineTo(8, hy + 1); c.stroke(); }
+  else { c.fillStyle = '#2a1f1a'; circ(c, 6, hy + .5, 1.4); c.fill(); }
+  if (o.glint) { c.fillStyle = '#e4f7ff'; circ(c, 6.8, hy - .3, 1); c.fill(); }
+  c.fillStyle = 'rgba(220,110,110,.35)'; circ(c, 6, hy + 4.5, 2); c.fill();
+  if (o.cold) { c.fillStyle = 'rgba(130,175,220,.4)'; circ(c, 1, hy, 10.6); c.fill(); }
+  c.restore();
+}
+function gerdaLook() {
+  return { face: player.face, walk: player.walk, moving: player.moving, girl: true, coat: '#a7373f', hair: '#6b4430',
+    feet: has('靴子') ? 'boots' : has('红鞋') ? 'red' : 'bare', mittens: has('大手套'), muff: has('手笼'),
+    shiver: state.W < 15 && scene && scene.cold > 0, cold: scene && scene.id === 's7', hug: player.hug };
+}
+function drawKay(e, extra) {
+  kid(ctx, e.x, FLOOR, Object.assign({ face: e.face, walk: e.walk, moving: e.walking, coat: '#3e5f8e', hair: '#c9a25e', feet: 'boots' }, extra || {}));
+}
+function drawGranny(x, t, reading) {
+  const c = ctx, y = FLOOR;
+  paper(true);
+  c.fillStyle = '#5b3b2b'; c.fillRect(x - 16, y - 50, 4, 50); c.fillRect(x + 14, y - 30, 4, 30); c.fillRect(x - 16, y - 30, 34, 5);
+  paper(false);
+  c.strokeStyle = '#4a2f22'; c.lineWidth = 3; c.beginPath(); c.arc(x + 1, y - 6, 22, Math.PI * .15, Math.PI * .85); c.stroke();
+  c.fillStyle = '#6f5d7e'; c.beginPath(); c.moveTo(x - 12, y - 28); c.quadraticCurveTo(x - 14, y - 58, x - 2, y - 60); c.quadraticCurveTo(x + 10, y - 58, x + 12, y - 28); c.closePath(); c.fill();
+  c.fillStyle = '#4e425a'; c.fillRect(x - 4, y - 32, 22, 8); c.fillRect(x + 12, y - 32, 6, 30);
+  c.fillStyle = '#a0739a'; c.beginPath(); c.moveTo(x - 12, y - 56); c.lineTo(x + 11, y - 56); c.lineTo(x + 1, y - 36); c.closePath(); c.fill();
+  c.fillStyle = '#efc9a9'; circ(c, x + 1, y - 68, 9.5); c.fill();
+  c.fillStyle = '#cfcac4'; c.beginPath(); c.arc(x, y - 70, 10, Math.PI * .9, Math.PI * 2.1); c.fill(); circ(c, x - 8.5, y - 72, 4.5); c.fill();
+  c.fillStyle = '#2a1f1a'; circ(c, x + 6, y - 67.5, 1.2); c.fill();
+  c.strokeStyle = '#8a7a5a'; c.lineWidth = .9; circ(c, x + 6, y - 67.5, 2.7); c.stroke();
+  if (reading) { c.fillStyle = '#efe6d2'; c.fillRect(x + 4, y - 46, 14, 10); c.fillStyle = '#7a3a2a'; c.fillRect(x + 10, y - 46, 2, 10); }
+  else { c.strokeStyle = '#d9c7a0'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(x + 4, y - 40); c.lineTo(x + 16, y - 48 + Math.sin(t * 3) * 1.5); c.stroke(); c.fillStyle = '#c4475a'; circ(c, x + 10, y - 38, 3.3); c.fill(); }
+}
+function drawOldWoman(x, face, t, hatOff, walking, ph) {
+  const c = ctx; c.save(); c.translate(x, FLOOR); c.scale(face, 1);
+  c.fillStyle = 'rgba(0,0,0,.22)'; ell(c, 0, 0, 15, 3.5); c.fill();
+  const bob = walking ? Math.abs(Math.sin(ph)) * 1.2 : 0; c.translate(0, -bob);
+  paper(true); c.fillStyle = '#5e4778'; c.beginPath(); c.moveTo(-14, 0); c.lineTo(14, 0); c.lineTo(8, -50); c.quadraticCurveTo(0, -56, -8, -50); c.closePath(); c.fill(); paper(false);
+  c.fillStyle = '#7a5f98'; c.fillRect(-13, -7, 26, 4);
+  c.strokeStyle = '#6a4a2c'; c.lineWidth = 2.4; c.beginPath(); c.moveTo(17, 0); c.lineTo(14, -40); c.quadraticCurveTo(13, -47, 8, -45); c.stroke();
+  c.fillStyle = '#5e4778'; c.save(); c.translate(4, -45); c.rotate(-.55); c.fillRect(-2.5, 0, 5, 16); c.restore();
+  c.fillStyle = '#efc8a6'; circ(c, 1, -62, 10); c.fill();
+  c.fillStyle = '#d8d2ca'; c.beginPath(); c.arc(0, -64, 10.5, Math.PI * .9, Math.PI * 2.1); c.fill();
+  c.fillStyle = '#2a1f1a'; circ(c, 6, -61.5, 1.3); c.fill();
+  if (!hatOff) drawHat(c, 0, -70, 1);
+  c.restore();
+}
+function drawHat(c, x, y, s) {
+  c.save(); c.translate(x, y); c.scale(s, s);
+  c.fillStyle = '#e8cf8a'; ell(c, 0, 4, 26, 6); c.fill(); c.beginPath(); c.ellipse(0, 3, 13, 11, 0, Math.PI, 0); c.fill();
+  [['#7d6bd1', -18, 4], ['#f0d14a', -11, 6], ['#e98aa8', 11, 6], ['#6bb0d8', 18, 4], ['#f7f2e8', -5, -3]].forEach(([col, dx, dy]) => { c.fillStyle = col; circ(c, dx, dy, 2.4); c.fill(); });
+  rose(c, 4, -3, 4.2); c.restore();
+}
+function drawCrow(x, y, face, t, flying, old) {
+  const c = ctx; c.save(); c.translate(x, y); c.scale(face, 1);
+  const flap = flying ? Math.sin(t * 22) : .2;
+  c.fillStyle = '#16151b'; ell(c, 0, 0, 12, 7); c.fill(); circ(c, 9, -6, 5.5); c.fill();
+  c.beginPath(); c.moveTo(-10, -1); c.lineTo(-22, -5); c.lineTo(-20, 3); c.closePath(); c.fill();
+  c.fillStyle = '#3a3640'; c.beginPath(); c.moveTo(14, -7); c.lineTo(21, -5); c.lineTo(14, -4); c.closePath(); c.fill();
+  c.fillStyle = '#26232b'; c.save(); c.translate(-2, -3); c.rotate(-flap * .9); c.beginPath(); c.moveTo(0, 0); c.lineTo(-14, -12); c.lineTo(-4, 3); c.closePath(); c.fill(); c.restore();
+  c.fillStyle = '#e8e0c8'; circ(c, 10.5, -7, 1.2); c.fill();
+  if (old) { c.strokeStyle = '#26232b'; c.lineWidth = 1.4; for (let i = 0; i < 3; i++) { c.beginPath(); c.moveTo(6 + i * 3, -10); c.lineTo(4 + i * 4, -15 - (i % 2) * 2); c.stroke(); } c.fillStyle = 'rgba(200,200,210,.35)'; ell(c, 2, 1, 7, 3); c.fill(); }
+  if (!flying) { c.strokeStyle = '#3a3640'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-1, 6); c.lineTo(-2, 11); c.moveTo(3, 6); c.lineTo(3, 11); c.stroke(); }
+  c.restore();
+}
+// 四条腿的都用这一个：默认是驯鹿；doe 是没角的小母鹿，horse 是马（有鬃毛和尾巴）
+function reindeer(c, x, y, face, ph, moving, o) {
+  o = o || {}; const s = o.s || 1, body = o.body || '#6d4a32', light = o.light || '#e8ddd0', mane = o.mane || '#3a2418';
+  c.save(); c.translate(x, y); c.scale(face * s, s);
+  c.fillStyle = 'rgba(0,0,0,.22)'; ell(c, 0, 0, 34, 5); c.fill();
+  const lg = moving ? Math.sin(ph) * .4 : 0;
+  [[-22, lg], [-14, -lg], [16, -lg], [24, lg]].forEach(([dx, a]) => { c.save(); c.translate(dx, -36); c.rotate(a); c.fillStyle = body; c.fillRect(-2.5, 0, 5, 35); c.fillStyle = '#3b2a1e'; c.fillRect(-2.8, 31, 5.6, 4); c.restore(); });
+  if (o.horse) { c.strokeStyle = mane; c.lineWidth = 5; c.lineCap = 'round'; c.beginPath(); c.moveTo(-30, -48); c.quadraticCurveTo(-44, -36 + Math.sin(ph) * 2, -40, -14); c.stroke(); }
+  paper(true); c.fillStyle = body; ell(c, 0, -44, 32, 15); c.fill(); paper(false);
+  if (!o.horse) { c.fillStyle = light; ell(c, -30, -48, 5, 6); c.fill(); }
+  c.fillStyle = body; c.beginPath(); c.moveTo(20, -52); c.lineTo(33, -74); c.lineTo(42, -70); c.lineTo(32, -44); c.closePath(); c.fill();
+  ell(c, 44, -76, 10.5, 6.5, .3); c.fill();
+  if (o.horse) { c.strokeStyle = mane; c.lineWidth = 4; c.lineCap = 'round'; c.beginPath(); c.moveTo(23, -52); c.lineTo(35, -78); c.stroke(); c.fillStyle = '#f2ece2'; ell(c, 48, -75, 4, 2.2, .3); c.fill(); }
+  else { c.fillStyle = light; ell(c, 30, -52, 6, 8); c.fill(); }
+  c.fillStyle = '#1f1612'; circ(c, 46, -78, 1.5); c.fill(); circ(c, 53.5, -73, 2.1); c.fill();
+  if (o.doe || o.horse) { c.fillStyle = body; c.beginPath(); c.moveTo(37, -81); c.lineTo(35, -92); c.lineTo(42, -83); c.closePath(); c.fill(); }
+  else {
+    c.strokeStyle = '#cdb89a'; c.lineWidth = 2.2; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(40, -82); c.lineTo(34, -102); c.moveTo(36, -94); c.lineTo(28, -98); c.moveTo(35, -99); c.lineTo(40, -110); c.moveTo(44, -82); c.lineTo(50, -100); c.moveTo(48, -93); c.lineTo(56, -95); c.stroke();
+  }
+  c.restore();
+}
+function drawSkiff(c, x, y, t) {
+  const b = Math.sin(t * 2.1) * 1.6; c.save(); c.translate(x, y + b);
+  paper(true); c.fillStyle = '#6b4a34'; c.beginPath(); c.moveTo(-46, -8); c.lineTo(46, -8); c.lineTo(34, 10); c.lineTo(-34, 10); c.closePath(); c.fill(); paper(false);
+  c.fillStyle = '#8a6446'; c.fillRect(-46, -10, 92, 4); c.restore();
+  return b;
+}
+function drawFlower(x, kind, t, talk) {
+  const c = ctx, sw = Math.sin(t * 1.3 + x) * 2 + (talk ? Math.sin(t * 10) * 2 : 0), y = FLOOR;
+  c.lineCap = 'round';
+  const stem = (h, col) => { c.strokeStyle = col || '#3f6b3a'; c.lineWidth = 3; c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x - 6, y - h / 2, x + sw, y - h); c.stroke(); c.fillStyle = '#4f8a46'; ell(c, x - 8, y - h * .35, 9, 3.5, -.5); c.fill(); ell(c, x + 8, y - h * .5, 9, 3.5, .5); c.fill(); };
+  if (kind === 'morning') {
+    c.fillStyle = '#6b7b86'; c.fillRect(x - 4, y - 190, 8, 190);
+    c.strokeStyle = '#4c8a4a'; c.lineWidth = 2.2; c.beginPath(); for (let yy = y; yy > y - 175; yy -= 8) { const xx = x + Math.sin(yy * .12) * 9; if (yy === y) c.moveTo(xx, yy); else c.lineTo(xx, yy); } c.stroke();
+    [[-10, -165], [9, -128], [-9, -90], [10, -56]].forEach(([dx, dy]) => { const px = x + dx + sw * .3, py = y + dy, d = dx < 0 ? -1 : 1; c.fillStyle = '#8a6bd8'; c.beginPath(); c.moveTo(px, py); c.lineTo(px + d * 14, py - 9); c.lineTo(px + d * 14, py + 9); c.closePath(); c.fill(); c.fillStyle = '#f2eefc'; circ(c, px + d * 13, py, 2.5); c.fill(); });
+  } else if (kind === 'snowdrop') {
+    stem(70);
+    for (const k of [-1, 1]) { c.strokeStyle = '#3f6b3a'; c.lineWidth = 2; c.beginPath(); c.moveTo(x + sw, y - 70); c.quadraticCurveTo(x + sw + k * 12, y - 78, x + sw + k * 16, y - 66); c.stroke(); c.fillStyle = '#f6f8fb'; ell(c, x + sw + k * 16, y - 60, 5, 8); c.fill(); }
+    c.fillStyle = '#f6f8fb'; ell(c, x + sw, y - 62, 6, 10); c.fill();
+  } else if (kind === 'buttercup') {
+    stem(64);
+    for (const [dx, dy] of [[0, -64], [-14, -50], [13, -46]]) { c.fillStyle = '#f2c230'; c.beginPath(); c.arc(x + sw + dx, y + dy, 9, 0, Math.PI); c.fill(); c.fillStyle = '#ffe27a'; ell(c, x + sw + dx, y + dy, 9, 3); c.fill(); }
+  } else if (kind === 'dandelion') {
+    stem(78);
+    c.fillStyle = 'rgba(245,245,240,.85)'; circ(c, x + sw, y - 82, 14); c.fill();
+    c.strokeStyle = 'rgba(255,255,255,.9)'; c.lineWidth = 1; for (let i = 0; i < 14; i++) { const a = i / 14 * TAU; c.beginPath(); c.moveTo(x + sw, y - 82); c.lineTo(x + sw + Math.cos(a) * 15, y - 82 + Math.sin(a) * 15); c.stroke(); }
+  } else if (kind === 'narcissus') {
+    c.fillStyle = '#5d8fa8'; ell(c, x + 14, y - 3, 26, 5); c.fill(); c.fillStyle = 'rgba(255,255,255,.25)'; ell(c, x + 10, y - 4, 10, 1.5); c.fill();
+    stem(66);
+    c.fillStyle = '#f8f5ea'; for (let i = 0; i < 6; i++) { const a = i / 6 * TAU; ell(c, x + sw + Math.cos(a) * 8, y - 68 + Math.sin(a) * 8, 6, 3.5, a); c.fill(); }
+    c.fillStyle = '#f0a83a'; circ(c, x + sw, y - 68, 5); c.fill();
+  }
+}
+
+// 回忆贴画：米白纸边，里面是那段回忆的小画，底下手写标题
+function drawSticker(c, id, x, y, r, rot, a, t, label) {
+  c.save(); c.globalAlpha = a; c.translate(x, y); c.rotate(rot);
+  const w = r * 2 + 10, h = r * 2 + (label ? 30 : 10);
+  c.shadowColor = 'rgba(0,0,0,.28)'; c.shadowOffsetY = 3; c.shadowBlur = 6;
+  c.fillStyle = '#fbf7ee'; rr(c, -w / 2, -r - 5, w, h, 5); c.fill();
+  c.shadowColor = 'rgba(0,0,0,0)'; c.shadowBlur = 0; c.shadowOffsetY = 0;
+  c.save(); rr(c, -r, -r, 2 * r, 2 * r, 4); c.clip(); VIG[id](c, 0, 0, r, t); c.restore();
+  if (label) { c.fillStyle = '#5a4c40'; c.font = Math.round(r * .42) + 'px ' + FONT_C; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(label, 0, r + 13); c.textBaseline = 'alphabetic'; }
+  c.restore();
+}
+function drawSled(c, x, face) {
+  c.save(); c.translate(x, FLOOR); c.scale(face, 1);
+  c.strokeStyle = '#8a6a44'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(30, -24); c.lineTo(64, -42); c.stroke();
+  paper(true); c.fillStyle = '#7a4a2c'; c.fillRect(-34, -22, 64, 12); paper(false);
+  c.fillStyle = '#5a3820'; c.fillRect(-34, -28, 8, 18);
+  c.strokeStyle = '#5a3820'; c.lineWidth = 2; for (const dx of [-24, 0, 20]) { c.beginPath(); c.moveTo(dx, -10); c.lineTo(dx, -4); c.stroke(); }
+  c.strokeStyle = '#c9b48a'; c.lineWidth = 2.5; c.lineCap = 'round'; c.beginPath(); c.moveTo(-36, -4); c.lineTo(28, -4); c.quadraticCurveTo(40, -4, 38, -14); c.stroke();
+  c.restore();
+}
+// 花苞：对着它哈气就开
+const Bud = (x, y, col) => ({ type: 'bud', x, y, col, open: 0, done: false, doneT: 0, draw: drawBud });
+function drawBud(e, t) {
+  const c = ctx, k = clamp(e.open, 0, 1), x = e.x, y = e.y;
+  c.strokeStyle = '#4f7a46'; c.lineWidth = 2.2; c.beginPath(); c.moveTo(x, y + 26); c.quadraticCurveTo(x - 4, y + 12, x, y); c.stroke();
+  c.fillStyle = '#5f9a52'; ell(c, x - 6, y + 16, 6, 2.6, -.5); c.fill(); ell(c, x + 5, y + 8, 5, 2.2, .5); c.fill();
+  if (!e.done) {
+    c.fillStyle = '#6aa05a'; ell(c, x, y - 4, 4.5 + k * 2, 7 + k * 2); c.fill();
+    c.fillStyle = e.col; ell(c, x, y - 9 - k * 2, 2.5 + k * 3, 3 + k * 2); c.fill();
+    if (near(x, 140)) { c.save(); c.globalAlpha = .25 + .2 * Math.sin(t * 4); c.strokeStyle = '#ffe2b8'; c.lineWidth = 1.2; circ(c, x, y - 6, 14); c.stroke(); c.restore(); }
+  } else {
+    const s = easeIO(clamp((state.t - e.doneT) / .5, 0, 1));
+    for (let i = 0; i < 5; i++) { const a = i / 5 * TAU + .3; c.fillStyle = e.col; ell(c, x + Math.cos(a) * 6 * s, y - 6 + Math.sin(a) * 6 * s, 5.2 * s, 3.4 * s, a); c.fill(); }
+    c.fillStyle = '#f2c230'; circ(c, x, y - 6, 2.6 * s); c.fill();
+  }
+}
+// 春天跟着走：脚印后面冒出来的小花
+const TRAIL_COLS = ['#e06a7c', '#f2c230', '#f6f8fb', '#8a6bd8', '#6bb0d8', '#f29a5c'];
+function drawTrail() {
+  const c = ctx, tr = state.flags.trail; if (!tr) return;
+  for (const p of tr) {
+    if (p.x < cam.x - 40 || p.x > cam.x + VWZ() + 40) continue;
+    const k = easeIO(clamp((state.t - p.t0) / .7, 0, 1)), h = (8 + 9 * p.s) * k, y = FLOOR + 2, fx = p.x + p.lean * k, fy = y - h, r = 2.6 * p.s * k;
+    c.strokeStyle = '#4f7a46'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(p.x, y); c.lineTo(fx, fy); c.stroke();
+    c.fillStyle = '#5f9a52'; ell(c, p.x - 3, y - h * .4, 3.2 * k, 1.4 * k, -.5); c.fill();
+    c.fillStyle = TRAIL_COLS[p.c]; for (let i = 0; i < 5; i++) { const a = i / 5 * TAU; circ(c, fx + Math.cos(a) * r, fy + Math.sin(a) * r, r * .75); c.fill(); }
+    c.fillStyle = p.c === 1 ? '#e2a33b' : '#f2c230'; circ(c, fx, fy, r * .55); c.fill();
+  }
+}
+function drawSprouts(x, t) {
+  const c = ctx;
+  for (let i = 0; i < 14; i++) { const sx = x - 120 + i * 18 + (i * 7) % 9, h = 8 + (i * 13) % 12; c.strokeStyle = '#5f9a52'; c.lineWidth = 2; c.beginPath(); c.moveTo(sx, FLOOR + 2); c.quadraticCurveTo(sx - 2, FLOOR - h / 2, sx + Math.sin(t * 1.5 + i) * 1.5, FLOOR - h); c.stroke(); c.fillStyle = '#7fb86a'; ell(c, sx + 3, FLOOR - h + 2, 3.5, 1.8, -.4); c.fill(); }
+}
+function drawShoesInReeds(x) {
+  const c = ctx; c.strokeStyle = '#6f8a4a'; c.lineWidth = 2;
+  for (let i = 0; i < 7; i++) { const rx = x - 26 + i * 9; c.beginPath(); c.moveTo(rx, FLOOR + 40); c.quadraticCurveTo(rx - 3, FLOOR + 10, rx + (i % 2 ? 4 : -4), FLOOR - 18 - (i * 5) % 14); c.stroke(); }
+  c.fillStyle = '#d23b45'; ell(c, x - 6, FLOOR + 30, 6, 3); c.fill(); ell(c, x + 6, FLOOR + 32, 6, 3); c.fill();
+}
+function drawRider(e) {
+  reindeer(ctx, e.x, FLOOR, e.face, e.walk, e.walking, { horse: true, body: '#8a5a3a', mane: '#2e1d14' });
+  kid(ctx, e.x - 4 * e.face, FLOOR - 40, { face: e.face, sit: true, noShadow: true, coat: '#6a4a36', vest: '#3a2a20', hair: '#1f1a17', wild: true, knife: true, feet: 'boots', cap: '#d23b45' });
+}
+function drawDenDoor(x) {
+  const c = ctx; paper(true); c.fillStyle = '#3a2f26'; c.fillRect(x - 44, FLOOR - 150, 88, 150); paper(false);
+  c.fillStyle = '#15110e'; c.fillRect(x - 32, FLOOR - 136, 64, 136);
+  c.fillStyle = '#5a4434'; for (let i = 0; i < 4; i++) c.fillRect(x - 30 + i * 16, FLOOR - 136, 12, 30 + (i % 2) * 12);
+}
+
+// ---------- 状态 ----------
+const state = { mode: 'title', sceneId: null, t: 0, W: 100, lock: false, fade: 1, mem: new Set(), faded: new Set(), used: new Set(), items: new Set(['红鞋']), flags: {}, goal: '', memAtVault: 0, camFocus: null, eter: null };
+const player = { x: 200, face: 1, walk: 0, moving: false, auto: false, cry: false, hug: false, hide: false };
+const cam = { x: 0 };
+let scene = null, ents = [];
+let timeScale = 1;
+const has = i => state.items.has(i);
+function give(i) { state.items.add(i); sfx.give(); }
+function take(i) { state.items.delete(i); }
+const find = id => ents.find(e => e.id === id);
+const availMem = () => [...state.mem].filter(id => !state.used.has(id));
+
+// ---------- 计时 ----------
+const timers = [], tweens = [];
+function wait(ms) { return new Promise(res => timers.push({ t: ms / 1000, res })); }
+function tween(obj, key, to, ms, ez) { return new Promise(res => tweens.push({ obj, key, from: obj[key], to, t: 0, d: Math.max(.001, ms / 1000), ez: ez || easeIO, res })); }
+function stepTimers(dt) {
+  for (let i = timers.length - 1; i >= 0; i--) { const tm = timers[i]; tm.t -= dt; if (tm.t <= 0) { timers.splice(i, 1); tm.res(); } }
+  for (let i = tweens.length - 1; i >= 0; i--) { const tw = tweens[i]; tw.t += dt; const k = Math.min(1, tw.t / tw.d); tw.obj[tw.key] = tw.from + (tw.to - tw.from) * tw.ez(k); if (k >= 1) { tweens.splice(i, 1); tw.res(); } }
+}
+const frameWaiters = [];
+const nextFrame = () => new Promise(r => frameWaiters.push(r));
+function flushFrames() { while (frameWaiters.length) frameWaiters.shift()(); }
+
+// ---------- 对话、卡片、提示 ----------
+const dlg = $('dialog'), dlgName = $('dlgName'), dlgText = $('dlgText');
+let dlgFull = '', dlgShown = 0, dlgTyping = false, dlgPending = null, dlgAt = 0;
+function showDialog(name, text, isNarr) {
+  dlg.hidden = false; dlg.classList.toggle('narr', !!isNarr);
+  dlgName.textContent = name || ''; dlgFull = text; dlgShown = 0; dlgText.textContent = '';
+  dlgTyping = true; dlg.classList.add('typing'); dlgAt = performance.now();
+}
+function finishType() { dlgShown = dlgFull.length; dlgText.textContent = dlgFull; dlgTyping = false; dlg.classList.remove('typing'); }
+function typeStep(dt) {
+  if (!dlgTyping) return;
+  dlgShown += dt * (reduced ? 600 : 44);
+  const n = Math.min(dlgFull.length, Math.floor(dlgShown));
+  dlgText.textContent = dlgFull.slice(0, n);
+  if (n >= dlgFull.length) finishType();
+}
+function hideDialog() { dlg.hidden = true; }
+function say(name, text) { return new Promise(res => { showDialog(name, text, false); dlgPending = () => { if (dlgTyping) { finishType(); return false; } res(); return true; }; }); }
+function narr(text) { return new Promise(res => { showDialog('', text, true); dlgPending = () => { if (dlgTyping) { finishType(); return false; } res(); return true; }; }); }
+
+const card = $('card');
+async function showCard(kicker, title, text, waitKey) {
+  $('cardKicker').textContent = kicker || ''; $('cardTitle').textContent = title || ''; $('cardText').textContent = text || '';
+  $('cardHint').hidden = !waitKey; card.hidden = false; await nextFrame(); card.classList.add('on');
+  if (waitKey) { await new Promise(res => { dlgAt = performance.now(); dlgPending = () => { res(); return true; }; }); }
+  else await wait(2300);
+}
+async function hideCard() { card.classList.remove('on'); await wait(reduced ? 50 : 600); card.hidden = true; }
+async function chapter(kicker, title) { await showCard(kicker, title, '', false); await hideCard(); }
+
+const toastEl = $('toast'); let toastT = 0;
+function toast(text, sec) { toastEl.textContent = text; toastEl.hidden = false; toastT = sec || 3.2; }
+const memPop = $('memPop'); let memPopT = 0;
+function collect(id) {
+  if (state.mem.has(id)) return;
+  state.mem.add(id); const m = MEM[id];
+  $('mpT').textContent = m.title; $('mpX').textContent = m.text; memPop.hidden = false; memPopT = 7;
+  sfx.chime(); hud();
+}
+function goal(text) { state.goal = text; hud(); }
+const promptEl = $('prompt'); let promptText = '';
+function setPrompt(text) {
+  if (text === promptText) return; promptText = text;
+  if (!text) { promptEl.hidden = true; return; }
+  promptEl.textContent = ''; const b = document.createElement('b'); b.textContent = touchy ? '互动' : 'E';
+  promptEl.append(b, document.createTextNode(text)); promptEl.hidden = false;
+}
+function hud() {
+  $('chapter').textContent = scene ? scene.chapter : '';
+  const fog = state.flags.forget && !state.flags.remember;
+  const g = $('goal'); g.textContent = fog ? '我要去找谁来着' : state.goal; g.classList.toggle('blur', !!fog); g.hidden = !g.textContent;
+  const n = [...state.mem].filter(id => !state.faded.has(id) && !state.used.has(id)).length;
+  $('memCount').textContent = n;
+}
+const KEY_BREATH = touchy ? '按住「哈气」' : '按住空格';
+
+// ---------- 脚本 ----------
+let scriptOn = false;
+async function run(fn) {
+  if (scriptOn) return; scriptOn = true; state.lock = true; setPrompt(''); breathSound(false);
+  try { await fn(); } catch (err) { console.error(err); }
+  finally { hideDialog(); dlgPending = null; scriptOn = false; state.lock = false; }
+}
+function walkNpc(e, toX, speed) { e.walking = true; e.face = toX > e.x ? 1 : -1; return tween(e, 'x', toX, Math.abs(toX - e.x) / (speed || 90) * 1000, linear).then(() => { e.walking = false; }); }
+function walkPlayer(toX, speed) { player.face = toX > player.x ? 1 : -1; player.auto = true; return tween(player, 'x', toX, Math.abs(toX - player.x) / (speed || 150) * 1000, linear).then(() => { player.auto = false; }); }
+async function fadeOut(ms) { await tween(state, 'fade', 1, ms || 650); }
+async function fadeIn(ms) { await tween(state, 'fade', 0, ms || 650); }
+
+// ---------- 实体 ----------
+const Win = (x, y, r, mem, o) => Object.assign({ type: 'win', x, y, r, mem, frost: 1, thick: 1, revealed: false, glow: 0 }, o || {});
+const Heat = (x, r, power, draw) => ({ type: 'heat', x, r, power, draw });
+const Npc = o => Object.assign({ type: 'npc', visible: true, warm: true, face: -1, walk: 0 }, o);
+const Use = o => Object.assign({ type: 'use' }, o);
+// dir 为 -1 的触发和出口是往左走才碰到的（回程）
+const Trig = (x, runFn, when, dir) => ({ type: 'trig', x, runFn, when, done: false, dir });
+const Exit = (x, to, when, blocked, runFn, dir) => ({ type: 'exit', x, to, when, blocked, runFn, dir });
+const Prop = (x, draw, layer) => ({ type: 'prop', x, draw, layer });
+const Guard = (x, kind) => ({ type: 'guard', x, y: FLOOR - 46, kind, frost: 1, open: false, hold: 0, ph: Math.random() * 6 });
+
+// ---------- 场景里的物件 ----------
+function drawCabin() {
+  const c = ctx; c.fillStyle = '#4a332b'; c.fillRect(0, 88, 668, FLOOR - 88);
+  c.fillStyle = 'rgba(234,164,92,.07)'; for (let x = 40; x < 660; x += 40) for (let y = 112, k = 0; y < FLOOR - 84; y += 36, k++) { circ(c, x + (k % 2) * 20, y, 2); c.fill(); }
+  c.fillStyle = '#2a1d18'; c.fillRect(0, 88, 34, FLOOR - 88);
+}
+function drawBed(x) {
+  const c = ctx; paper(true); c.fillStyle = '#4a3328'; c.fillRect(x - 70, FLOOR - 34, 140, 10); c.fillRect(x - 70, FLOOR - 64, 8, 64); c.fillRect(x + 62, FLOOR - 46, 8, 46);
+  c.fillStyle = '#e9dcc5'; rr(c, x - 62, FLOOR - 49, 30, 15, 6); c.fill(); c.fillStyle = '#8f3f45'; rr(c, x - 36, FLOOR - 47, 98, 15, 5); c.fill(); paper(false);
+}
+function drawRadiator(x) {
+  const c = ctx; glow(c, x, FLOOR - 30, 120, 'rgba(234,164,92,.26)');
+  paper(true); c.fillStyle = '#8a5a3c'; for (let i = 0; i < 6; i++) { rr(c, x - 27 + i * 9, FLOOR - 52, 7, 46, 3); c.fill(); } c.fillRect(x - 28, FLOOR - 14, 56, 4); paper(false);
+}
+function drawDoor(x) {
+  const c = ctx; c.fillStyle = 'rgba(0,0,0,.2)'; c.fillRect(x - 26, FLOOR - 148, 52, 148);
+  paper(true); c.fillStyle = '#5a4339'; c.fillRect(x - 34, FLOOR - 152, 8, 152); c.fillRect(x + 26, FLOOR - 152, 8, 152); c.fillRect(x - 34, FLOOR - 160, 68, 10); paper(false);
+}
+function drawRoseBox(x, t, summer) {
+  const c = ctx, f = state.flags;
+  c.fillStyle = '#2a2320'; c.fillRect(x + 20, 88, 56, 12); c.fillStyle = '#4a3a33'; for (let i = 0; i < 5; i++) c.fillRect(x + 23 + i * 10, 90, 6, 8);
+  glow(c, x + 60, FLOOR - 80, summer ? 190 : 150, summer ? 'rgba(255,220,150,.32)' : 'rgba(255,214,150,.24)');
+  c.fillStyle = '#d9c7a0'; c.fillRect(x + 30, FLOOR - 170, 60, 6); c.fillStyle = 'rgba(255,240,200,.9)'; c.fillRect(x + 34, FLOOR - 165, 52, 3);
+  paper(true); c.fillStyle = '#7a4a2c'; c.fillRect(x, FLOOR - 34, 120, 34); paper(false);
+  c.fillStyle = '#5f3820'; c.fillRect(x, FLOOR - 34, 120, 5); c.fillRect(x + 40, FLOOR - 34, 3, 34); c.fillRect(x + 80, FLOOR - 34, 3, 34);
+  const rs = [[14, -62], [30, -76], [48, -58], [66, -82], [84, -64], [102, -74]];
+  c.strokeStyle = '#3f6b3a'; c.lineWidth = 2;
+  rs.forEach(([dx, dy], i) => { c.beginPath(); c.moveTo(x + dx, FLOOR - 34); c.quadraticCurveTo(x + dx - 6, FLOOR - 34 + dy / 2, x + dx + Math.sin(t + i) * 1.2, FLOOR + dy); c.stroke(); });
+  c.fillStyle = '#4f8a46'; rs.forEach(([dx, dy]) => { ell(c, x + dx - 6, FLOOR + dy + 16, 6, 3, -.5); c.fill(); ell(c, x + dx + 5, FLOOR + dy + 24, 6, 3, .5); c.fill(); });
+  rs.forEach(([dx, dy], i) => { if (f.kicked && !f.fixed && i === 3) return; rose(c, x + dx + Math.sin(t + i) * 1.2, FLOOR + dy, summer ? 7.5 : 6.5); });
+  if (summer) rs.forEach(([dx, dy], i) => { rose(c, x + dx + 8, FLOOR + dy + 14, 5); });
+  if (f.kicked && !f.fixed) rose(c, x + 142, FLOOR - 4, 6);
+  if (summer) { c.fillStyle = '#b58553'; for (const sx of [x + 150, x + 205]) { c.fillRect(sx, FLOOR - 22, 30, 5); c.fillRect(sx + 3, FLOOR - 17, 4, 17); c.fillRect(sx + 23, FLOOR - 17, 4, 17); } }
+}
+function drawLift(x) {
+  const c = ctx; paper(true); c.fillStyle = '#5a4a42'; c.fillRect(x - 52, FLOOR - 172, 104, 172); paper(false);
+  c.fillStyle = '#8a776a'; c.fillRect(x - 44, FLOOR - 162, 42, 162); c.fillRect(x + 2, FLOOR - 162, 42, 162);
+  c.fillStyle = '#2c221e'; c.fillRect(x - 2, FLOOR - 162, 4, 162);
+  c.fillStyle = '#eaa45c'; circ(c, x + 62, FLOOR - 90, 4); c.fill();
+  c.fillStyle = '#efe6d2'; c.font = '15px ' + FONT_C; c.textAlign = 'center'; c.fillText('往船尾 →', x, FLOOR - 184);
+}
+function pillarWin(x, y) { const c = ctx; paper(true); c.fillStyle = '#7f98ad'; c.fillRect(x - 54, 60, 108, FLOOR - 60); paper(false); c.fillStyle = 'rgba(230,242,250,.55)'; c.fillRect(x - 54, 60, 108, 18); c.fillRect(x - 54, FLOOR - 40, 108, 40); c.fillStyle = 'rgba(255,255,255,.25)'; for (let i = 0; i < 5; i++) c.fillRect(x - 50 + i * 22, 78, 3, 30 + (i * 17) % 40); }
+function drawGuard(e, t) {
+  const c = ctx, y = e.y + Math.sin(t * 2 + e.ph) * 6, a = clamp(e.frost * 1.1, 0, 1);
+  c.save(); c.globalAlpha = .4 + .6 * a; c.translate(e.x, y);
+  glow(c, 0, 0, 46, 'rgba(200,232,255,.35)');
+  c.strokeStyle = '#eef8ff'; c.fillStyle = 'rgba(220,240,255,.9)'; c.lineWidth = 2; c.lineCap = 'round';
+  if (e.kind === 'hedgehog') { circ(c, 0, 4, 15); c.fill(); for (let i = 0; i < 14; i++) { const an = Math.PI + i / 13 * Math.PI; c.beginPath(); c.moveTo(Math.cos(an) * 13, 4 + Math.sin(an) * 13); c.lineTo(Math.cos(an) * 25, 4 + Math.sin(an) * 23); c.stroke(); } c.fillStyle = '#5a7fa3'; circ(c, 11, 2, 1.8); c.fill(); }
+  else if (e.kind === 'snake') { for (let i = 0; i < 7; i++) { circ(c, -24 + i * 8, Math.sin(t * 3 + i) * 7, 6 - i * .4); c.fill(); } c.fillStyle = '#5a7fa3'; circ(c, -24, Math.sin(t * 3) * 7 - 1, 1.6); c.fill(); }
+  else if (e.kind === 'bear') { circ(c, 0, 8, 19); c.fill(); circ(c, 12, -14, 11); c.fill(); circ(c, 7, -24, 4); c.fill(); circ(c, 18, -23, 4); c.fill(); for (let i = 0; i < 16; i++) { const an = i / 16 * TAU; c.beginPath(); c.moveTo(Math.cos(an) * 18, 8 + Math.sin(an) * 18); c.lineTo(Math.cos(an) * 24, 8 + Math.sin(an) * 24); c.stroke(); } c.fillStyle = '#5a7fa3'; circ(c, 16, -15, 1.7); c.fill(); }
+  else { for (let i = 0; i < 6; i++) { const an = i / 6 * TAU + t * .3; c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.cos(an) * 24, Math.sin(an) * 24); c.moveTo(Math.cos(an) * 14, Math.sin(an) * 14); c.lineTo(Math.cos(an + .5) * 19, Math.sin(an + .5) * 19); c.moveTo(Math.cos(an) * 14, Math.sin(an) * 14); c.lineTo(Math.cos(an - .5) * 19, Math.sin(an - .5) * 19); c.stroke(); } }
+  c.restore();
+  // 正对着它哈热气的时候，那段回忆的贴画先在冰上显出来
+  if (e.hold > 0 && !e.open) { const id = availMem()[0]; if (id) { const k = clamp(e.hold / .5, 0, 1); drawSticker(c, id, e.x, y - 34, 14 + 16 * k, Math.sin(t * 3) * .05, .25 + .55 * k, t); } }
+}
+function drawWin(e, t) {
+  const c = ctx, { x, y, r } = e;
+  if (e.pillar) pillarWin(x, y);
+  paper(true); c.fillStyle = '#55606f'; circ(c, x, y, r + 7); c.fill(); paper(false);
+  c.fillStyle = '#8b96a5'; circ(c, x, y, r + 3.5); c.fill();
+  c.fillStyle = '#3d4553'; for (let i = 0; i < 8; i++) { const a = i / 8 * TAU; circ(c, x + Math.cos(a) * (r + 5.2), y + Math.sin(a) * (r + 5.2), 1.2); c.fill(); }
+  c.save(); circ(c, x, y, r); c.clip();
+  if (e.mem && e.frost < .999) VIG[e.mem](c, x, y, r, t); else spaceView(c, x, y, r, x);
+  if (e.view === 'goal') { glow(c, x + r * .25, y - r * .2, r * .55, 'rgba(255,214,90,.55)'); c.fillStyle = '#ffd65a'; circ(c, x + r * .25, y - r * .2, r * .09); c.fill(); }
+  const hole = r * Math.pow(clamp(1 - e.frost, 0, 1), .85) * 1.08;
+  c.beginPath(); c.arc(x, y, r + 1, 0, TAU); if (hole > .5) { c.moveTo(x + hole, y); c.arc(x, y, hole, 0, TAU, true); }
+  c.fillStyle = frostPat || 'rgba(208,226,241,.9)'; c.globalAlpha = .95; c.fill('evenodd'); c.globalAlpha = 1;
+  if (hole > .5) { const inner = hole * .7, g = c.createRadialGradient(x, y, inner, x, y, hole + 7); g.addColorStop(0, 'rgba(214,231,243,0)'); g.addColorStop(1, 'rgba(214,231,243,.8)'); c.fillStyle = g; c.beginPath(); c.arc(x, y, hole + 7, 0, TAU); c.moveTo(x + inner, y); c.arc(x, y, inner, 0, TAU, true); c.fill('evenodd'); }
+  c.strokeStyle = 'rgba(255,255,255,.2)'; c.lineWidth = 2; c.beginPath(); c.arc(x, y, r - 5, Math.PI * 1.1, Math.PI * 1.45); c.stroke();
+  c.restore();
+  if (e.glow > 0) { c.save(); c.globalAlpha = e.glow; c.strokeStyle = '#ffd9a0'; c.lineWidth = 3; circ(c, x, y, r + 9); c.stroke(); c.restore(); }
+  if (!e.revealed && e.mem && near(e.x, e.r + 40)) { c.save(); c.globalAlpha = .35 + .25 * Math.sin(t * 4); c.strokeStyle = '#ffe2b8'; c.lineWidth = 1.5; circ(c, x, y, r + 12); c.stroke(); c.restore(); }
+}
+const near = (x, d) => Math.abs(player.x - x) < d;
+
+// ---------- 背景 ----------
+const PAL = {
+  s1: { wall: '#3b2b26', ceil: '#231a17', pipe: '#4c3a33', seam: '#2e221e', rail: '#5a4339', floor: '#2a201c', edge: '#6a4d3e' },
+  s2: { wall: '#1d2d34', ceil: '#121c21', pipe: '#28404a', seam: '#16242a', rail: '#2f4b55', floor: '#18262c', edge: '#3d5c66' },
+  s4: { wall: '#272338', ceil: '#17152a', pipe: '#3a3350', seam: '#1d1a2e', rail: '#8a6d3f', floor: '#1c1929', edge: '#a8864d' },
+  s5: { wall: '#2a2420', ceil: '#171310', pipe: '#3a302a', seam: '#1d1915', rail: '#4a3a2e', floor: '#1a1512', edge: '#5a4636' },
+  end: { wall: '#4a3730', ceil: '#2e221e', pipe: '#5c473e', seam: '#3a2b25', rail: '#6e5446', floor: '#33271f', edge: '#80604c' },
+};
+const mod = (a, n) => ((a % n) + n) % n;
+function bgCorridor(c, cx, p) {
+  c.fillStyle = p.wall; c.fillRect(0, 0, viewW, VIEW_H);
+  const g = c.createLinearGradient(0, 88, 0, FLOOR); g.addColorStop(0, 'rgba(0,0,0,.28)'); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(0, 88, viewW, FLOOR - 88);
+  c.fillStyle = p.ceil; c.fillRect(0, 0, viewW, 88);
+  c.fillStyle = p.pipe; c.fillRect(0, 54, viewW, 10); c.fillRect(0, 71, viewW, 5);
+  let off = mod(cx, 240); c.fillStyle = p.seam; for (let x = -off; x < viewW + 10; x += 240) c.fillRect(x, 48, 6, 32);
+  off = mod(cx, 180); for (let x = -off; x < viewW + 10; x += 180) c.fillRect(x, 88, 2, FLOOR - 88);
+  c.fillStyle = p.rail; c.fillRect(0, FLOOR - 74, viewW, 5);
+  c.fillStyle = p.floor; c.fillRect(0, FLOOR, viewW, VIEW_H - FLOOR);
+  c.fillStyle = p.edge; c.fillRect(0, FLOOR, viewW, 3);
+  off = mod(cx, 120); c.fillStyle = 'rgba(0,0,0,.2)'; for (let x = -off; x < viewW + 10; x += 120) c.fillRect(x, FLOOR + 3, 2, VIEW_H - FLOOR);
+}
+function bgCanal(c, cx, t) {
+  bgCorridor(c, cx, PAL.s2);
+  c.fillStyle = '#10272f'; c.fillRect(0, 448, viewW, VIEW_H - 448);
+  c.strokeStyle = 'rgba(140,200,210,.18)'; c.lineWidth = 1.5;
+  for (let k = 0; k < 4; k++) { c.beginPath(); for (let x = 0; x <= viewW; x += 16) { const y = 458 + k * 18 + Math.sin((x + cx) * .03 + t * 1.6 + k) * 2.5; if (x === 0) c.moveTo(x, y); else c.lineTo(x, y); } c.stroke(); }
+  const dockR = 540 - cx; if (dockR > 0) { c.fillStyle = PAL.s2.floor; c.fillRect(0, FLOOR, Math.min(viewW, dockR), 34); c.fillStyle = PAL.s2.edge; c.fillRect(0, FLOOR, Math.min(viewW, dockR), 3); c.fillStyle = '#0c1a1f'; c.fillRect(0, FLOOR + 34, Math.min(viewW, dockR), 4); }
+  const g2 = 3300 - cx; if (g2 < viewW) { c.fillStyle = 'rgba(160,200,120,.18)'; c.fillRect(g2 + 40, 88, viewW, FLOOR - 88); c.fillStyle = PAL.s2.floor; c.fillRect(g2, FLOOR, viewW, 34); c.fillStyle = '#6f8a4a'; c.fillRect(g2, FLOOR, viewW, 3); }
+}
+function bgGarden(c, cx, t) {
+  const g = c.createLinearGradient(0, 0, 0, FLOOR); g.addColorStop(0, '#f0d38a'); g.addColorStop(.45, '#a9c27a'); g.addColorStop(1, '#5f8a4f'); c.fillStyle = g; c.fillRect(0, 0, viewW, FLOOR);
+  let off = mod(cx, 300);
+  for (let x = -off; x < viewW + 60; x += 300) { c.fillStyle = 'rgba(255,248,215,.95)'; c.fillRect(x + 40, 16, 120, 10); c.fillStyle = 'rgba(255,242,190,.13)'; c.beginPath(); c.moveTo(x + 40, 26); c.lineTo(x + 160, 26); c.lineTo(x + 230, FLOOR); c.lineTo(x - 30, FLOOR); c.closePath(); c.fill(); }
+  off = mod(cx * .5, 220); c.fillStyle = '#56814a'; for (let x = -off - 110; x < viewW + 220; x += 220) { c.beginPath(); c.ellipse(x + 110, FLOOR, 130, 90, 0, Math.PI, 0); c.fill(); }
+  off = mod(cx * .8, 160); c.strokeStyle = 'rgba(60,110,60,.55)'; c.lineWidth = 2; for (let x = -off; x < viewW + 20; x += 160) { c.beginPath(); c.moveTo(x, 0); c.quadraticCurveTo(x + 10, 50, x + Math.sin(t + x) * 4, 90); c.stroke(); }
+  c.fillStyle = '#3e5e30'; c.fillRect(0, FLOOR, viewW, VIEW_H - FLOOR); c.fillStyle = '#58803f'; c.fillRect(0, FLOOR, viewW, 4);
+}
+function bgIce(c, cx, t) {
+  const g = c.createLinearGradient(0, 0, 0, FLOOR); g.addColorStop(0, '#16223a'); g.addColorStop(.6, '#4f6f8f'); g.addColorStop(1, '#a8c3d7'); c.fillStyle = g; c.fillRect(0, 0, viewW, FLOOR);
+  for (let k = 0; k < 2; k++) {
+    const ag = c.createLinearGradient(0, 40, 0, 220); ag.addColorStop(0, k ? 'rgba(180,150,240,0)' : 'rgba(110,230,180,0)'); ag.addColorStop(.5, k ? 'rgba(180,150,240,.28)' : 'rgba(110,230,180,.3)'); ag.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = ag; c.beginPath(); c.moveTo(0, 230);
+    for (let x = 0; x <= viewW; x += 20) c.lineTo(x, 110 + k * 36 + Math.sin((x + cx * .2) * .006 + t * .35 + k * 2) * 30);
+    for (let x = viewW; x >= 0; x -= 20) c.lineTo(x, 40 + k * 30 + Math.sin((x + cx * .2) * .008 + t * .3 + k) * 20);
+    c.closePath(); c.fill();
+  }
+  let off = mod(cx * .45, 260); c.fillStyle = '#c9dbe8';
+  for (let x = -off - 130; x < viewW + 260; x += 260) { c.beginPath(); c.moveTo(x, FLOOR); c.lineTo(x + 70, FLOOR - 120); c.lineTo(x + 110, FLOOR - 80); c.lineTo(x + 160, FLOOR - 150); c.lineTo(x + 260, FLOOR); c.closePath(); c.fill(); }
+  off = mod(cx * .7, 200); c.fillStyle = '#e3eef6';
+  for (let x = -off - 100; x < viewW + 200; x += 200) { c.beginPath(); c.moveTo(x, FLOOR); c.lineTo(x + 60, FLOOR - 60); c.lineTo(x + 130, FLOOR); c.closePath(); c.fill(); }
+  c.fillStyle = '#d7e6f0'; c.fillRect(0, FLOOR, viewW, VIEW_H - FLOOR); c.fillStyle = '#f4f9fc'; c.fillRect(0, FLOOR, viewW, 3);
+  off = mod(cx, 90); c.fillStyle = 'rgba(255,255,255,.45)'; for (let x = -off; x < viewW; x += 90) c.fillRect(x, FLOOR + 14 + (x % 3) * 6, 40, 2);
+}
+function bgVault(c, cx, t) {
+  const g = c.createLinearGradient(0, 0, 0, FLOOR); g.addColorStop(0, '#9fbcd4'); g.addColorStop(1, '#e2eef6'); c.fillStyle = g; c.fillRect(0, 0, viewW, FLOOR);
+  let off = mod(cx * .6, 180);
+  for (let x = -off; x < viewW + 180; x += 180) { c.fillStyle = 'rgba(255,255,255,.35)'; c.beginPath(); c.moveTo(x, FLOOR); c.lineTo(x + 18, 40); c.lineTo(x + 36, FLOOR); c.closePath(); c.fill(); c.fillStyle = 'rgba(150,190,220,.3)'; c.beginPath(); c.moveTo(x + 90, FLOOR); c.lineTo(x + 100, 120); c.lineTo(x + 112, FLOOR); c.closePath(); c.fill(); }
+  c.fillStyle = '#eaf3f9'; c.fillRect(0, FLOOR, viewW, VIEW_H - FLOOR); c.fillStyle = '#ffffff'; c.fillRect(0, FLOOR, viewW, 3);
+}
+
+// ---------- 场景 ----------
+const SCENES = {};
+
+// 第二个故事：船头
+SCENES.s1 = {
+  id: 's1', chapter: '第二个故事 · 一个男孩和一个女孩', kicker: '第二个故事', title: '一个男孩和一个女孩', width: 2600, start: 200, cold: 0, music: 'twinkle',
+  bg: (c, cx) => bgCorridor(c, cx, PAL.s1), flakes: 0,
+  build() {
+    const f = state.flags;
+    return [
+      Prop(0, drawCabin), Prop(160, e => drawBed(e.x)), Heat(300, 160, 32, e => drawRadiator(e.x)),
+      Win(520, 300, 34, 'm1', { onReveal: async () => { f.kayCalled = true; await wait(700); await say('加伊（窗外）', '看见你啦！出来，我在玫瑰箱这儿等你。'); goal('去走廊，找玫瑰箱边上的加伊'); } }),
+      Prop(700, e => drawDoor(e.x)), Heat(1000, 160, 32, e => drawRadiator(e.x)), Win(1150, 290, 38, 'm2'),
+      Use({ x: 1265, reach: 90, draw: (e, t) => drawRoseBox(e.x, t), prompt: '把掉下来的玫瑰插回去', when: () => f.dayTwo && !f.fixed,
+        run: async () => { f.fixed = true; await narr('格尔达把那朵玫瑰捡起来，插回土里，又拿手指把土按实。'); } }),
+      Win(1900, 300, 34, 'm3'), Prop(2450, e => drawLift(e.x)),
+      Npc({ id: 'granny', x: 372, face: 1, prompt: '和奶奶说话', draw: (e, t) => drawGranny(e.x, t), run: grannyTalk }),
+      Npc({ id: 'kay', x: 1335, face: -1, prompt: '和加伊说话', draw: e => drawKay(e, { glint: f.splinter, magnifier: e.mag, reach: e.mag }), when: () => !f.event,
+        run: async () => { if (!f.kayCalled) { await say('加伊', '你先回屋把窗户烫个孔嘛，我在外头看你。'); return; } await kayEvent(); } }),
+      Npc({ id: 'ano', x: 1680, face: -1, visible: false, prompt: '问问阿诺', draw: e => kid(ctx, e.x, FLOOR, { face: e.face, coat: '#4f7a4a', hair: '#2f2a26', feet: 'boots', scale: .94 }), when: () => f.dayTwo && !f.told, run: anoTalk }),
+      Exit(2420, 's2', () => f.told, async () => { await say('格尔达', '奶奶说过，不许一个人坐升降梯。'); }),
+    ];
+  },
+  async enter() {
+    await narr('船历二一一年，冬。白鹳号正经过两颗恒星之间最暗的一段。暖气开到了最大，舷窗还是结了霜。');
+    goal('走到窗前，' + KEY_BREATH + '哈气'); toast('走到窗前，' + KEY_BREATH + '哈气', 6);
+  },
+  update(dt) { const f = state.flags; if (f.vent && Math.random() < dt * 10) flake(1300 + R(-16, 16), 98, true); },
+};
+async function grannyTalk() {
+  const f = state.flags;
+  if (!f.event) {
+    if (!f.grannyTold) {
+      f.grannyTold = true;
+      await say('奶奶', '又跟窗户较劲呢？外头飘的那些冰屑，是白蜜蜂。');
+      await say('格尔达', '白蜜蜂也有蜂后吗？');
+      await say('奶奶', '有啊，冰雪女王。哪儿冰屑多，她就往哪儿飞。夜里她贴着舷窗往里看，看一眼，窗上就结一层冰花。');
+    } else if (!f.kayCalled) await say('奶奶', '窗子冻得厚，多哈几口气。');
+    else await say('奶奶', '去吧，加伊在外头等你呢。');
+  } else if (!f.told) await say('奶奶', '加伊这孩子，今天是怎么了。');
+  else await say('奶奶', '你要去找他？……路上冷，看见暖气片就歇一歇。');
+}
+async function kayEvent() {
+  const f = state.flags, kay = find('kay');
+  kay.face = player.x < kay.x ? -1 : 1;
+  await say('加伊', '奶奶又讲冰雪女王了吧？她要是敢进来，我就把她搁暖气片上，烤化她。');
+  await say('格尔达', '你小点声，她会听见的。');
+  await say('加伊', '听见就听见。你看这朵，开得多……');
+  f.splinter = true; sfx.prick(); sparkle(kay.x + 6 * kay.face, FLOOR - 52, '#e4f7ff');
+  await say('加伊', '哎！');
+  await say('加伊', '心口扎了一下。眼睛里也进东西了。');
+  await say('格尔达', '我看看。……什么也没有啊。');
+  await say('加伊', '好像出来了。');
+  await wait(500);
+  await say('加伊', '你哭丧着脸干什么？难看死了。');
+  await say('格尔达', '我没哭。');
+  f.kicked = true; sfx.thud();
+  await say('加伊', '这朵被虫咬了，那朵长歪了。这箱破玫瑰，跟装它的箱子一样丑。');
+  f.vent = true; await wait(1100); kay.mag = true; kay.face = 1;
+  await say('加伊', '过来看。冰花，一个毛病都没有，六个角一样长。比真花强多了。');
+  await say('加伊', '要是它们不化就好了。');
+  await say('格尔达', '加伊……');
+  kay.mag = false; f.vent = false;
+  await say('加伊', '别跟着我。我去船尾玩雪橇了，那边才有意思。');
+  hideDialog();
+  await walkNpc(kay, Math.min(2650, cam.x + VWZ() + 60), 120); kay.visible = false;
+  f.event = true;
+  await fadeOut(700);
+  await narr('那天晚上，加伊没有回家。');
+  await narr('第二天。');
+  hideDialog();
+  find('ano').visible = true; f.dayTwo = true; player.x = 1520; player.face = 1;
+  cam.x = clamp(player.x - VWZ() * .42, 0, Math.max(0, scene.width - VWZ()));
+  goal('问问阿诺');
+  await fadeIn(700);
+}
+async function anoTalk() {
+  const f = state.flags;
+  await say('阿诺', '你找加伊？他昨天把雪橇挂在一辆白色的货车后头，跟着走了。');
+  await say('阿诺', '那车一直往船尾开，开得飞快。车上坐着一个穿白衣服的高个子女人，回头冲他点了点头。');
+  await say('阿诺', '后来就没人见过他了。大人们说，他是掉进冷却河里了。');
+  await say('格尔达', '我不信。');
+  f.told = true; goal('去船尾找加伊（一直往右走）');
+}
+
+// 第三个故事：水渠
+SCENES.s2 = {
+  id: 's2', chapter: '第三个故事 · 会魔法的老太太的花园', kicker: '第三个故事', title: '会魔法的老太太的花园', width: 3600, start: 140, cold: 1, music: 'canon',
+  bg: bgCanal, flakes: 3,
+  maxX: () => state.flags.boat ? 3560 : 505,
+  build() {
+    const f = state.flags; f.shoe = null;
+    return [
+      Use({ x: 440, reach: 90, prompt: '把红鞋给水渠', when: () => !f.shoes, run: shoesScript }),
+      Use({ x: 470, reach: 80, prompt: '上船，把鞋扔远一点', when: () => f.shoes && !f.boat, run: boatScript, draw: (e, t) => { if (!f.boat) drawSkiff(ctx, 590, 456, t); } }),
+      Heat(920, 170, 30, (e, t) => drawSteamPipe(e.x, t)), Heat(1680, 170, 30, (e, t) => drawSteamPipe(e.x, t)), Heat(2380, 170, 30, (e, t) => drawSteamPipe(e.x, t)), Heat(3000, 170, 30, (e, t) => drawSteamPipe(e.x, t)),
+      Win(760, 262, 30, null), Win(1150, 262, 34, 'm4'), Win(1460, 258, 30, null), Win(2060, 262, 34, 'm5'), Win(2640, 262, 30, null),
+      Npc({ id: 'oldwoman', x: 3420, face: -1, draw: (e, t) => drawOldWoman(e.x, e.face, t, false, false, 0) }),
+      Trig(3200, oldWomanMeet, () => f.boat),
+      Prop(0, drawCanalFront, 'front'),
+    ];
+  },
+  async enter() {
+    await narr('循环水渠从船头一直流到船尾。船上的人都说，掉进水里的东西，水会把它带到该去的地方。');
+    goal('到水渠边上去');
+  },
+  update(dt, t) {
+    const f = state.flags, s = f.shoe;
+    if (s) {
+      if (s.phase === 'fly' || s.phase === 'fly2') { s.vy += 520 * dt; s.x += s.vx * dt; s.y += s.vy * dt; if (s.y >= 454) { s.y = 454; sfx.splash(); splash(s.x); s.phase = s.phase === 'fly' ? 'back' : 'sink'; } }
+      else if (s.phase === 'back') { s.x = Math.max(552, s.x - 70 * dt); s.y = 454 + Math.sin(t * 3) * 1.5; }
+      else if (s.phase === 'sink') { s.y += 14 * dt; if (s.y > 476) f.shoe = null; }
+    }
+  },
+};
+function drawCanalFront() {
+  const c = ctx, f = state.flags, s = f.shoe;
+  if (s) { c.fillStyle = '#d23b45'; ell(c, s.x - 4, s.y, 5, 2.6); c.fill(); ell(c, s.x + 5, s.y + 1, 5, 2.6); c.fill(); }
+  const x0 = Math.max(540, cam.x - 10); c.fillStyle = 'rgba(16,39,47,.55)'; c.fillRect(x0, 462, cam.x + VWZ() + 10 - x0, VIEW_H - 462);
+}
+function drawSteamPipe(x, t) {
+  const c = ctx; glow(c, x, 420, 130, 'rgba(234,164,92,.22)');
+  paper(true); c.fillStyle = '#5f6f78'; c.fillRect(x - 9, 330, 18, 92); c.fillRect(x - 16, 410, 32, 14); paper(false);
+  c.fillStyle = '#b07a4a'; c.fillRect(x - 9, 360, 18, 6);
+  for (let i = 0; i < 5; i++) { const k = mod(t * .5 + i / 5, 1); c.fillStyle = 'rgba(240,244,248,' + (.32 * (1 - k)).toFixed(3) + ')'; circ(c, x + Math.sin(t * 1.5 + i) * 8, 412 - k * 110, 7 + k * 16); c.fill(); }
+}
+function splash(x) { for (let i = 0; i < 10; i++) parts.push({ k: 'drop', x, y: 452, vx: R(-60, 60), vy: R(-160, -60), life: 0, max: .8 }); }
+async function shoesScript() {
+  const f = state.flags;
+  await walkPlayer(470, 120); player.face = 1;
+  await say('格尔达', '水渠，是你把加伊带走了吗？');
+  await say('格尔达', '我把我的新红鞋给你，你把他还给我。');
+  hideDialog(); take('红鞋');
+  f.shoe = { x: player.x + 8, y: FLOOR - 10, vx: 110, vy: -170, phase: 'fly' };
+  await wait(1900);
+  await narr('水把鞋推回了岸边，像是不肯收。');
+  await say('格尔达', '是我扔得太近了。');
+  f.shoes = true; goal('上船，把鞋扔远一点');
+}
+async function boatScript() {
+  const f = state.flags;
+  await walkPlayer(500, 120);
+  f.boat = true; state.mode = 'boat'; player.x = 590; f.shoe = null;
+  await narr('格尔达爬上一条小船，站在船尾，把鞋使劲扔了出去。');
+  hideDialog();
+  f.shoe = { x: player.x + 10, y: FLOOR - 30, vx: 260, vy: -230, phase: 'fly2' };
+  await wait(1500);
+  await narr('系船的绳子本来就没拴紧。鞋落进水里的时候，小船也离了岸，顺着水往船尾漂。');
+  toast('红鞋给了水渠。光着脚，冷得快一些。', 3.6);
+  await wait(300);
+  goal('顺着水渠往船尾漂');
+  setTimeout(() => toast(touchy ? '按住 ◀ 扶住墙，船就停下；停在窗下哈气' : '按住 ← 扶住墙，船就停下；停在窗下哈气', 6), 3800 / timeScale);
+}
+async function oldWomanMeet() {
+  await say('老太太', '哎哟，可怜的小东西，你怎么一个人漂到这么远的水上来了？');
+  await narr('一个戴大草帽的老太太拿拐杖勾住船头，把船拉到了岸边。她的草帽上画满了花。');
+  await say('老太太', '上来吧，到我园子里坐坐。告诉我你是谁，从哪儿来。');
+  await gotoScene('s3', { soft: true });
+}
+
+// 第三个故事：花园
+const FLOWERS = [
+  { x: 1020, kind: 'morning', name: '牵牛花', line: '我顺着管子爬到最高的地方往下看。有个姑娘靠在栏杆上，手里攥着一封信。她等的人一直没来，灯都熄了，她还站着。', fog: '……她在等谁呢？', fogBack: ['牵牛花', '我只说我看见的。'], clear: '那不是加伊。' },
+  { x: 1270, kind: 'snowdrop', name: '雪花莲', line: '两根绳子拴着一块木板，两个小孩站在上面荡秋千，一边荡一边吹肥皂泡。一个泡泡飞进了通风口，啪，没了。两个小孩笑得从板子上掉了下来。', fog: '两个小孩……', clear: '你讲的是你自己看见的，我知道。' },
+  { x: 1520, kind: 'buttercup', name: '毛茛', line: '早上太阳灯一亮，门口坐着一个老奶奶晒太阳。她孙女从外头跑回来，在她脸上亲了一下。那一下，比我身上的黄颜色还亮。', fog: '奶奶……', hint: '你要是在找什么，别往地里找了。老太太把玫瑰全按进了土里，就她自己草帽上画的那一朵，她忘了。', clear: '我奶奶也在等我。我会回去的。' },
+  { x: 1770, kind: 'dandelion', name: '蒲公英', line: '通风口一开，我就把孩子们全送出去了，一个也没留。它们飞到哪儿去了，我也不知道。', fog: '……', clear: '它们会落在好地方的。' },
+  { x: 2010, kind: 'narcissus', name: '水仙', line: '我能看见我自己。水里那个是我。真好看，真好看。', fog: '我问的不是这个……', clear: '我问的不是这个！' },
+];
+SCENES.s3 = {
+  id: 's3', chapter: '第三个故事 · 会魔法的老太太的花园', kicker: '第三个故事', title: '会魔法的老太太的花园', width: 2800, start: 230, cold: -14, music: 'morning',
+  bg: bgGarden, flakes: 0,
+  build() {
+    const f = state.flags; f.roseH = 1;
+    const list = [
+      Prop(300, (e, t) => drawCottage(e.x, t)),
+      Use({ x: 690, reach: 70, prompt: '看看门边的草帽', when: () => f.forget && !f.remember, run: rememberScript, draw: (e, t) => { if (f.hatOff) { const c = ctx; c.fillStyle = '#5a3a24'; c.fillRect(e.x - 2, FLOOR - 132, 4, 10); drawHat(c, e.x, FLOOR - 112, 1.25); if (f.forget && !f.remember) { c.save(); c.globalAlpha = .3 + .25 * Math.sin(t * 3); c.strokeStyle = '#fff4d0'; c.lineWidth = 1.5; circ(c, e.x + 5, FLOOR - 116, 12); c.stroke(); c.restore(); } } } }),
+      Prop(2250, (e, t) => drawRoseBed(e.x, t)),
+      Prop(2690, e => drawGate(e.x)),
+      Npc({ id: 'oldwoman', x: 560, face: -1, prompt: '和老太太说话', draw: (e, t) => drawOldWoman(e.x, e.face, t, f.hatOff, e.walking, e.walk), when: () => f.forget,
+        run: async () => { if (!f.remember) await say('老太太', '再吃颗樱桃吧，孩子。这儿多好，一年到头都是夏天。'); else await say('老太太', '你要走啦？……那就走吧。路上当心。'); } }),
+      Exit(2700, 's4', () => f.remember, async () => { await say('格尔达', '外面好冷。我……我出去干什么来着？'); },
+        async () => { await narr('门边挂着一块船历牌。格尔达跑出园门，才看见上面写的是：秋。园子里的灯一直是夏天，她在里面待了整整三个月。'); await gotoScene('s4'); }),
+    ];
+    FLOWERS.forEach(fl => list.push(Use({ x: fl.x, reach: 60, prompt: '听' + fl.name + '说话', draw: (e, t) => drawFlower(e.x, fl.kind, t, e.talk), when: () => f.forget,
+      run: async function () { const self = this; self.talk = true; await say(fl.name, fl.line); self.talk = false;
+        if (!f.remember) { await say('格尔达', fl.fog); if (fl.fogBack) await say(fl.fogBack[0], fl.fogBack[1]); if (fl.hint) await say(fl.name, fl.hint); }
+        else await say('格尔达', fl.clear); } })));
+    return list;
+  },
+  async enter() {
+    const f = state.flags, ow = find('oldwoman');
+    await narr('园子里的灯一年到头都是夏天。花开得比格尔达见过的所有花都大。');
+    await say('老太太', '我一直想要一个你这样的小姑娘。吃樱桃吧。');
+    await say('格尔达', '您见过一个男孩吗？叫加伊，穿蓝外套……');
+    await say('老太太', '没见过。可他总会路过这儿的，别着急。先坐下，我给你梳梳头。');
+    await narr('她拿一把金梳子给格尔达梳头。梳一下，格尔达就忘掉一点。');
+    f.forget = true; f.forgetT = 0; hud();
+    f.hatOff = true;
+    await narr('老太太把草帽挂在门边，拄着拐杖进了园子。她拿拐杖朝玫瑰丛一指，玫瑰就一株一株沉进了土里。她怕格尔达看见玫瑰，会想起什么来。');
+    hideDialog();
+    state.camFocus = 2250; await wait(900); await tween(f, 'roseH', 0, 1600); await wait(500); state.camFocus = null;
+    walkNpc(ow, 1640, 70);
+    toast('格尔达好像忘了自己是来干什么的。在园子里走走看。', 5);
+  },
+  update(dt) {
+    const f = state.flags;
+    if (f.forget && !f.remember) { f.forgetT = (f.forgetT || 0) + dt; if (f.forgetT > 2.2) { f.forgetT = 0; const id = [...state.mem].reverse().find(i => !state.faded.has(i)); if (id) { state.faded.add(id); hud(); } } }
+  },
+};
+function drawCottage(x, t) {
+  const c = ctx;
+  paper(true); c.fillStyle = '#d9c39a'; c.fillRect(x, FLOOR - 190, 460, 190); paper(false);
+  c.fillStyle = '#8a6a3a'; c.beginPath(); c.moveTo(x - 30, FLOOR - 186); c.lineTo(x + 230, FLOOR - 250); c.lineTo(x + 490, FLOOR - 186); c.closePath(); c.fill();
+  c.fillStyle = 'rgba(0,0,0,.12)'; c.fillRect(x, FLOOR - 190, 460, 12);
+  c.fillStyle = '#5a3f2a'; c.fillRect(x + 60, FLOOR - 150, 76, 70);
+  [['#c4475a', 0, 0], ['#3e6fa8', 38, 0], ['#3e6fa8', 0, 35], ['#c4475a', 38, 35]].forEach(([col, dx, dy]) => { c.fillStyle = col; c.globalAlpha = .85; c.fillRect(x + 63 + dx, FLOOR - 147 + dy, 34, 30); }); c.globalAlpha = 1;
+  paper(true); c.fillStyle = '#7a5434'; c.fillRect(x + 150, FLOOR - 44, 90, 8); c.fillRect(x + 158, FLOOR - 36, 6, 36); c.fillRect(x + 226, FLOOR - 36, 6, 36); paper(false);
+  c.fillStyle = '#efe6d2'; ell(c, x + 195, FLOOR - 48, 18, 5); c.fill();
+  c.fillStyle = '#b3243a'; for (let i = 0; i < 7; i++) { circ(c, x + 184 + (i % 4) * 7, FLOOR - 53 - Math.floor(i / 4) * 5, 3.2); c.fill(); }
+}
+function drawRoseBed(x, t) {
+  const c = ctx, h = state.flags.roseH;
+  c.fillStyle = '#5a3d26'; c.beginPath(); c.ellipse(x, FLOOR, 90, 16, 0, Math.PI, 0); c.fill();
+  if (h <= .02) return;
+  c.save(); c.translate(x, FLOOR); c.scale(1, h);
+  c.strokeStyle = '#3f6b3a'; c.lineWidth = 2.4; const bs = [[-60, -70], [-34, -96], [-8, -80], [18, -104], [44, -84], [66, -66]];
+  bs.forEach(([dx, dy], i) => { c.beginPath(); c.moveTo(dx * .6, 0); c.quadraticCurveTo(dx - 4, dy / 2, dx + Math.sin(t + i) * 1.5, dy); c.stroke(); c.fillStyle = '#4f8a46'; ell(c, dx - 6, dy * .55, 7, 3, -.5); c.fill(); });
+  bs.forEach(([dx, dy], i) => rose(c, dx + Math.sin(t + i) * 1.5, dy, 8));
+  c.restore();
+}
+function drawGate(x) {
+  const c = ctx; paper(true); c.fillStyle = '#5c4632'; c.fillRect(x - 40, FLOOR - 170, 10, 170); c.fillRect(x + 30, FLOOR - 170, 10, 170); c.fillRect(x - 46, FLOOR - 180, 92, 12); paper(false);
+  c.strokeStyle = '#7a6046'; c.lineWidth = 3; for (let i = 0; i < 4; i++) { c.beginPath(); c.moveTo(x - 26 + i * 17, FLOOR - 160); c.lineTo(x - 26 + i * 17, FLOOR - 6); c.stroke(); }
+  c.fillStyle = '#efe6d2'; c.font = '14px ' + FONT_C; c.textAlign = 'center'; c.fillText('园门', x, FLOOR - 190);
+}
+async function rememberScript() {
+  const f = state.flags;
+  await narr('老太太的草帽挂在门边。帽檐上画满了花，最中间是一朵玫瑰。');
+  await narr('格尔达盯着那朵玫瑰看了很久。');
+  await say('格尔达', '玫瑰……家里的玫瑰箱……');
+  await say('格尔达', '加伊！');
+  hideDialog(); f.remember = true;
+  for (const id of [...state.faded]) { state.faded.delete(id); hud(); sparkle(player.x, FLOOR - 70, '#ffe7b0'); await wait(200); }
+  sfx.chime(); hud();
+  await say('格尔达', '我在这儿待了多久了？加伊还在等我！');
+  hideDialog();
+  await walkPlayer(2178, 200); player.face = 1;
+  player.cry = true;
+  await narr('她跑到玫瑰沉下去的那块地上，蹲下来哭了。眼泪落进土里，土里一下子冒出一丛玫瑰，跟沉下去以前一模一样。');
+  hideDialog(); await tween(f, 'roseH', 1, 1500); player.cry = false;
+  await say('玫瑰', '我们在土底下待了好久。死了的人都在底下，加伊不在那儿。');
+  await say('格尔达', '那他还活着！谢谢你们！');
+  await narr('她还想起了奶奶。');
+  hideDialog(); collect('m6');
+  goal('从园门出去，接着往船尾走');
+}
+
+// 第四个故事：舰桥
+SCENES.s4 = {
+  id: 's4', chapter: '第四个故事 · 王子和公主', kicker: '第四个故事', title: '王子和公主', width: 3000, start: 120, cold: 3, music: 'minuet',
+  bg: (c, cx) => bgCorridor(c, cx, PAL.s4), flakes: 1.5,
+  build() {
+    const f = state.flags;
+    const crow = Npc({ id: 'crow', x: 330, y: 268, face: -1, warm: false, wp: 0, flying: false, draw: (e, t) => drawCrow(e.x, e.y, e.face, t, e.flying) });
+    return [
+      Heat(620, 150, 22, e => drawLamp(e.x)), Heat(1260, 150, 22, e => drawLamp(e.x)), Heat(2080, 150, 22, e => drawLamp(e.x)),
+      Prop(330, e => drawPerch(e.x)), Prop(820, e => drawPerch(e.x)), Prop(1320, e => drawPerch(e.x)), Prop(1830, e => drawPerch(e.x)), Prop(2320, e => drawPerch(e.x)),
+      Win(960, 300, 34, 'm7'), Win(1560, 300, 34, 'm8'),
+      Prop(1850, (e, t) => drawDreams(e.x, t)),
+      Prop(2400, () => drawBedroom()),
+      Use({ x: 2775, reach: 70, prompt: '掀开红色的那片花瓣', when: () => f.crowLed && !f.petal, run: bedroomScript, draw: (e, t) => drawLilies(2700, t) }),
+      crow,
+      Trig(250, crowTalk),
+      Trig(1890, async () => { await say('乌鸦', '别怕，墙上那些是梦。它们来接睡着的人的心思，带出去玩一夜。'); }, () => f.following),
+    ];
+  },
+  async enter() { await narr('外面已经很冷了。格尔达光着脚，一步一步往前走。'); goal('往前走'); },
+  update(dt) {
+    const f = state.flags, crow = find('crow'), WP = [330, 820, 1320, 1830, 2320, 2640], WY = [268, 268, 268, 268, 268, 312];
+    if (crow && f.following && !crow.flying && crow.wp < WP.length - 1 && player.x > crow.x - 130) {
+      crow.flying = true; crow.face = 1; const i = crow.wp + 1;
+      tween(crow, 'x', WP[i], 1100, easeIO); tween(crow, 'y', WY[i] - 40, 550).then(() => tween(crow, 'y', WY[i], 550)).then(() => { crow.flying = false; crow.wp = i; crow.face = -1; if (i === WP.length - 1) { f.crowLed = true; goal('掀开红色的那片花瓣，看看是不是加伊'); } });
+    }
+  },
+};
+function drawLamp(x) { const c = ctx; glow(c, x, FLOOR - 160, 150, 'rgba(255,205,130,.2)'); c.fillStyle = '#a8864d'; c.fillRect(x - 3, FLOOR - 190, 6, 22); c.fillStyle = '#ffe2a8'; ell(c, x, FLOOR - 162, 12, 8); c.fill(); }
+function drawPerch(x) { const c = ctx; c.fillStyle = '#4a4160'; c.fillRect(x - 40, 278, 80, 6); c.fillStyle = '#2f2944'; c.fillRect(x - 3, 284, 6, 20); }
+function drawDreams(x0, t) {
+  const c = ctx; if (!state.flags.following) return;
+  c.save(); c.beginPath(); c.rect(x0, 100, 520, FLOOR - 110); c.clip();
+  for (let k = 0; k < 6; k++) {
+    const sx = x0 + 520 - mod(t * 70 + k * 95, 600), sy = FLOOR - 150 - (k % 3) * 40; c.globalAlpha = .3; c.fillStyle = '#cbbcff';
+    if (k % 3 === 0) { ell(c, sx, sy, 26, 11); c.fill(); c.fillRect(sx - 20, sy, 4, 22); c.fillRect(sx + 16, sy, 4, 22); ell(c, sx - 28, sy - 10, 8, 6); c.fill(); circ(c, sx + 2, sy - 22, 6); c.fill(); c.fillRect(sx - 2, sy - 18, 6, 12); }
+    else if (k % 3 === 1) { circ(c, sx, sy - 30, 6); c.fill(); c.beginPath(); c.moveTo(sx - 12, sy + 10); c.lineTo(sx + 12, sy + 10); c.lineTo(sx, sy - 24); c.closePath(); c.fill(); }
+    else { ell(c, sx, sy, 16, 7); c.fill(); circ(c, sx - 16, sy - 6, 5); c.fill(); c.fillRect(sx - 10, sy, 3, 12); c.fillRect(sx + 8, sy, 3, 12); }
+  }
+  c.restore();
+}
+function drawBedroom() { const c = ctx; c.fillStyle = 'rgba(40,30,70,.35)'; c.fillRect(2400, 88, 600, FLOOR - 88); c.fillStyle = '#3a2f55'; c.fillRect(2400, FLOOR - 74, 600, 5); c.fillStyle = '#a8864d'; c.fillRect(2396, 88, 8, FLOOR - 88); }
+function drawLilies(x, t) {
+  const c = ctx, f = state.flags;
+  c.strokeStyle = '#c9a24e'; c.lineWidth = 4; c.beginPath(); c.moveTo(x, 88); c.quadraticCurveTo(x + 10, 200, x, 300); c.stroke();
+  c.beginPath(); c.moveTo(x, 300); c.quadraticCurveTo(x - 30, 310, x - 70, 330); c.moveTo(x, 300); c.quadraticCurveTo(x + 30, 310, x + 75, 330); c.stroke();
+  const lily = (cx, col, col2) => { paper(true); c.fillStyle = col; c.beginPath(); c.moveTo(cx - 52, 336); c.quadraticCurveTo(cx - 50, 392, cx, 396); c.quadraticCurveTo(cx + 50, 392, cx + 52, 336); c.quadraticCurveTo(cx, 352, cx - 52, 336); c.fill(); paper(false); c.fillStyle = col2; c.beginPath(); c.moveTo(cx - 52, 336); c.quadraticCurveTo(cx - 20, 318, cx, 334); c.quadraticCurveTo(cx + 20, 318, cx + 52, 336); c.quadraticCurveTo(cx, 352, cx - 52, 336); c.fill(); };
+  lily(x - 70, '#efeae0', '#ffffff');
+  lily(x + 75, '#b8374a', '#d65468');
+  if (f.petal) { c.fillStyle = '#efc8a6'; circ(c, x + 62, 330, 9); c.fill(); c.fillStyle = '#5a3a28'; c.beginPath(); c.arc(x + 62, 328, 9.5, Math.PI * .9, Math.PI * 2.1); c.fill(); c.fillStyle = '#d65468'; c.save(); c.translate(x + 120, 330); c.rotate(-.9); ell(c, 0, 0, 30, 10); c.fill(); c.restore(); }
+}
+async function crowTalk() {
+  const f = state.flags, crow = find('crow');
+  await say('乌鸦', '嘎！小姑娘，光着脚上哪儿去？');
+  await say('格尔达', '我在找一个男孩，叫加伊。你见过他吗？');
+  await say('乌鸦', '也许见过，也许。');
+  await say('乌鸦', '舰桥上的女船长，是全船最聪明的人，大伙儿背地里叫她公主。前些日子她说要找个领航员，得是能跟她说上话的。');
+  await say('乌鸦', '来了好多人，一进舰桥就说不出话了。最后来了个半大孩子，谁也不怕，船长问什么他都答得上。他走路的时候，靴子咯吱咯吱响。');
+  await say('格尔达', '是加伊！他有一双新靴子，走起来就咯吱咯吱响！');
+  await say('乌鸦', '正门你进不去，穿制服的人会把你轰出来。夜里我带你走后面的楼梯。');
+  await narr('等到船上熄了灯，乌鸦来接她。大伙儿叫那两个人王子和公主，叫着叫着，就忘了他们本来叫什么。');
+  hideDialog(); await fadeOut(500); f.night = true; await fadeIn(500);
+  f.following = true; crow.face = 1; goal('跟着乌鸦');
+}
+async function bedroomScript() {
+  const f = state.flags;
+  await narr('两张床像两朵百合，挂在一根金色的茎上。一朵白的，一朵红的。格尔达掀开红色的那一片，看见一截褐色的脖子。');
+  f.petal = true;
+  await say('格尔达', '加伊！');
+  await narr('她把灯举近了些。床上的人醒了，转过头来。');
+  await narr('不是加伊。');
+  player.cry = true;
+  await say('领航员', '你是谁？半夜跑到这儿来干什么？');
+  await narr('白色的那朵也醒了。格尔达一边哭，一边把事情从头讲了一遍：玫瑰箱，碎片，白色的货车，水渠，花园。');
+  player.cry = false;
+  await say('女船长', '可怜的孩子。今晚就睡在这儿吧。');
+  hideDialog(); await fadeOut(600);
+  await narr('第二天早上。');
+  hideDialog(); f.night = false; f.petal = false; await fadeIn(600);
+  await say('女船长', '你要去船尾，那一路越走越冷。这双靴子你穿上，这个手笼也拿着。');
+  give('靴子'); give('手笼'); toast('得到靴子和手笼。冷得慢一些了。', 3.4);
+  await say('领航员', '有辆送补给的车要去废弃区，我让他们捎你一段。再往后，就没有车了。');
+  await say('乌鸦', '嘎。一路小心。');
+  await narr('乌鸦飞上一根管子，冲着车子拍了好一会儿翅膀。');
+  await gotoScene('s5');
+}
+
+// 第五个故事：废弃区
+SCENES.s5 = {
+  id: 's5', chapter: '第五个故事 · 小强盗女孩', kicker: '第五个故事', title: '小强盗女孩', width: 2600, start: 260, cold: 4, music: 'mountain',
+  bg: (c, cx) => bgCorridor(c, cx, PAL.s5), flakes: 2,
+  build() {
+    const f = state.flags;
+    return [
+      Prop(180, e => drawCart(e.x)), Prop(600, () => drawDebris()),
+      Win(780, 300, 34, 'm9'),
+      Prop(1230, (e, t) => drawRafter(e.x, t)),
+      Use({ x: 1250, reach: 70, prompt: '和房梁上的鸽子说话', when: () => f.night && !f.pigeons, run: pigeonsTalk }),
+      Npc({ id: 'deer', x: 1540, face: 1, prompt: () => f.night && f.pigeons && !f.deerTalked ? '和驯鹿说话' : '看看驯鹿', draw: (e, t) => { if (!f.freed) { const c = ctx; c.fillStyle = '#4a3a2e'; c.fillRect(e.x + 96, FLOOR - 120, 8, 120); c.strokeStyle = '#8a6a44'; c.lineWidth = 2; c.beginPath(); c.moveTo(e.x + 40, FLOOR - 66); c.quadraticCurveTo(e.x + 74, FLOOR - 30, e.x + 98, FLOOR - 64); c.stroke(); } reindeer(ctx, e.x, FLOOR, e.face, 0, false); },
+        run: async () => { if (f.night && f.pigeons && !f.deerTalked) await deerTalk(); else if (f.freed) await say('驯鹿', '走吧，我驮你。'); else await narr('驯鹿被拴在柱子上，看了格尔达一眼，又把头低了下去。'); } }),
+      Heat(1820, 180, 36, (e, t) => drawFire(e.x, t)),
+      Npc({ id: 'mom', x: 2150, face: -1, prompt: '看看老强盗婆', draw: () => drawRobberMom(find('mom').x, f.night), run: async () => { await say('老强盗婆', f.night ? '呼……呼……' : '看什么看？我闺女说了算。'); } }),
+      Npc({ id: 'girl', x: 520, face: -1, prompt: '和小强盗女孩说话', draw: e => kid(ctx, e.x, FLOOR, { face: e.face, walk: e.walk, moving: e.walking, coat: '#6a4a36', vest: '#3a2a20', hair: '#1f1a17', wild: true, knife: true, feet: 'boots', eyesShut: f.night && !f.morning }), run: girlTalk, when: () => !f.left }),
+      Exit(2480, 's6', () => f.freed, async () => { await say('格尔达', '得先跟小强盗女孩说一声。'); }),
+    ];
+  },
+  async enter() {
+    const f = state.flags, girl = find('girl');
+    await narr('补给车开进废弃区，灯一盏比一盏少。车停了，几个人从黑地方钻出来，把车围住了。');
+    await say('老强盗婆', '这靴子不错，手笼也不错。小东西细皮嫩肉的，拿去换点吃的正好。');
+    await say('小强盗女孩', '她是我的！她得陪我玩！');
+    await narr('小强盗女孩一口咬在她妈耳朵上。老强盗婆疼得直跳，换东西的事就没再提。');
+    await say('小强盗女孩', '跟我来。只要我不生你的气，他们就不敢碰你。');
+    hideDialog(); walkNpc(girl, 1980, 80);
+    goal('跟着小强盗女孩，去她的窝');
+  },
+};
+function drawCart(x) { const c = ctx; paper(true); c.fillStyle = '#4c5560'; c.fillRect(x - 70, FLOOR - 56, 140, 38); paper(false); c.fillStyle = '#2b3138'; circ(c, x - 45, FLOOR - 12, 12); c.fill(); circ(c, x + 45, FLOOR - 12, 12); c.fill(); c.fillStyle = '#8a7a5a'; c.fillRect(x - 60, FLOOR - 70, 50, 14); c.fillRect(x, FLOOR - 66, 40, 10); }
+function drawDebris() { const c = ctx; c.fillStyle = '#3a312a'; c.beginPath(); c.moveTo(560, FLOOR); c.lineTo(600, FLOOR - 40); c.lineTo(640, FLOOR - 22); c.lineTo(690, FLOOR - 50); c.lineTo(720, FLOOR); c.closePath(); c.fill(); c.strokeStyle = '#2a221d'; c.lineWidth = 3; c.beginPath(); c.moveTo(900, 88); c.quadraticCurveTo(930, 200, 880, 260); c.moveTo(1080, 88); c.quadraticCurveTo(1060, 160, 1100, 220); c.stroke(); }
+function drawRafter(x, t) {
+  const c = ctx, f = state.flags; paper(true); c.fillStyle = '#4a3a2e'; c.fillRect(x - 90, FLOOR - 196, 200, 10); paper(false);
+  for (let i = 0; i < 3; i++) { const px = x - 50 + i * 40, py = FLOOR - 204 + Math.sin(t * 2 + i) * .8; c.fillStyle = '#8f949c'; ell(c, px, py, 11, 7); c.fill(); circ(c, px + 9, py - 6, 5); c.fill(); c.fillStyle = '#c86e8a'; c.fillRect(px + 13, py - 6, 4, 2); c.fillStyle = f.night ? '#ffe9a8' : '#1f1a17'; circ(c, px + 10, py - 7, 1.1); c.fill(); }
+}
+function drawFire(x, t) { const c = ctx, k = 1 + Math.sin(t * 13) * .05 + Math.sin(t * 7) * .04; glow(c, x, FLOOR - 50, 200 * k, 'rgba(240,140,60,.3)'); paper(true); c.fillStyle = '#3b3a3a'; c.fillRect(x - 20, FLOOR - 46, 40, 46); paper(false); c.fillStyle = '#f08a3c'; c.beginPath(); c.moveTo(x - 16, FLOOR - 46); c.quadraticCurveTo(x - 10, FLOOR - 70 * k, x, FLOOR - 82 * k); c.quadraticCurveTo(x + 10, FLOOR - 70 * k, x + 16, FLOOR - 46); c.closePath(); c.fill(); c.fillStyle = '#ffd27a'; c.beginPath(); c.moveTo(x - 8, FLOOR - 46); c.quadraticCurveTo(x, FLOOR - 66 * k, x + 8, FLOOR - 46); c.closePath(); c.fill(); }
+function drawRobberMom(x, sleeping) {
+  const c = ctx; c.save(); c.translate(x, FLOOR); c.scale(-1, 1);
+  c.fillStyle = 'rgba(0,0,0,.22)'; ell(c, 0, 0, 18, 4); c.fill();
+  paper(true); c.fillStyle = '#3b3230'; c.beginPath(); c.moveTo(-18, 0); c.lineTo(18, 0); c.lineTo(10, -50); c.quadraticCurveTo(-4, -58, -12, -48); c.closePath(); c.fill(); paper(false);
+  c.fillStyle = '#e2b892'; circ(c, 6, -60, 10); c.fill(); c.fillStyle = '#6b4a3a'; c.beginPath(); c.arc(4, -62, 11, Math.PI * .85, Math.PI * 2.05); c.fill();
+  c.fillStyle = '#9a948c'; c.beginPath(); c.moveTo(6, -54); c.lineTo(16, -54); c.lineTo(10, -44); c.closePath(); c.fill();
+  if (sleeping) { c.strokeStyle = '#2a1f1a'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(9, -61); c.lineTo(13, -61); c.stroke(); } else { c.fillStyle = '#2a1f1a'; circ(c, 11, -61, 1.4); c.fill(); }
+  c.restore();
+}
+async function girlTalk() {
+  const f = state.flags, girl = find('girl');
+  if (girl.walking) { await say('小强盗女孩', '走快点！'); return; }
+  if (f.morning) { await freeDeer(); return; }
+  if (!f.night) {
+    await say('小强盗女孩', '你一个人走到这儿的？');
+    await say('格尔达', '我在找加伊。'); await narr('格尔达又把她的事讲了一遍。');
+    await say('小强盗女孩', '鞋呢？你来的时候光着脚？');
+    await say('格尔达', '鞋给水渠了。这双是船长给的。');
+    await say('小强盗女孩', '傻。');
+    await say('小强盗女孩', '房梁上那几只鸽子是我的，柱子上拴的那头鹿也是我的。鹿老想跑，我每天晚上拿刀背在它脖子上刮一刮，它就老实了。');
+    await say('小强盗女孩', '我困了。你睡我旁边。');
+    hideDialog(); await fadeOut(600); f.night = true; bgm('lullaby');
+    await narr('小强盗女孩一手搂着格尔达，一手攥着刀，没一会儿就打起了呼噜。格尔达睡不着。');
+    hideDialog(); await fadeIn(600); goal('和房梁上的鸽子说话');
+  } else await narr('小强盗女孩睡得正香，手里还攥着刀。');
+}
+async function freeDeer() {
+  const f = state.flags;
+  {
+    await say('小强盗女孩', '你们夜里说话那么大声，我全听见了。');
+    await narr('她拿刀割断了拴鹿的绳子。');
+    await say('小强盗女孩', '走吧，你。好好驮着她，一直驮到冷舱去。');
+    await say('小强盗女孩', '手笼我留下了，太好看了。你戴我妈的手套，大是大了点，暖和。');
+    take('手笼'); give('大手套'); toast('手笼留给了小强盗女孩，换来她妈妈的大手套。', 3.6);
+    await say('小强盗女孩', '别哭了。我最见不得人哭。');
+    await narr('格尔达爬上鹿背。小强盗女孩打开门，在后面喊了一句什么，风太大，没听清。');
+    f.freed = true; f.left = true; goal('骑着驯鹿往船尾去');
+    hideDialog(); await gotoScene('s6');
+  }
+}
+async function pigeonsTalk() {
+  const f = state.flags;
+  await say('鸽子', '咕咕，咕咕。我们见过加伊。');
+  await say('鸽子', '一辆白色的货车从我们窝顶上开过去，冰雪女王坐在车上，加伊坐在她旁边，脸冻得发青。');
+  await say('鸽子', '车往船尾的冷舱开去了。那边一年到头都是冰。问问那头鹿吧，它知道。');
+  f.pigeons = true; goal('问问驯鹿');
+}
+async function deerTalk() {
+  const f = state.flags;
+  await say('驯鹿', '冷舱那边我熟。我是在那边的牧场舱生的，冰原上我能跑一整天。');
+  await say('驯鹿', '冰雪女王的宫殿在最里头，冷舱最深的地方。');
+  await say('格尔达', '你能带我去吗？');
+  await say('驯鹿', '只要绳子解开。');
+  f.deerTalked = true;
+  hideDialog(); await fadeOut(600); await narr('天亮了。'); hideDialog(); f.night = false; f.morning = true; bgm('mountain'); await fadeIn(600);
+  goal('去找小强盗女孩');
+}
+
+// 第六个故事：冰原
+SCENES.s6 = {
+  id: 's6', chapter: '第六个故事 · 拉普兰女人和芬兰女人', kicker: '第六个故事', title: '拉普兰女人和芬兰女人', width: 3400, start: 140, cold: 7, mode: 'ride', music: 'prelude',
+  bg: bgIce, flakes: 6,
+  build() {
+    return [
+      Heat(830, 200, 40, (e, t) => drawLappHut(e.x, t)),
+      Win(1500, 290, 36, 'm10', { thick: 2, pillar: true }),
+      Heat(1880, 180, 34, (e, t) => drawEngineVent(e.x, t)),
+      Win(2250, 290, 36, 'm11', { thick: 2, pillar: true }),
+      Heat(3040, 280, 60, (e, t) => drawFinnHut(e.x, t)),
+      Trig(760, lappScript), Trig(2960, finnScript),
+    ];
+  },
+  async enter() {
+    await narr('驯鹿驮着格尔达跑进了船尾。这里是一整片冰原，发动机的光从冰底下透上来，一会儿绿，一会儿紫。');
+    goal('往船尾去'); toast('骑着鹿走得快，鹿身上也暖和。', 4);
+  },
+};
+function drawEngineVent(x, t) {
+  const c = ctx, k = .8 + .2 * Math.sin(t * 3);
+  glow(c, x, FLOOR - 10, 150, 'rgba(255,170,90,' + (.32 * k).toFixed(3) + ')');
+  paper(true); c.fillStyle = '#6f7f8c'; rr(c, x - 34, FLOOR - 22, 68, 22, 4); c.fill(); paper(false);
+  c.fillStyle = '#2b2622'; for (let i = 0; i < 5; i++) c.fillRect(x - 26 + i * 11, FLOOR - 17, 6, 12);
+  c.fillStyle = 'rgba(255,190,110,' + (.7 * k).toFixed(3) + ')'; for (let i = 0; i < 5; i++) c.fillRect(x - 26 + i * 11, FLOOR - 9, 6, 4);
+  for (let i = 0; i < 4; i++) { const q = mod(t * .6 + i / 4, 1); c.fillStyle = 'rgba(255,255,255,' + (.28 * (1 - q)).toFixed(3) + ')'; circ(c, x + Math.sin(t + i * 2) * 10, FLOOR - 26 - q * 90, 6 + q * 14); c.fill(); }
+}
+function drawLappHut(x, t) {
+  const c = ctx; glow(c, x + 10, FLOOR - 40, 160, 'rgba(255,190,110,.35)');
+  paper(true); c.fillStyle = '#9c8a74'; c.beginPath(); c.ellipse(x, FLOOR, 80, 70, 0, Math.PI, 0); c.fill(); paper(false);
+  c.fillStyle = '#f2f6f9'; c.beginPath(); c.ellipse(x, FLOOR - 50, 64, 24, 0, Math.PI, 0); c.fill();
+  c.fillStyle = '#2a211b'; c.beginPath(); c.ellipse(x + 20, FLOOR, 22, 38, 0, Math.PI, 0); c.fill();
+  c.fillStyle = '#ffcf80'; circ(c, x + 20, FLOOR - 16, 4 + Math.sin(t * 9) * .4); c.fill();
+}
+function drawFinnHut(x, t) {
+  const c = ctx; glow(c, x, FLOOR - 60, 220, 'rgba(255,170,90,.38)');
+  paper(true); c.fillStyle = '#6a4a36'; c.fillRect(x - 70, FLOOR - 110, 140, 110); paper(false);
+  c.fillStyle = '#f2f6f9'; c.beginPath(); c.moveTo(x - 84, FLOOR - 106); c.lineTo(x, FLOOR - 150); c.lineTo(x + 84, FLOOR - 106); c.closePath(); c.fill();
+  c.fillStyle = '#ffb760'; c.fillRect(x - 18, FLOOR - 70, 36, 70);
+  for (let i = 0; i < 4; i++) { const yy = FLOOR - 150 - mod(t * 30 + i * 25, 100); c.fillStyle = 'rgba(255,255,255,' + (.35 - (FLOOR - 150 - yy) / 300).toFixed(2) + ')'; circ(c, x + 40 + Math.sin(t + i) * 6, yy, 10 + (FLOOR - 150 - yy) * .08); c.fill(); }
+}
+async function lappScript() {
+  await narr('驯鹿在一间矮棚子前停下。棚子里只有一个老太太，守着一盏灯烤鱼。');
+  await say('拉普兰老太太', '哎哟，可怜的孩子，你们还有好远的路要走。冰雪女王在最里头，每天晚上都放那种青光。');
+  await say('拉普兰老太太', '我没有纸，给你在这条鳕鱼干上写几个字。往前走，有个芬兰老太太，她知道得比我多。');
+  give('鳕鱼干'); toast('得到一条写了字的鳕鱼干。', 3);
+}
+async function finnScript() {
+  await narr('芬兰老太太的屋子热得像蒸笼。格尔达一进门，就把手套和靴子都脱了。');
+  await narr('老太太把鳕鱼干上的字读了三遍，记住了，就把鱼丢进了汤锅。鱼还能吃，她从来不浪费东西。');
+  take('鳕鱼干');
+  await say('驯鹿', '你那么有本事，一根线能拴住全船的风。你就不能给这孩子一点力气，让她打得过冰雪女王吗？');
+  await narr('芬兰老太太把驯鹿拉到墙角，小声说话。');
+  await say('芬兰老太太', '加伊确实在冰雪女王那儿。他样样称心，觉得那是全船最好的地方。那是因为他眼睛里有一粒碎片，心里也有一粒。不把碎片弄出来，他就做不回原来的加伊了。');
+  await say('芬兰老太太', '我给不了她更多的本事了。你看看，人肯帮她，鹿肯驮她，她光着脚走了大半条船。这本事是她自己的。');
+  await say('芬兰老太太', '从这儿往里两里地，就是冰雪女王的园子。把她放在那丛红果子旁边，别站着说闲话，赶紧回来。');
+  await narr('她把格尔达抱上鹿背。驯鹿撒开腿就跑。');
+  await narr('跑出去好远，格尔达才想起来：靴子和手套都落在那间屋子里了。');
+  take('靴子'); take('大手套');
+  await gotoScene('s7');
+}
+
+// 第七个故事：冷舱
+SCENES.s7 = {
+  id: 's7', chapter: '第七个故事 · 冰雪女王的宫殿里发生的事', kicker: '第七个故事', title: '冰雪女王的宫殿里发生的事', width: 3400, start: 170, cold: 0, music: 'gymno',
+  bg: bgVault, flakes: 5,
+  build() {
+    const f = state.flags;
+    return [
+      Prop(150, e => drawBush(e.x)),
+      Prop(2000, () => drawPods()),
+      Prop(2700, (e, t) => drawLake(t)),
+      Guard(720, 'hedgehog'), Guard(980, 'snake'), Guard(1240, 'bear'), Guard(1520, 'flake'), Guard(1800, 'hedgehog'),
+      Npc({ id: 'kay', x: 3030, face: -1, warm: false, draw: (e, t) => drawKayOnLake(e, t) }),
+      Trig(2060, async () => { await narr('两边是一排一排的冷舱，玻璃上结满了霜。里面的人都睡着，等船到的那一天。'); }),
+      Trig(2880, finale),
+    ];
+  },
+  async enter() {
+    await narr('驯鹿把她放在一丛结着红果子的灌木旁边，亲了亲她，掉下几颗大眼泪，转身跑了回去。');
+    await narr('格尔达站在那里，没有鞋，也没有手套。');
+    await narr('冰雪女王的雪花卫兵朝她飘过来。有的像竖起刺的刺猬，有的像缠成一团的蛇，有的像毛都炸开的小熊。');
+    hideDialog();
+    const n = availMem().length;
+    toast(n ? '冷舱里没有暖和的地方。你一路看到的回忆，每一段都能哈出一口热气。' + KEY_BREATH + '。' : '你没带回忆进来。小口哈气也能化开冰，只是慢一点。' + KEY_BREATH + '。', 7);
+    goal('去冷舱最里面找加伊');
+  },
+  update(dt) { const e = state.eter; if (e) e.t += dt; },
+};
+function drawBush(x) { const c = ctx; paper(true); c.fillStyle = '#4b6b5a'; ell(c, x, FLOOR - 26, 50, 30); c.fill(); paper(false); c.fillStyle = 'rgba(255,255,255,.6)'; ell(c, x - 6, FLOOR - 50, 36, 8); c.fill(); c.fillStyle = '#c4303f'; for (let i = 0; i < 12; i++) { circ(c, x - 38 + (i * 23) % 76, FLOOR - 14 - (i * 17) % 36, 3); c.fill(); } }
+function drawPods() {
+  const c = ctx;
+  for (let i = 0; i < 9; i++) { const x = 2010 + i * 72; paper(true); c.fillStyle = '#b8cfe0'; rr(c, x, FLOOR - 170, 50, 150, 22); c.fill(); paper(false); c.fillStyle = 'rgba(240,248,253,.85)'; rr(c, x + 6, FLOOR - 162, 38, 132, 18); c.fill(); c.fillStyle = 'rgba(120,150,175,.35)'; ell(c, x + 25, FLOOR - 128, 9, 11); c.fill(); c.fillRect(x + 15, FLOOR - 116, 20, 60); }
+}
+function drawLake(t) {
+  const c = ctx; c.fillStyle = '#cfe4f2'; c.fillRect(2700, FLOOR, 700, VIEW_H - FLOOR);
+  c.fillStyle = 'rgba(255,255,255,.7)'; for (let i = 0; i < 7; i++) c.fillRect(2720 + i * 95, FLOOR + 18 + (i % 3) * 14, 50, 2);
+  paper(true); c.fillStyle = '#d6e8f4'; c.fillRect(3250, FLOOR - 150, 80, 150); c.fillRect(3240, FLOOR - 70, 100, 18); paper(false);
+  c.fillStyle = '#f4faff'; c.beginPath(); c.moveTo(3250, FLOOR - 150); c.lineTo(3270, FLOOR - 180); c.lineTo(3290, FLOOR - 156); c.lineTo(3310, FLOOR - 186); c.lineTo(3330, FLOOR - 150); c.closePath(); c.fill();
+}
+function drawKayOnLake(e, t) {
+  const c = ctx, f = state.flags;
+  if (!state.eter) { c.fillStyle = '#eef8ff'; for (let i = 0; i < 22; i++) { const a = i * 2.4, rad = 34 + (i * 13) % 50; c.save(); c.translate(e.x + Math.cos(a) * rad, FLOOR - 4 + Math.sin(a) * 6); c.rotate(a); c.fillRect(-4, -2.5, 8, 5); c.restore(); } }
+  kid(c, e.x, FLOOR, { face: e.face, sit: !f.freedKay, coat: '#3e5f8e', hair: '#c9a25e', feet: 'boots', cold: !f.freedKay, glint: !f.freedKay, hug: f.freedKay });
+}
+async function finale() {
+  const f = state.flags, kay = find('kay');
+  await narr('加伊坐在冰湖中间，冻得发青，自己却一点也觉不出来。他在用冰块拼字，拼了拆，拆了又拼。');
+  await narr('冰雪女王不在。宝座上空空的。');
+  await say('加伊', '冰雪女王说，我要是拼得出“永恒”两个字，我就能自己做主了。新世界归我，她还送我一双新冰鞋。');
+  await say('加伊', '冷舱里的人都不会老。等船到了，我一醒来就能看见新世界。');
+  hideDialog(); await walkPlayer(kay.x - 26, 90); player.face = 1;
+  await say('格尔达', '加伊！是我，格尔达！');
+  await narr('加伊一动不动，又硬又冷。');
+  bgm(null);
+  player.hug = true; player.cry = true;
+  await narr('格尔达抱住他哭了。眼泪落在他胸口，渗了进去，把那一小块冰化开了，也把碎片冲了出来。');
+  kay.cry = true;
+  await narr('加伊看着她，忽然也哭起来，哭得那么厉害，眼睛里那粒碎片跟着眼泪滚了出来。');
+  f.freedKay = true; player.cry = false;
+  await say('加伊', '格尔达！你上哪儿去了，去了这么久？我这又是在哪儿？');
+  await say('加伊', '这儿好冷。怎么这么空。');
+  kay.cry = false; player.hug = false;
+  hideDialog();
+  state.camFocus = 3030; startEternity(3030, 250); await wait(4200);
+  await narr('冰块高兴得跳起舞来。跳累了，它们自己躺下来，正好拼成了那两个字。');
+  bgm('largo');
+  await narr('加伊什么都不用拼了。两个人手拉着手，往船头走。');
+  state.camFocus = null;
+  await gotoScene('r1');
+}
+function startEternity(cx, cy) {
+  const oc = document.createElement('canvas'); oc.width = 360; oc.height = 170; const o = oc.getContext('2d');
+  o.fillStyle = '#fff'; o.font = 'bold 140px ' + FONT_C; o.textAlign = 'center'; o.textBaseline = 'middle'; o.fillText('永恒', 180, 90);
+  const d = o.getImageData(0, 0, 360, 170).data, pts = [];
+  for (let y = 0; y < 170; y += 5) for (let x = 0; x < 360; x += 5) if (d[(y * 360 + x) * 4 + 3] > 128) pts.push({ x0: cx + R(-110, 110), y0: FLOOR - 4 + R(-6, 4), x1: cx - 180 + x, y1: cy - 90 + y, d: R(0, .8), sp: R(-1, 1) });
+  state.eter = { pts, t: 0, cx, cy };
+  sfx.shatter(); setTimeout(() => sfx.chime(), 1800 / timeScale);
+}
+function drawEternity() {
+  const e = state.eter; if (!e) return; const c = ctx;
+  if (!e.pts.length) { const k = clamp(e.t / 2, 0, 1); c.globalAlpha = k; c.fillStyle = '#eaf6ff'; c.font = 'bold 120px ' + FONT_C; c.textAlign = 'center'; c.fillText('永恒', e.cx, e.cy + 40); c.globalAlpha = 1; return; }
+  for (const p of e.pts) {
+    const k = easeIO(clamp((e.t - p.d) / 2.4, 0, 1)), hop = Math.sin(k * Math.PI) * 60;
+    const x = lerp(p.x0, p.x1, k) + Math.sin(e.t * 3 + p.sp * 5) * (1 - k) * 8, y = lerp(p.y0, p.y1, k) - hop;
+    c.fillStyle = 'rgba(200,232,255,.35)'; c.fillRect(x - 3.5, y - 3.5, 7, 7);
+    c.fillStyle = '#f4fbff'; c.fillRect(x - 2, y - 2, 4, 4);
+  }
+}
+
+// ---------- 归途 ----------
+// 回去的路往左走：冰原、废弃区和舰桥、水渠，一路化冻。加伊跟在后面，路过当初那些窗户，他也想起一点什么。
+const KAY_MEM = {
+  m11: [['加伊', '那个小黄点。我当时说还有一百一十年，其实是瞎数的。'], ['加伊', '后来我去问了星图老师，是一百一十二年。一直没敢告诉你。'], ['格尔达', '两年也没差多少。']],
+  m10: [['加伊', '在冰湖上，我也敲过三下。敲的是冰。'], ['加伊', '没人回。我还以为是冰太厚了。'], ['格尔达', '我回了。你没听见。']],
+  m9: [['加伊', '那盒新蜡笔，绿的那根我偷偷先用过，又拿小刀把头削干净了。'], ['格尔达', '我就说怎么绿的短一截。']],
+  m8: [['加伊', '那节课我被罚站了。'], ['加伊', '站着的时候我就想，船上得一直有小孩，那我们俩就一直当小孩好了。']],
+  m7: [['加伊', '那双靴子我一直没上油。上了油就不响了，你就听不出是我了。']],
+  m5: [['加伊', '第三张画我画了一晚上。你头上那几道热气，画了擦，擦了画，纸都擦破了。'], ['格尔达', '我知道。我拿胶带粘上了。']],
+  m4: [['加伊', '那颗玻璃珠，是我拿三张饭票跟阿诺换的。说是星星，是我编的。'], ['格尔达', '我早知道。'], ['加伊', '那你还揣了一年？'], ['格尔达', '嗯。']],
+};
+async function kayRemember(id) {
+  const kay = find('kay'), w = ents.find(e => e.type === 'win' && e.mem === id);
+  if (kay) kay.face = player.x < kay.x ? -1 : 1;
+  for (const [who, text] of KAY_MEM[id]) await say(who, text);
+  hideDialog();
+  const had = state.mem.has(id) && !state.used.has(id) && !state.faded.has(id);
+  state.used.delete(id); state.faded.delete(id);
+  if (!state.mem.has(id)) collect(id);
+  else if (!had) { sfx.chime(); toast('「' + MEM[id].title + '」又回到了小册子里。', 3); }
+  if (w) stickerFx(w.x, w.y, id, -40);
+  state.kayMem = (state.kayMem || 0) + 1; hud();
+}
+function vines(c, cx, t, step) {
+  for (let k = Math.floor((cx - 60) / step); k <= Math.floor((cx + viewW + 60) / step); k++) {
+    const vx = k * step + mod(k * 37, 50) - cx, len = 50 + mod(k * 29, 70), sw = Math.sin(t * .8 + k);
+    c.strokeStyle = '#4f7a46'; c.lineWidth = 2; c.beginPath(); c.moveTo(vx, 62); c.quadraticCurveTo(vx + 10, 62 + len / 2, vx + sw * 3, 62 + len); c.stroke();
+    c.fillStyle = '#6aa05a'; for (let i = 1; i <= 4; i++) { ell(c, vx + (i % 2 ? 5 : -5) + sw * 2 * i / 4, 62 + len * i / 4.4, 5, 2.4, i % 2 ? .5 : -.5); c.fill(); }
+  }
+}
+function bgIceThaw(c, cx, t) {
+  const g = c.createLinearGradient(0, 0, 0, FLOOR); g.addColorStop(0, '#22324e'); g.addColorStop(.6, '#7b94a9'); g.addColorStop(1, '#d3dee3'); c.fillStyle = g; c.fillRect(0, 0, viewW, FLOOR);
+  glow(c, -60, FLOOR - 140, 560, 'rgba(255,196,140,.34)');
+  const ag = c.createLinearGradient(0, 40, 0, 220); ag.addColorStop(0, 'rgba(110,230,180,0)'); ag.addColorStop(.5, 'rgba(110,230,180,.13)'); ag.addColorStop(1, 'rgba(0,0,0,0)');
+  c.fillStyle = ag; c.beginPath(); c.moveTo(0, 230);
+  for (let x = 0; x <= viewW; x += 20) c.lineTo(x, 118 + Math.sin((x + cx * .2) * .006 + t * .35) * 30);
+  for (let x = viewW; x >= 0; x -= 20) c.lineTo(x, 46 + Math.sin((x + cx * .2) * .008 + t * .3) * 20);
+  c.closePath(); c.fill();
+  let off = mod(cx * .45, 260); c.fillStyle = '#b9c8d3';
+  for (let x = -off - 130; x < viewW + 260; x += 260) { c.beginPath(); c.moveTo(x, FLOOR); c.lineTo(x + 70, FLOOR - 120); c.lineTo(x + 110, FLOOR - 80); c.lineTo(x + 160, FLOOR - 150); c.lineTo(x + 260, FLOOR); c.closePath(); c.fill(); }
+  off = mod(cx * .7, 200); c.fillStyle = '#d4e0e8';
+  for (let x = -off - 100; x < viewW + 200; x += 200) { c.beginPath(); c.moveTo(x, FLOOR); c.lineTo(x + 60, FLOOR - 60); c.lineTo(x + 130, FLOOR); c.closePath(); c.fill(); }
+  c.fillStyle = '#cbd8df'; c.fillRect(0, FLOOR, viewW, VIEW_H - FLOOR); c.fillStyle = '#eef4f7'; c.fillRect(0, FLOOR, viewW, 3);
+  // 化开的水洼；越往船头，冒出来的草越多
+  for (let k = Math.floor((cx - 100) / 140); k <= Math.floor((cx + viewW + 100) / 140); k++) {
+    const wx = k * 140 + mod(k * 53, 60), sx = wx - cx;
+    c.fillStyle = 'rgba(110,140,165,.32)'; ell(c, sx, FLOOR + 22 + mod(k, 3) * 9, 26 + mod(k, 4) * 6, 4); c.fill();
+    if (mod(k * 7, 10) / 10 < clamp(1.25 - wx / 1800, 0, 1)) { c.fillStyle = '#6f9a58'; for (let i = 0; i < 4; i++) { c.beginPath(); c.moveTo(sx + 40 + i * 4, FLOOR + 2); c.lineTo(sx + 42 + i * 4, FLOOR - 6 - (i % 2) * 4); c.lineTo(sx + 44 + i * 4, FLOOR + 2); c.closePath(); c.fill(); } }
+  }
+}
+const PAL_SP5 = { wall: '#3a3328', ceil: '#211c16', pipe: '#4a4034', seam: '#2a241d', rail: '#5a4a3a', floor: '#241e18', edge: '#6a5644' };
+const PAL_SP4 = { wall: '#342f4a', ceil: '#1d1a30', pipe: '#463e60', seam: '#25213a', rail: '#9a7c4a', floor: '#221f33', edge: '#b8945a' };
+const PAL_SP2 = { wall: '#24383c', ceil: '#152226', pipe: '#2f4c52', seam: '#1a2a2e', rail: '#3d5c5e', floor: '#2a3a36', edge: '#6f8a4a' };
+function bgSpringHall(c, cx, t) {
+  bgCorridor(c, cx, PAL_SP5);
+  const sx = 1100 - cx;
+  if (sx > 0) { c.save(); c.beginPath(); c.rect(0, 0, Math.min(viewW, sx), VIEW_H); c.clip(); bgCorridor(c, cx, PAL_SP4); c.restore(); c.fillStyle = '#a8864d'; c.fillRect(sx - 4, 88, 8, FLOOR - 88); }
+  glow(c, 0, 120, 460, 'rgba(255,226,170,.12)');
+  vines(c, cx, t, 170);
+}
+function bgSpringCanal(c, cx, t) {
+  bgCorridor(c, cx, PAL_SP2);
+  glow(c, 0, 140, 480, 'rgba(255,226,170,.16)');
+  c.fillStyle = '#17363d'; c.fillRect(0, FLOOR + 30, viewW, VIEW_H - FLOOR - 30);
+  c.strokeStyle = 'rgba(170,220,215,.25)'; c.lineWidth = 1.5;
+  for (let k = 0; k < 3; k++) { c.beginPath(); for (let x = 0; x <= viewW; x += 16) { const y = FLOOR + 40 + k * 16 + Math.sin((x + cx) * .03 + t * 1.8 + k) * 2.5; if (x === 0) c.moveTo(x, y); else c.lineTo(x, y); } c.stroke(); }
+  c.fillStyle = '#0f2a30'; c.fillRect(0, FLOOR + 28, viewW, 3);
+  vines(c, cx, t, 190);
+}
+const kayFollower = (x) => Npc({ id: 'kay', x, face: -1, follow: true, gap: 50, speed: 260, draw: e => drawKay(e) });
+
+// 归途一：冰原化了
+SCENES.r1 = {
+  id: 'r1', chapter: '归途 · 冰原化了', kicker: '归途', title: '冰原化了', width: 2800, start: 2560, cold: 0, dir: -1, ret: true, music: 'largo',
+  bg: bgIceThaw, flakes: .5,
+  build() {
+    const f = state.flags;
+    return [
+      Prop(2680, e => drawBush(e.x)),
+      Heat(2060, 280, 50, (e, t) => drawFinnHut(e.x, t)),
+      Win(1700, 290, 36, 'm11', { thick: 2, pillar: true, frost: 0, revealed: true }),
+      Heat(1440, 180, 30, (e, t) => drawEngineVent(e.x, t)),
+      Win(1150, 290, 36, 'm10', { thick: 2, pillar: true, frost: 0, revealed: true }),
+      Heat(820, 200, 36, (e, t) => drawLappHut(e.x, t)),
+      Prop(330, (e, t) => drawSprouts(e.x, t)),
+      Npc({ id: 'deer', x: 2400, face: 1, draw: e => { if (f.sled && !f.riding) drawSled(ctx, e.x - 78 * e.face, e.face); reindeer(ctx, e.x, FLOOR, e.face, e.walk, e.walking); } }),
+      Npc({ id: 'doe', x: 2310, face: 1, gap: 110, speed: 340, draw: e => reindeer(ctx, e.x, FLOOR, e.face, e.walk, e.walking, { doe: true, s: .8, body: '#8a6a4c' }) }),
+      kayFollower(2620),
+      Trig(2480, deerReunion, null, -1),
+      Trig(2140, finnBack, null, -1),
+      Trig(1760, () => kayRemember('m11'), null, -1),
+      Trig(1210, () => kayRemember('m10'), null, -1),
+      Trig(900, lappBack, null, -1),
+      Trig(430, borderBye, null, -1),
+      Exit(70, 'r2', () => f.bye, null, null, -1),
+    ];
+  },
+  async enter() {
+    await narr('两个人手拉着手走出冷舱。他们走到哪儿，哪儿的风就停下来，冰底下的光一点一点暖了。');
+    goal('往船头走（一直往左）'); toast('回去的路往左走。', 4);
+  },
+};
+async function deerReunion() {
+  const f = state.flags, deer = find('deer'), doe = find('doe'), kay = find('kay');
+  await narr('红果子灌木旁边，驯鹿还在那儿等着。它身边多了一头小母鹿，奶胀得鼓鼓的。');
+  await say('驯鹿', '我就知道你们会出来。');
+  await narr('小母鹿让两个孩子喝了热乎乎的奶，又在他们嘴上各亲了一下。');
+  state.W = 100; sparkle(player.x, FLOOR - 60, '#ffe7b0'); sfx.give();
+  await say('驯鹿', '两个都上来。先去芬兰老太太那儿。');
+  hideDialog(); await fadeOut(350);
+  deer.visible = false; kay.visible = false; f.kayRide = true; f.riding = true;
+  player.x = deer.x; player.face = -1; state.mode = 'ride'; doe.follow = true;
+  await fadeIn(350);
+  goal('骑着驯鹿往船头去');
+}
+async function finnBack() {
+  await narr('芬兰老太太的屋子还是热得像蒸笼。老太太看见他们，把手在围裙上擦了擦。');
+  await say('芬兰老太太', '靴子和手套落我这儿了，给你烘得热热的。');
+  give('靴子'); give('大手套'); toast('靴子和大手套回来了。', 3);
+  await say('芬兰老太太', '这就是那个拼字的孩子？瘦了。回去多吃点。');
+  await say('加伊', '嗯。');
+  await narr('她拿手指在格尔达手心里画了一遍回船头的路，哪儿该拐，哪儿有热水管，一边画一边念叨。');
+}
+async function lappBack() {
+  const f = state.flags;
+  await narr('拉普兰老太太站在棚子门口张望，看见他们就笑了。');
+  await say('拉普兰老太太', '回来啦？我给你们一人缝了一件新袄子。雪橇也套好了，骑鹿背上颠，坐雪橇稳当。');
+  hideDialog(); await fadeOut(350);
+  state.mode = 'sled'; f.sled = true; find('doe').gap = 175;
+  await fadeIn(350);
+  await say('加伊', '跟我那架雪橇差不多大。');
+  await say('格尔达', '你那架呢？');
+  await say('加伊', '挂在白色货车后头，不知道丢哪儿去了。');
+}
+async function borderBye() {
+  const f = state.flags, deer = find('deer'), doe = find('doe'), kay = find('kay'), bx = player.x;
+  await narr('冰原走到了头，地上冒出来第一撮绿芽。');
+  await say('驯鹿', '我就送到这儿了。再往前，不是我们鹿走的地方。');
+  hideDialog(); await fadeOut(400);
+  state.mode = 'walk'; f.riding = false; f.kayRide = false;
+  deer.x = bx + 60; deer.face = 1; deer.visible = true;
+  doe.follow = false; doe.walking = false; doe.x = bx + 150; doe.face = -1;
+  player.x = bx - 120; player.face = 1; kay.visible = true; kay.x = bx - 165; kay.face = 1;
+  await fadeIn(400);
+  await narr('格尔达抱着驯鹿的脖子，好半天才撒手。小母鹿拿鼻子拱了拱加伊的手心。');
+  await say('格尔达', '再见！');
+  await say('加伊', '再见！');
+  await say('驯鹿', '再见。');
+  f.bye = true; goal('接着往船头走（往左）');
+}
+
+// 归途二：骑马的姑娘
+SCENES.r2 = {
+  id: 'r2', chapter: '归途 · 骑马的姑娘', kicker: '归途', title: '骑马的姑娘', width: 2700, start: 2560, cold: 0, dir: -1, ret: true, spring: true, music: 'largo',
+  bg: bgSpringHall, flakes: 0,
+  build() {
+    const f = state.flags;
+    return [
+      Prop(2640, e => drawDenDoor(e.x)),
+      Object.assign(Prop(0, drawTrail), { always: true }),
+      Win(2180, 300, 34, 'm9', { frost: 0, revealed: true }),
+      Bud(2340, 330, '#f3a6b5'), Bud(1990, 330, '#f6f8fb'), Bud(1560, 330, '#f2c230'), Bud(1020, 330, '#c9b3f0'), Bud(640, 330, '#f3a6b5'),
+      Heat(1420, 150, 22, e => drawLamp(e.x)), Heat(560, 150, 22, e => drawLamp(e.x)),
+      Win(1240, 300, 34, 'm8', { frost: 0, revealed: true }), Win(860, 300, 34, 'm7', { frost: 0, revealed: true }),
+      Prop(380, e => drawPerch(e.x)),
+      Npc({ id: 'crow', x: 380, y: 268, face: 1, warm: false, draw: (e, t) => drawCrow(e.x, e.y, e.face, t, false, true) }),
+      Npc({ id: 'girl', x: -300, face: 1, visible: false, draw: e => drawRider(e) }),
+      kayFollower(2620),
+      Trig(2240, () => kayRemember('m9'), null, -1),
+      Trig(1800, robberRide, null, -1),
+      Trig(1300, () => kayRemember('m8'), null, -1),
+      Trig(920, () => kayRemember('m7'), null, -1),
+      Trig(480, oldCrow, null, -1),
+      Exit(70, 'r3', () => f.crowSeen, null, null, -1),
+    ];
+  },
+  async enter() {
+    await narr('废弃区的管子上冒出了嫩芽。房梁上有鸟在叫，不知道是谁家的。');
+    goal('接着往船头走'); toast('对着花苞' + KEY_BREATH + '，哈一口气看看。', 5);
+  },
+  update(dt) {
+    if (Math.random() < dt * .22) sfx.chirp();
+    const g = find('girl'); if (g && g.walking && Math.random() < dt * 7) sfx.hoof();
+  },
+};
+async function robberRide() {
+  const girl = find('girl');
+  girl.x = cam.x - 140; girl.visible = true; girl.face = 1;
+  await walkNpc(girl, player.x - 130, 240);
+  await narr('前面嗒嗒嗒跑过来一匹马。马上坐着一个姑娘，头上戴一顶亮红的帽子，腰里别着一把刀。');
+  await say('格尔达', '是你！');
+  await say('小强盗女孩', '是你！');
+  await narr('一个在马上，一个在马下，两个人拉着手直嚷嚷。');
+  await narr('小强盗女孩拿马鞭朝加伊一指。');
+  await say('小强盗女孩', '你倒好，满船乱跑。我倒想知道，你值不值得人家光着脚跑到船尾去找你。');
+  await narr('格尔达拍拍她的脸，问船长和领航员怎么样了。');
+  await say('小强盗女孩', '出船外修天线去了，说要好几个月才回来。走之前托人捎话，靴子不用还了。');
+  await say('格尔达', '乌鸦呢？');
+  await say('小强盗女孩', '老了，飞不大动了。天天蹲在舰桥底下的暖气管上，逢人就讲它领过一个光脚的小姑娘，一天讲八遍。');
+  await say('小强盗女孩', '该你们讲了。你是怎么把他弄回来的？');
+  await narr('格尔达和加伊你一句我一句，从头讲了一遍。');
+  await narr('小强盗女孩听完，拍着巴掌喊了一串谁也听不懂的话，大概是她们强盗家说“好”的意思。');
+  await say('小强盗女孩', '我在家闷坏了，要往船尾那头去看看。哪天路过你们船头，我去找你们玩。');
+  await narr('她弯下腰，一手拉住格尔达，一手拉住加伊，使劲握了握，一拨马头，跑进了废弃区。');
+  hideDialog();
+  await walkNpc(girl, cam.x + VWZ() + 180, 260); girl.visible = false;
+}
+async function oldCrow() {
+  const f = state.flags;
+  await narr('舰桥底下的暖气管上蹲着一只乌鸦，羽毛乱蓬蓬的。');
+  await say('乌鸦', '嘎！我就说她会回来的。我跟谁都这么说。');
+  await say('加伊', '就是你领她去舰桥的？');
+  await say('乌鸦', '嘎，就是我。飞是飞不动了，眼神还行。你就是那个靴子也咯吱咯吱响的？');
+  await say('加伊', '那双早穿不下了。');
+  await narr('乌鸦嘎嘎笑了两声，冲着他们拍了好一会儿翅膀，跟当初送格尔达上车的时候一样。');
+  f.crowSeen = true; goal('接着往船头走');
+}
+
+// 归途三：春天跟着走
+SCENES.r3 = {
+  id: 'r3', chapter: '归途 · 春天跟着走', kicker: '归途', title: '春天跟着走', width: 2600, start: 2460, cold: 0, dir: -1, ret: true, spring: true, music: 'canon',
+  bg: bgSpringCanal, flakes: 0,
+  build() {
+    const f = state.flags;
+    return [
+      Object.assign(Prop(0, drawTrail), { always: true }),
+      Win(2100, 262, 34, 'm5', { frost: 0, revealed: true }), Win(1760, 258, 30, null, { frost: 0, revealed: true }),
+      Win(1450, 262, 34, 'm4', { frost: 0, revealed: true }), Win(1100, 262, 30, null, { frost: 0, revealed: true }), Win(720, 262, 30, null, { frost: 0, revealed: true }),
+      Bud(1900, 330, '#f6f8fb'), Bud(1280, 330, '#f3a6b5'), Bud(900, 330, '#f2c230'), Bud(420, 330, '#c9b3f0'),
+      Use({ x: 1640, reach: 80, prompt: '看看水边那团红的', when: () => !f.shoes, run: shoesBack, draw: () => { if (!f.shoes) drawShoesInReeds(1640); } }),
+      kayFollower(2520),
+      Trig(2160, () => kayRemember('m5'), null, -1),
+      Trig(1510, () => kayRemember('m4'), null, -1),
+      Trig(560, bellsHome, null, -1),
+      Exit(70, 'end', () => f.bells, null, null, -1),
+    ];
+  },
+  async enter() {
+    await narr('水渠里的冰全化了，水哗哗地往船头流。他们每走一步，脚边就冒出一朵花来。');
+    goal('顺着水渠往船头走');
+  },
+};
+async function shoesBack() {
+  const f = state.flags;
+  await narr('水边的芦苇里卡着一双红鞋。');
+  await say('加伊', '这不是你的鞋吗？');
+  await say('格尔达', '是我的！我拿它跟水渠换你来着。');
+  await narr('加伊蹲下去，把鞋捞上来，甩了甩水。鞋泡了这么久，颜色一点没掉。');
+  await say('加伊', '水渠不要了，还给你。');
+  f.shoes = true; give('红鞋'); take('靴子');
+  await narr('格尔达把靴子脱下来拎在手里，换上了红鞋。');
+  toast('红鞋回来了。', 3);
+}
+async function bellsHome() {
+  const f = state.flags;
+  sfx.bell();
+  await narr('船头的钟响了。');
+  await narr('他们认出了那一排舷窗，认出了走廊尽头那扇门。是奶奶家。');
+  f.bells = true; goal('回家');
+}
+
+// 尾声
+SCENES.end = {
+  id: 'end', chapter: '尾声', width: 1400, start: 1110, cold: 0, music: 'twinkleWarm', bg: (c, cx) => bgCorridor(c, cx, PAL.end), flakes: 0, hidePlayer: true,
+  build() {
+    return [
+      Prop(0, () => { const c = ctx; c.fillStyle = '#5a4136'; c.fillRect(0, 88, 668, FLOOR - 88); glow(c, 420, 200, 380, 'rgba(255,220,160,.18)'); }),
+      Heat(300, 160, 30, e => drawRadiator(e.x)),
+      Win(520, 300, 34, null, { frost: 0, revealed: true }),
+      Prop(700, e => drawDoor(e.x)),
+      Win(1150, 290, 38, null, { frost: 0, revealed: true, view: 'goal' }),
+      Prop(930, (e, t) => drawGranny(e.x, t, true)),
+      Prop(1000, (e, t) => drawRoseBox(e.x, t, true)),
+      Prop(1150, () => { kid(ctx, 1165, FLOOR - 8, { face: 1, sit: true, girl: true, coat: '#a7373f', hair: '#6b4430', feet: has('红鞋') ? 'red' : 'boots', scale: 1.18, noShadow: true }); kid(ctx, 1220, FLOOR - 8, { face: -1, sit: true, coat: '#3e5f8e', hair: '#c9a25e', feet: 'boots', scale: 1.22, noShadow: true }); }),
+    ];
+  },
+  async enter() {
+    state.used.clear();
+    await narr('奶奶家的门没锁。屋里的东西都跟原来一样，挂钟嘀嗒嘀嗒地走。');
+    await narr('玫瑰箱里的玫瑰正开着。奶奶坐在阳光灯底下，照着念一本旧书。');
+    await narr('他们在玫瑰箱旁边的小板凳上坐下来，膝盖顶到了下巴。这才发现，两个人都长高了。');
+    await narr('船历二一三年，夏。离抵达还有一百零七年。');
+    hideDialog(); await wait(2600); showEnd();
+  },
+};
+
+// ---------- 切换场景 ----------
+async function gotoScene(id, opt) {
+  opt = opt || {};
+  const sc = SCENES[id];
+  await fadeOut(opt.soft ? 500 : 650);
+  hideDialog(); memPop.hidden = true; toastEl.hidden = true;
+  state.flags = {}; parts.length = 0; state.camFocus = null; state.eter = null;
+  scene = sc; state.sceneId = id; ents = sc.build();
+  player.x = sc.start; player.face = sc.dir || 1; player.cry = false; player.hug = false; player.moving = false; player.auto = false;
+  state.mode = sc.mode || 'walk';
+  if (id === 's7') state.memAtVault = state.mem.size;
+  state.W = sc.ret ? 100 : Math.max(state.W, 75);
+  cam.x = clamp(player.x - VWZ() * (sc.dir < 0 ? .58 : .42), 0, Math.max(0, sc.width - VWZ()));
+  $('hud').hidden = id === 'end';
+  save(); hud(); setPrompt('');
+  if (sc.music !== undefined) bgm(sc.music);
+  if (sc.kicker && !opt.soft) await chapter(sc.kicker, sc.title);
+  await fadeIn(650);
+  if (sc.enter) await sc.enter();
+}
+
+// ---------- 粒子 ----------
+const parts = [];
+function puff(x, y, vx, vy, size, warm) { if (parts.length < 420) parts.push({ k: 'puff', x, y, vx, vy, r: 3, R: size, life: 0, max: .9, warm }); }
+function flake(x, y, slow) { if (parts.length < 420) parts.push({ k: 'flake', x, y, vx: R(-10, 10), vy: slow ? R(14, 24) : R(18, 40), life: 0, max: 14, r: R(1, 2.3) }); }
+function sparkle(x, y, col) { for (let i = 0; i < 12; i++) { const a = R(0, TAU), s = R(30, 90); parts.push({ k: 'spark', x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 0, max: R(.5, .9), col }); } }
+function shards(x, y) { for (let i = 0; i < 18; i++) { const a = R(0, TAU), s = R(60, 220); parts.push({ k: 'shard', x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 80, life: 0, max: R(.5, 1), rot: R(0, TAU) }); } }
+function floatText(x, y, text) { parts.push({ k: 'text', x, y, vx: 0, vy: -24, life: 0, max: 2.8, text }); }
+function tear(x, y) { parts.push({ k: 'tear', x, y, vx: R(-6, 6), vy: 10, life: 0, max: 1.5 }); }
+function stepParts(dt) {
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = parts[i]; p.life += dt;
+    if (p.life >= p.max) { parts.splice(i, 1); continue; }
+    p.x += p.vx * dt; p.y += p.vy * dt;
+    if (p.k === 'puff') { const damp = Math.exp(-1.8 * dt); p.vx *= damp; p.vy *= damp; p.vy -= 10 * dt; }
+    else if (p.k === 'tear') { p.vy += 380 * dt; if (p.y > FLOOR) { parts.splice(i, 1); continue; } }
+    else if (p.k === 'shard' || p.k === 'drop') { p.vy += 420 * dt; }
+    else if (p.k === 'flake') { p.vx += Math.sin(p.life * 2 + p.x * .01) * 6 * dt; if (p.y > FLOOR + 4) { parts.splice(i, 1); continue; } }
+    else if (p.k === 'sticker') { if (p.life > 1.3) p.vy = p.vy2; }
+  }
+}
+function drawParts() {
+  const c = ctx;
+  for (const p of parts) {
+    const a = 1 - p.life / p.max;
+    if (p.k === 'puff') { const r = lerp(p.r, p.R * 1.4, Math.sqrt(p.life / p.max)); c.fillStyle = p.warm ? 'rgba(255,214,150,' + (a * .42).toFixed(3) + ')' : 'rgba(240,246,252,' + (a * .26).toFixed(3) + ')'; circ(c, p.x, p.y, r); c.fill(); }
+    else if (p.k === 'flake') { c.fillStyle = 'rgba(240,248,255,.8)'; circ(c, p.x, p.y, p.r); c.fill(); }
+    else if (p.k === 'spark') { c.fillStyle = p.col || '#fff'; c.globalAlpha = a; c.fillRect(p.x - 1.5, p.y - 1.5, 3, 3); c.globalAlpha = 1; }
+    else if (p.k === 'shard') { c.save(); c.translate(p.x, p.y); c.rotate(p.rot + p.life * 8); c.globalAlpha = a; c.fillStyle = '#eef8ff'; c.fillRect(-4, -1.5, 8, 3); c.restore(); }
+    else if (p.k === 'drop') { c.fillStyle = 'rgba(160,210,220,' + a.toFixed(2) + ')'; circ(c, p.x, p.y, 2); c.fill(); }
+    else if (p.k === 'tear') { c.fillStyle = 'rgba(150,200,240,.9)'; ell(c, p.x, p.y, 1.6, 2.6); c.fill(); }
+    else if (p.k === 'sticker') {
+      const q = Math.min(1, p.life / .28), s = 1 + 2.7 * Math.pow(q - 1, 3) + 1.7 * Math.pow(q - 1, 2), al = clamp(p.max - p.life, 0, 1);
+      glow(c, p.x, p.y, 70 * Math.max(.2, s), 'rgba(255,214,150,' + (.35 * al).toFixed(3) + ')');
+      drawSticker(c, p.mem, p.x, p.y, 30 * Math.max(.05, s), p.rot + Math.sin(p.life * 2.2) * .04, al, state.t, MEM[p.mem].title);
+    }
+    else if (p.k === 'text') { c.globalAlpha = Math.min(1, a * 1.6); c.font = '20px ' + FONT_C; c.textAlign = 'center'; c.lineWidth = 4; c.strokeStyle = 'rgba(255,246,232,.9)'; c.strokeText(p.text, p.x, p.y); c.fillStyle = '#a8542a'; c.fillText(p.text, p.x, p.y); c.globalAlpha = 1; }
+  }
+}
+
+// ---------- 输入 ----------
+const keys = { left: false, right: false, breath: false };
+let actHit = false, advHit = false;
+const KEYMAP = { ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', Space: 'breath' };
+const bookEl = $('book');
+function unlockAudio() { audioInit(); if (ac && ac.state === 'suspended') ac.resume(); }
+addEventListener('pointerdown', unlockAudio, true);
+addEventListener('keydown', e => {
+  unlockAudio();
+  if (e.code === 'KeyM' && !e.repeat) { audioMode = audioMode === 0 ? 1 : 0; applyAudio(true); if (state.mode !== 'title') toast(audioMode === 0 ? '音乐 开' : '音乐 关', 1.6); }
+  if (!$('title').hidden || !$('end').hidden) return;
+  if (!bookEl.hidden) { if (e.code === 'Escape' || e.code === 'KeyB' || e.code === 'Tab') { e.preventDefault(); closeBook(); } return; }
+  const k = KEYMAP[e.code];
+  if (k) { keys[k] = true; e.preventDefault(); }
+  if (e.repeat) return;
+  if (e.code === 'Space') advHit = true;
+  if (e.code === 'KeyE' || e.code === 'Enter') { actHit = true; advHit = true; e.preventDefault(); }
+  if (e.code === 'KeyB' || e.code === 'Tab') { e.preventDefault(); openBook(); }
+});
+addEventListener('keyup', e => { const k = KEYMAP[e.code]; if (k) keys[k] = false; });
+addEventListener('blur', () => { keys.left = keys.right = keys.breath = false; });
+frame.addEventListener('pointerdown', e => { if (e.target.closest('button') || e.target.closest('.book')) return; if (dlgPending) advHit = true; });
+below.addEventListener('pointerdown', () => { if (dlgPending) advHit = true; });
+pad.querySelectorAll('button').forEach(b => {
+  const k = b.dataset.k;
+  const down = e => { e.preventDefault(); try { b.setPointerCapture(e.pointerId); } catch (_) {} b.classList.add('on'); audioInit(); if (k === 'act') { actHit = true; advHit = true; } else { keys[k] = true; if (k === 'breath') advHit = true; } };
+  const up = () => { b.classList.remove('on'); if (k !== 'act') keys[k] = false; };
+  b.addEventListener('pointerdown', down); b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('lostpointercapture', up);
+});
+$('bookBtn').addEventListener('click', () => { openBook(); });
+$('bookClose').addEventListener('click', closeBook);
+$('soundBtn').addEventListener('click', e => { audioMode = (audioMode + 1) % 3; applyAudio(true); e.currentTarget.blur(); });
+
+function openBook() {
+  if (state.mode === 'title') return;
+  renderBook(); bookEl.hidden = false; keys.left = keys.right = keys.breath = false; breathSound(false); $('bookClose').focus();
+}
+function closeBook() { bookEl.hidden = true; if (document.activeElement) document.activeElement.blur(); }
+function renderBook() {
+  const list = $('bookList'); list.textContent = ''; let n = 0;
+  for (const m of MEMS) {
+    const got = state.mem.has(m.id), faded = state.faded.has(m.id), used = got && state.used.has(m.id);
+    const el = document.createElement('div'); el.className = 'mem' + (got ? '' : ' miss') + (faded ? ' faded' : '') + (used ? ' used' : '');
+    const cv = document.createElement('canvas'); cv.width = 120; cv.height = 120; const c = cv.getContext('2d');
+    const box = document.createElement('div'), h = document.createElement('h3'), p = document.createElement('p'); box.style.minWidth = '0';
+    if (got) {
+      n++; c.fillStyle = '#fbf7ee'; rr(c, 0, 0, 120, 120, 10); c.fill();
+      c.save(); rr(c, 8, 8, 104, 104, 6); c.clip(); VIG[m.id](c, 60, 60, 52, 1.2); c.restore();
+      h.textContent = m.title; p.textContent = faded ? '（想不起来了）' : used ? '（在冷舱里化成了一口热气。）' : m.text;
+    }
+    else { c.fillStyle = '#d8ccb3'; rr(c, 0, 0, 120, 120, 10); c.fill(); c.fillStyle = '#b9a98a'; c.font = '46px ' + FONT_C; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('？', 60, 64); h.textContent = '还没想起来'; p.textContent = '也许在哪扇结了霜的窗户后面。'; }
+    box.append(h, p); el.append(cv, box); list.append(el);
+  }
+  $('bookN').textContent = n + ' / ' + MEMS.length;
+}
+
+// ---------- 存档 ----------
+const SAVE_KEY = 'snowqueen-ship-v1';
+function save() { if (!state.sceneId || state.sceneId === 'end') return; try { localStorage.setItem(SAVE_KEY, JSON.stringify({ scene: state.sceneId, mem: [...state.mem], items: [...state.items] })); } catch (e) {} }
+function loadSave() { try { const s = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); return s && SCENES[s.scene] && s.scene !== 'end' ? s : null; } catch (e) { return null; } }
+function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} }
+
+// ---------- 更新 ----------
+let breathing = false, breathAcc = 0, lowToast = false;
+function mouth() {
+  if (state.mode === 'ride') return { x: player.x - 4 * player.face + 9 * player.face, y: FLOOR - 40 - 9 - 52 + 4 };
+  if (state.mode === 'sled') return { x: player.x - 68 * player.face + 9 * player.face, y: FLOOR - 12 - 9 - 52 + 4 };
+  if (state.mode === 'boat') return { x: player.x + 9 * player.face, y: 448 - 49 };
+  return { x: player.x + 9 * player.face, y: FLOOR - 49 };
+}
+function breathTarget() {
+  let best = null, bd = 1e9;
+  for (const e of ents) if (e.type === 'win' && e.frost > .001) { const d = Math.abs(e.x - player.x); if (d < e.r + 16 && d < bd) { best = e; bd = d; } }
+  if (best) return best;
+  for (const e of ents) if (e.type === 'bud' && !e.done) { const dx = (e.x - player.x) * player.face; if (dx > -10 && dx < 120 && dx < bd) { best = e; bd = dx; } }
+  if (best) return best;
+  for (const e of ents) if (e.type === 'guard' && !e.open) { const dx = (e.x - player.x) * player.face; if (dx > 0 && dx < 140 && dx < bd) { best = e; bd = dx; } }
+  return best;
+}
+function reveal(e) {
+  e.revealed = true; e.glow = 1; tween(e, 'glow', 0, 1600);
+  if (e.mem) collect(e.mem);
+  if (e.onReveal) run(e.onReveal);
+}
+function shatterGuard(e, memId) {
+  e.open = true; e.frost = 0; shards(e.x, e.y); sfx.shatter();
+  if (memId) { state.used.add(memId); stickerFx(e.x, e.y - 34, memId); hud(); }
+}
+// 贴画弹出来，停一会儿，再慢慢往上飘、淡掉
+function stickerFx(x, y, id, vy) { parts.push({ k: 'sticker', x, y, vx: 0, vy: 0, vy2: vy == null ? -26 : vy, life: 0, max: 3.6, mem: id, rot: R(-.14, .14) }); }
+function update(dt) {
+  state.t += dt;
+  const px0 = player.x;
+  stepTimers(dt);
+  if (dlgPending) {
+    if (window.__sq && window.__sq.auto) { if (dlgTyping) finishType(); const p = dlgPending; dlgPending = null; if (!p()) dlgPending = p; }
+    else if (advHit && performance.now() - dlgAt > 140) { if (dlgPending()) dlgPending = null; }
+  }
+  typeStep(dt);
+  if (toastT > 0) { toastT -= dt; if (toastT <= 0) toastEl.hidden = true; }
+  if (memPopT > 0) { memPopT -= dt; if (memPopT <= 0) memPop.hidden = true; }
+  stepParts(dt);
+  if (!scene) return;
+  const sc = scene, f = state.flags;
+  // 走动
+  let mv = 0;
+  const free = !state.lock && state.mode !== 'end';
+  if (free) { if (keys.left) mv -= 1; if (keys.right) mv += 1; }
+  breathing = free && keys.breath && !sc.hidePlayer;
+  player.moving = player.auto;
+  if (state.mode === 'boat') {
+    if (free) { const v = keys.left ? 0 : (keys.right ? 95 : 48); player.x += v * dt; player.face = 1; }
+  } else if (mv && !breathing) {
+    let sp = state.mode === 'ride' || state.mode === 'sled' ? 270 : 150;
+    if (sc.id === 's7') sp *= .62;
+    if (state.W < 1 && sc.cold > 0) sp *= .6;
+    player.x += mv * sp * dt; player.face = mv; player.moving = true;
+  }
+  if (player.moving) player.walk += dt * (state.mode === 'ride' || state.mode === 'sled' ? 12 : 10);
+  for (const e of ents) if (e.walking) e.walk += dt * 9;
+  for (const e of ents) if (e.type === 'guard' && !e.open && player.x < e.x && player.x > e.x - 60) player.x = e.x - 60;
+  const maxX = sc.maxX ? sc.maxX() : sc.width - 30;
+  if (!player.auto) player.x = clamp(player.x, 40, maxX);
+  // 跟着走的人和鹿：离远了就追上来，停下来就看着格尔达看的方向
+  for (const e of ents) if (e.follow && e.visible !== false) {
+    const d = player.x - e.x, ad = Math.abs(d), gap = e.gap || 52;
+    if (ad > gap + 14) { const sp = Math.min(e.speed || 300, Math.max(110, (ad - gap) * 3)); e.x += Math.sign(d) * Math.min(sp * dt, ad - gap); e.walking = true; e.face = Math.sign(d); }
+    else { e.walking = false; if (!state.lock) e.face = player.face; }
+  }
+  // 春天跟着走：走过的地方冒出小花
+  const moved = Math.abs(player.x - px0);
+  if (sc.spring && moved > 0 && moved < 50) {
+    f.trailAcc = (f.trailAcc || 0) + moved;
+    if (f.trailAcc > 30) { f.trailAcc = 0; const tr = f.trail || (f.trail = []); tr.push({ x: player.x - player.face * 12 + R(-6, 6), t0: state.t, s: R(.75, 1.2), c: Math.floor(R(0, TRAIL_COLS.length)), lean: R(-3, 3) }); if (tr.length > 240) tr.shift(); }
+  }
+  // 哈气
+  let tgt = null, strength = 0;
+  if (breathing) {
+    strength = sc.id === 's7' ? .4 : (state.W < 1 && sc.cold > 0 ? .15 : clamp(state.W / 60, .3, 1));
+    tgt = breathTarget();
+    const avail = sc.id === 's7' ? availMem() : null, burst = tgt && tgt.type === 'guard' && avail && avail.length;
+    breathAcc += dt;
+    while (breathAcc > .035) {
+      breathAcc -= .035; const m = mouth(); let vx = player.face * 130, vy = -10;
+      if (tgt && (tgt.type === 'win' || tgt.type === 'bud')) { vx = (tgt.x - m.x) * 2.3; vy = (tgt.y - m.y) * 2.3; }
+      puff(m.x, m.y, vx * R(.75, 1.25) + R(-14, 14), vy * R(.8, 1.2) + R(-14, 14), (burst ? 22 : 8) + 16 * strength, !!burst);
+    }
+    if (tgt) {
+      if (tgt.type === 'win') {
+        tgt.frost = Math.max(0, tgt.frost - .36 * strength / (tgt.thick || 1) * dt);
+        if (!tgt.revealed && tgt.frost < .42) reveal(tgt);
+      } else if (tgt.type === 'guard') {
+        if (burst) { tgt.hold += dt; if (tgt.hold > .5) shatterGuard(tgt, avail[0]); }
+        else { tgt.frost -= .16 * dt; if (tgt.frost <= .05) shatterGuard(tgt, null); }
+      } else if (tgt.type === 'bud') {
+        tgt.open += dt * .9;
+        if (tgt.open >= 1) { tgt.done = true; tgt.doneT = state.t; sparkle(tgt.x, tgt.y - 6, '#ffe0e6'); sfx.bloom(); }
+      }
+    }
+    if (!tgt || tgt.type !== 'guard') for (const e of ents) if (e.type === 'guard') e.hold = 0;
+    breathSound(true);
+  } else { breathSound(false); for (const e of ents) if (e.type === 'guard') e.hold = 0; }
+  if (sc.cold > 0) for (const e of ents) if (e.type === 'win' && !e.revealed && e !== tgt && e.frost < 1) e.frost = Math.min(1, e.frost + .05 * dt);
+  // 冷暖
+  if (sc.id === 's7') state.W = 20;
+  else {
+    let drain = 0;
+    if (sc.cold > 0) {
+      drain = sc.cold + (has('靴子') ? -2 : has('红鞋') ? -1 : 2) - (has('手笼') ? 1.5 : 0) - (has('大手套') ? 2 : 0);
+      if (state.mode === 'ride') drain *= .5;
+      drain = state.lock ? 0 : Math.max(.4, drain);
+    }
+    let gain = sc.cold < 0 ? -sc.cold : 0;
+    for (const e of ents) {
+      if (e.type === 'heat') { const d = Math.abs(e.x - player.x); if (d < e.r) gain += e.power * (1 - d / e.r); }
+      else if (e.type === 'npc' && e.warm && e.visible) { if (Math.abs(e.x - player.x) < 70) gain += 8; }
+    }
+    let dW = gain - drain; if (breathing) dW -= 9;
+    state.W = clamp(state.W + dW * dt, 0, 100);
+    if (state.W < 1 && sc.cold > 0 && !lowToast && !state.lock) { lowToast = true; toast('太冷了，哈不出气。去暖和的地方待一会儿。', 4); }
+    if (state.W > 30) lowToast = false;
+  }
+  // 交互
+  let nearE = null;
+  if (free) {
+    for (const e of ents) if ((e.type === 'npc' || e.type === 'use') && e.visible !== false && e.run && (!e.when || e.when())) { const d = Math.abs(e.x - player.x); if (d < (e.reach || 60) && (!nearE || d < Math.abs(nearE.x - player.x))) nearE = e; }
+  }
+  setPrompt(nearE ? (typeof nearE.prompt === 'function' ? nearE.prompt() : nearE.prompt) : '');
+  if (nearE && actHit) { const e = nearE; run(() => e.run()); }
+  // 触发、出口
+  const past = e => e.dir < 0 ? player.x <= e.x : player.x >= e.x;
+  if (!scriptOn) for (const e of ents) if (e.type === 'trig' && !e.done && past(e) && (!e.when || e.when())) { e.done = true; run(e.runFn); break; }
+  if (!scriptOn) for (const e of ents) if (e.type === 'exit' && past(e)) {
+    if (!e.when || e.when()) run(e.runFn || (() => gotoScene(e.to)));
+    else { player.x = e.x - 60 * (e.dir || 1); if (e.blocked) run(e.blocked); }
+    break;
+  }
+  // 眼泪
+  if (player.cry && Math.random() < dt * 6) { const m = mouth(); tear(m.x - 2 * player.face, m.y - 4); }
+  const kay = find('kay'); if (kay && kay.cry && Math.random() < dt * 6) tear(kay.x + 6 * kay.face, FLOOR - 52 - 9);
+  // 飘雪
+  const vw = VWZ();
+  if (sc.flakes && Math.random() < dt * sc.flakes) flake(cam.x + R(0, vw), sc.id === 's6' || sc.id === 's7' ? 50 : 92);
+  if (sc.update) sc.update(dt, state.t);
+  // 镜头
+  const target = state.camFocus != null ? state.camFocus - vw / 2 : player.x - vw * (sc.dir < 0 ? .58 : .42);
+  const cmax = Math.max(0, sc.width - vw);
+  cam.x += (clamp(target, 0, cmax) - cam.x) * Math.min(1, dt * (state.camFocus != null ? 2.5 : 6));
+  if (sc.width < vw) cam.x = -(vw - sc.width) / 2;
+  // 暖和条
+  const wi = $('warmI'); wi.style.width = state.W.toFixed(0) + '%';
+  wi.style.setProperty('--wc', state.W > 55 ? '#eaa45c' : state.W > 25 ? '#cdb38a' : '#86b6da');
+}
+
+// ---------- 画面 ----------
+function render(t) {
+  ctx.setTransform(scale * dpr, 0, 0, scale * dpr, 0, 0);
+  ctx.clearRect(0, 0, viewW, VIEW_H);
+  if (state.mode === 'title') { drawTitle(t); return; }
+  if (!scene) { ctx.fillStyle = '#05070d'; ctx.fillRect(0, 0, viewW, VIEW_H); drawParts(); return; }
+  const sc = scene, cx = cam.x, k = scale * dpr;
+  ctx.setTransform(k * ZOOM, 0, 0, k * ZOOM, 0, -OY * k * ZOOM);
+  sc.bg(ctx, cx, t);
+  ctx.save(); ctx.translate(-Math.round(cx), 0);
+  for (const e of ents) {
+    if (e.layer === 'front' || (!e.always && (e.x < cx - 700 || e.x > cx + VWZ() + 700))) continue;
+    if (e.type === 'win') drawWin(e, t);
+    else if (e.type === 'guard') { if (!e.open) drawGuard(e, t); }
+    else if (e.type === 'npc') { if (e.visible !== false && e.draw) e.draw(e, t); }
+    else if (e.draw) e.draw(e, t);
+    paper(false);
+  }
+  if (!sc.hidePlayer) {
+    if (state.mode === 'boat') { const b = drawSkiff(ctx, player.x, 456, t); kid(ctx, player.x, 448 + b, gerdaLook()); }
+    else if (state.mode === 'ride') {
+      reindeer(ctx, player.x, FLOOR, player.face, player.walk, player.moving);
+      if (state.flags.kayRide) kid(ctx, player.x - 22 * player.face, FLOOR - 40, { face: player.face, sit: true, noShadow: true, coat: '#3e5f8e', hair: '#c9a25e', feet: 'boots' });
+      kid(ctx, player.x - 4 * player.face, FLOOR - 40, Object.assign(gerdaLook(), { sit: true, moving: false, noShadow: true }));
+    } else if (state.mode === 'sled') {
+      const sx = player.x - 78 * player.face;
+      drawSled(ctx, sx, player.face); reindeer(ctx, player.x, FLOOR, player.face, player.walk, player.moving);
+      kid(ctx, sx - 12 * player.face, FLOOR - 12, { face: player.face, sit: true, noShadow: true, coat: '#3e5f8e', hair: '#c9a25e', feet: 'boots' });
+      kid(ctx, sx + 10 * player.face, FLOOR - 12, Object.assign(gerdaLook(), { sit: true, moving: false, noShadow: true }));
+    }
+    else kid(ctx, player.x, FLOOR, gerdaLook());
+    paper(false);
+  }
+  for (const e of ents) if (e.layer === 'front' && e.draw) e.draw(e, t);
+  drawEternity();
+  drawParts();
+  ctx.restore();
+  ctx.setTransform(k, 0, 0, k, 0, 0);
+  const f = state.flags;
+  if (f.night) {
+    let fx = null; const fire = ents.find(e => e.type === 'heat' && sc.id === 's5'); if (fire) fx = (fire.x - cx) * ZOOM;
+    const fy = (FLOOR - 60 - OY) * ZOOM;
+    const g = fx != null ? ctx.createRadialGradient(fx, fy, 70, fx, fy, 480) : null;
+    if (g) { g.addColorStop(0, 'rgba(6,6,18,.1)'); g.addColorStop(1, 'rgba(6,6,18,.62)'); ctx.fillStyle = g; } else ctx.fillStyle = 'rgba(8,8,24,.26)';
+    ctx.fillRect(0, 0, viewW, VIEW_H);
+  }
+  const coldTint = sc.id === 's7' ? .34 : sc.id === 's6' ? .12 : 0;
+  const a = sc.cold > 0 || sc.id === 's7' ? clamp((1 - state.W / 100) * .55 + coldTint, 0, .75) : 0;
+  if (a > .01) { const g = ctx.createRadialGradient(viewW / 2, VIEW_H / 2, VIEW_H * .38, viewW / 2, VIEW_H / 2, Math.max(viewW, VIEW_H) * .72); g.addColorStop(0, 'rgba(214,231,243,0)'); g.addColorStop(1, 'rgba(214,231,243,' + a.toFixed(3) + ')'); ctx.fillStyle = g; ctx.fillRect(0, 0, viewW, VIEW_H); }
+  if (state.fade > .001) { ctx.fillStyle = 'rgba(5,7,13,' + state.fade.toFixed(3) + ')'; ctx.fillRect(0, 0, viewW, VIEW_H); }
+}
+const titleWin = { x: 0, y: 150, r: 80, frost: 1, mem: 'm1', revealed: false, glow: 0 };
+function drawTitle(t) {
+  const c = ctx; const g = c.createLinearGradient(0, 0, 0, VIEW_H); g.addColorStop(0, '#1a1410'); g.addColorStop(1, '#0a0f1c'); c.fillStyle = g; c.fillRect(0, 0, viewW, VIEW_H);
+  glow(c, viewW / 2, 170, 260, 'rgba(234,164,92,.12)');
+  titleWin.x = viewW / 2; titleWin.frost = .62 + .3 * Math.sin(t * .45);
+  drawWin(titleWin, t); paper(false);
+  if (Math.random() < .3) parts.push({ k: 'flake', x: R(0, viewW), y: -4, vx: R(-8, 8), vy: R(14, 26), life: 0, max: 30, r: R(.8, 2) });
+  stepParts(1 / 60); drawParts();
+}
+
+// ---------- 结尾、开始 ----------
+function showEnd() {
+  state.mode = 'end'; clearSave();
+  const n = state.memAtVault, k = state.kayMem || 0;
+  $('endStat').textContent = (n ? '你带着 ' + n + ' 段回忆走进了冷舱。' : '你一段回忆也没带，还是走到了加伊跟前。') + (k ? '回来的路上，加伊想起了 ' + k + ' 段。' : '');
+  $('end').hidden = false; $('btnAgain').focus();
+}
+function resetRun() {
+  state.mem = new Set(); state.faded = new Set(); state.used = new Set(); state.items = new Set(['红鞋']); state.W = 100; state.memAtVault = 0; state.kayMem = 0;
+}
+async function prologue() {
+  state.mode = 'cut'; scene = null; ents = []; parts.length = 0; state.fade = 0;
+  await showCard('第一个故事', '镜子和碎片', '', false);
+  $('cardKicker').textContent = ''; $('cardTitle').textContent = '';
+  for (const text of [
+    '白鹳号是一艘世代船。从出发到抵达，要开三百二十年。船上的人在船上出生，在船上长大，一代一代往下传。',
+    '船尾有一面大镜子，早年间用来测星。后来有人在镜面上动了手脚：玫瑰照进去，只看得见虫眼；人脸照进去，只看得见斑。',
+    '有一天，镜子裂了。碎片比灰还细，顺着通风管飘遍了全船。进了眼睛，看什么都只看得见毛病。扎进心口，心就慢慢凉成一块冰。',
+  ]) { $('cardText').textContent = text; $('cardHint').hidden = false; await new Promise(res => { dlgAt = performance.now(); dlgPending = () => { res(); return true; }; }); }
+  state.fade = 1; await hideCard();
+  await gotoScene('s1');
+}
+function startGame(from) {
+  audioInit(); if (ac && ac.state === 'suspended') ac.resume();
+  $('title').hidden = true; $('end').hidden = true; $('hud').hidden = true;
+  if (document.activeElement) document.activeElement.blur();
+  parts.length = 0;
+  if (from) { state.mem = new Set(from.mem || []); state.items = new Set(from.items || []); state.faded = new Set(); state.used = new Set(); state.W = 100; state.mode = 'cut'; run(() => gotoScene(from.scene)); }
+  else { resetRun(); bgm('twinkle'); run(prologue); }
+}
+$('btnNew').addEventListener('click', () => startGame(null));
+$('btnCont').addEventListener('click', () => { const s = loadSave(); startGame(s); });
+$('btnAgain').addEventListener('click', () => { state.mode = 'cut'; startGame(null); });
+$('btnEndBook').addEventListener('click', () => { renderBook(); bookEl.hidden = false; $('bookClose').focus(); });
+if (touchy) $('keysHint').textContent = '左下角走路，右下角按住「哈气」，点「互动」说话、翻页';
+
+// ---------- 主循环 ----------
+let last = performance.now();
+function loop(now) {
+  flushFrames();
+  const dt = Math.min(.05, (now - last) / 1000) * timeScale; last = now;
+  if (state.mode !== 'title' && bookEl.hidden) update(dt);
+  else if (state.mode !== 'title' && !bookEl.hidden) { /* 小册子打开时暂停 */ }
+  render(now / 1000);
+  actHit = false; advHit = false;
+  requestAnimationFrame(loop);
+}
+function boot(data) {
+  layout();
+  const s = loadSave(); $('btnCont').hidden = !s;
+  if (s) $('btnCont').textContent = '接着玩：' + SCENES[s.scene].kicker;
+  if (data && data.scene && SCENES[data.scene] && data.scene !== 'end') startGame(data);
+  else { try { $('btnNew').focus({ preventScroll: true }); } catch (e) {} }
+  requestAnimationFrame(loop);
+}
+addEventListener('resize', layout);
+// 测试用：不靠动画帧，手动往前推进游戏时间
+const mc = new MessageChannel(); let mcRes = null; mc.port1.onmessage = () => { const r = mcRes; mcRes = null; if (r) r(); };
+const yieldTask = () => new Promise(r => { mcRes = r; mc.port2.postMessage(0); });
+async function pump(sec, step) {
+  step = step || 1 / 30; const n = Math.max(1, Math.round(sec / step));
+  for (let i = 0; i < n; i++) { flushFrames(); if (state.mode !== 'title' && bookEl.hidden) update(step); actHit = false; advHit = false; await yieldTask(); }
+  render(performance.now() / 1000);
+}
+window.__sq = { state, player, cam, keys, get scene() { return scene; }, ents: () => ents, auto: false, pump,
+  speed: k => { timeScale = k; }, act: () => { actHit = true; advHit = true; }, go: id => run(() => gotoScene(id)), collect, availMem,
+  bgm, song, songs: () => Object.keys(SONGS), get bgmCur() { return bgmCur; } };
+try { window.claude && window.claude.hot && window.claude.hot.snapshot && window.claude.hot.snapshot(() => ({ scene: state.sceneId, mem: [...state.mem], items: [...state.items] })); } catch (e) {}
+const hot = window.claude && window.claude.hot;
+if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
+})();
+</script>
+</body></html>
