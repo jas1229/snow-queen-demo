@@ -4,7 +4,7 @@
 
 在线玩：https://jas1229.github.io/snow-queen-demo/
 
-开始页可以切换中文、English、Français。
+开始页可以切换中文、English、Français，还可以选「原版」或「加长版」。加长版多几段安徒生原文：加伊看画册时说的话、冰雪女王空荡荡的大殿和“理智之镜”、她临走的话，冷舱里要亲手拼一次“永恒”，回忆里也多了些小毛病。
 
 ## 怎么玩
 
@@ -26,8 +26,9 @@
 ## 文件
 
 - `index.html`：游戏源文件，英文和法文的译文表也在里面（按中文原句对应）
+- 原版和加长版是同一份代码，`index.html` 里的 `LONG` 开关决定走哪条线（开始页选，存档里也记着）
 - `docs/`：放在 GitHub Pages 上的那份，运行 `python3 build-local.py` 从源文件生成；里面还有添加到主屏幕用的图标、`manifest.webmanifest` 和离线缓存 `sw.js`
 
 ---
 
-**The Snow Queen at the Stern** — a short browser game (about 20 minutes) based on Hans Christian Andersen's *The Snow Queen*, set on a generation starship. Walk from the bow to the stern, breathe on frosted portholes to uncover memories, and bring Kay home. Playable in Chinese, English and French: https://jas1229.github.io/snow-queen-demo/
+**The Snow Queen at the Stern** — a short browser game (about 20 minutes) based on Hans Christian Andersen's *The Snow Queen*, set on a generation starship. Walk from the bow to the stern, breathe on frosted portholes to uncover memories, and bring Kay home. Playable in Chinese, English and French, as the original cut or an extended one with more of Andersen's own text and a hands-on ice puzzle: https://jas1229.github.io/snow-queen-demo/

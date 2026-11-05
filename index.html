@@ -147,6 +147,18 @@ body{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 .touch .warm{font-size:12px;padding:6px 10px}
 .touch .prompt{pointer-events:auto;cursor:pointer}
 
+/* 开始页的版本选择（原版 / 加长版）；竖屏地方小，不放那句说明，免得标题顶到舷窗上 */
+.s-ver{display:inline-flex;gap:2px;padding:2px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);margin-top:4px}
+.s-ver button{background:none;border:0;border-radius:999px;color:var(--ink-2);font-family:var(--f-title);font-size:.88em;letter-spacing:.1em;padding:4px 16px;cursor:pointer}
+.s-ver button:hover{color:var(--paper)}
+.s-ver button.on{background:rgba(255,255,255,.15);color:var(--paper)}
+.s-ver button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+.s-verhint{margin:-4px 0 0;color:var(--ink-3);font-size:.75em;max-width:30em;text-wrap:pretty}
+#app.portrait .s-verhint{display:none}
+#app.portrait #title{gap:7px}
+#app.portrait #title .s-keys{line-height:1.6}
+@media (max-height:500px){ .s-verhint{display:none} #title{gap:6px} #title .s-keys{line-height:1.5} }
+
 /* 语言切换和西文排版：标题换成西文衬线体，字距收紧 */
 .s-lang{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
 .s-lang button{background:none;border:0;color:var(--ink-3);font-size:.78em;padding:4px 8px;cursor:pointer;border-bottom:1px solid transparent}
@@ -195,6 +207,8 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
       <div class="s-kicker" data-i18n="世代船 白鹳号">世代船 白鹳号</div>
       <h1 class="s-name" data-i18n="船尾的冰雪女王">船尾的冰雪女王</h1>
       <p class="s-sub" data-i18n="七个故事 · demo">七个故事 · demo</p>
+      <div class="s-ver" id="verPick" role="group" aria-label="版本" data-i18n-aria="版本"><button type="button" data-ver="0" data-i18n="原版">原版</button><button type="button" data-ver="1" data-i18n="加长版">加长版</button></div>
+      <p class="s-verhint" id="verHint"></p>
       <div class="s-actions"><button class="btn" id="btnNew" type="button" data-i18n="开始">开始</button><button class="btn ghost" id="btnCont" type="button" hidden>接着玩</button></div>
       <div class="s-keys" id="homeHint" hidden></div>
       <div class="s-keys" id="keysHint"><kbd>←</kbd><kbd>→</kbd> 走路　<kbd>空格</kbd> 按住哈气　<kbd>E</kbd> 互动 / 继续　<kbd>B</kbd> 小册子　<kbd>M</kbd> 音乐</div>
@@ -657,11 +671,40 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "领航员起来，把自己的床让给格尔达睡，他能做的也就这么多了。格尔达合起小手想：“人和动物都多么好啊！”然后就睡着了，睡得很香。": ["The navigator got up and let Gerda sleep in his bed, and more than this he could not do. She folded her little hands and thought, “How good people and animals are!” and then she fell asleep and slept soundly.", "Le navigateur se leva et laissa Gerda dormir dans son lit ; il ne pouvait pas faire plus. Elle joignit ses petites mains et pensa : « Comme les hommes et les bêtes sont bons ! » Puis elle s’endormit et dormit profondément."],
 "驯鹿一直跑到那丛结着红果子的大灌木旁边，把格尔达放下来，亲了亲她的嘴，大颗大颗亮晶晶的眼泪从它眼睛里流下来，然后它就拼命往回跑了。": ["The reindeer ran on till he came to the great bush with the red berries, and there he set Gerda down, kissed her mouth, while large bright tears flowed from his eyes, and then back he went as fast as possible.", "Le renne courut jusqu’au grand buisson aux baies rouges ; il y déposa Gerda, l’embrassa sur la bouche, tandis que de grosses larmes brillantes coulaient de ses yeux, puis il repartit aussi vite qu’il put."],
 "驯鹿和小母鹿在他们身边跳着跑着，一直把他们送到冷舱的边界。那儿冒出了第一撮绿芽。": ["The reindeer and the young doe leaped along beside them, and went with them to the edge of the cold vault. Here the first green shoots peeped forth.", "Le renne et la jeune renne bondirent à côté d’eux et les accompagnèrent jusqu’à la limite de la cale froide. Là, les premières pousses vertes pointaient."],
-"驯鹿高兴得一下子蹦了起来。": ["The reindeer gave a bound for joy.", "Le renne fit un bond de joie."]
+"驯鹿高兴得一下子蹦了起来。": ["The reindeer gave a bound for joy.", "Le renne fit un bond de joie."],
+"大殿正中是一个冻住的湖，裂成了一千块，每一块都一模一样，好像是哪个手巧的工匠做出来的。冰雪女王在家的时候，就坐在湖中间。她说她坐在“理智之镜”里，这是世界上独一无二、最好的东西。": ["In the middle of the empty, endless hall was a frozen lake; it was cracked in a thousand pieces, but each piece was so like the other, that it seemed the work of a cunning artificer. In the middle of this lake sat the Snow Queen when she was at home; and then she said she was sitting in the Mirror of Understanding, and that this was the only one and the best thing in the world.", "Au milieu de la salle vide et sans fin, il y avait un lac gelé ; il était fendu en mille morceaux, mais chaque morceau ressemblait tant aux autres qu’on aurait dit l’ouvrage d’un habile artisan. C’est au milieu de ce lac que la Reine des neiges s’asseyait quand elle était chez elle ; elle disait alors qu’elle était assise dans le Miroir de la Raison, et que c’était le seul et le meilleur qui fût au monde."],
+"冰雪女王走的时候说：“我要到暖和的地方去了，去看看那些黑锅炉。给它们刷一层白，本来就该这样；再说，这对温室里的橙子和葡萄也有好处。”": ["“I am going now to warm lands,” the Snow Queen had said when she left. “I must have a look down into the black boilers. I will just give them a coating of white, for that is as it ought to be; besides, it is good for the oranges and the grapes in the greenhouse.”", "« Je m’en vais maintenant vers les pays chauds, avait dit la Reine des neiges en partant. Il faut que j’aille jeter un coup d’œil dans les chaudières noires. Je vais leur passer une couche de blanc, c’est ainsi que cela doit être ; et puis c’est bon pour les oranges et les raisins de la serre. »"],
+"说完她就飞走了。加伊一个人坐在好几里长的、空荡荡的冰殿里，看着那些冰块，想啊想，想得脑袋都快裂开了。他坐在那儿，僵硬得一动不动，别人准会以为他已经冻死了。": ["And then away she flew, and Kay sat quite alone in the empty halls of ice that were miles long, and looked at the blocks of ice, and thought and thought till his skull was almost cracked. There he sat quite benumbed and motionless; one would have imagined he was frozen to death.", "Puis elle s’envola, et Kay resta tout seul dans les salles de glace vides, longues de plusieurs lieues ; il regardait les morceaux de glace et réfléchissait, réfléchissait, à s’en fendre la tête. Il restait là, raide et immobile ; on aurait dit qu’il était mort de froid."],
+"我跟她说，我会心算，连分数都会；我还知道每个国家有多少平方英里、住着多少人。她听着就笑。我就觉得，我会的那些都不够。": ["I told her I could calculate in my head, and with fractions, even; that I knew the number of square miles there were in the different countries, and how many inhabitants they contained. And she smiled while I spoke. Then it seemed to me as if what I knew was not enough.", "Je lui ai dit que je savais calculer de tête, même avec des fractions ; que je connaissais le nombre de lieues carrées de chaque pays, et combien d’habitants il y avait. Elle souriait pendant que je parlais. Alors il m’a semblé que tout ce que je savais ne suffisait pas."],
+"她亲了我一下，我就不冷了。又亲了一下，我就把……把什么都忘了。她说不能再亲了，再亲就要把我亲死了。": ["She kissed me once, and I was not cold any more. She kissed me again, and I forgot… I forgot everything. She said I should have no more kisses, or else she would kiss me to death.", "Elle m’a embrassé une fois, et je n’ai plus eu froid. Elle m’a embrassé encore, et j’ai oublié… j’ai tout oublié. Elle a dit que je n’aurais plus de baisers, sinon elle me ferait mourir de baisers."],
+"帮加伊拼出“永恒”": ["Help Kay spell out “Eternity”", "Aider Kay à former le mot « Éternité »"],
+"帮加伊拼冰块": ["Help Kay with the ice-puzzle", "Aider Kay avec le puzzle de glace"],
+"抱住加伊": ["Hug Kay", "Serrer Kay dans ses bras"],
+"格尔达蹲下来，想帮他拼。": ["Gerda knelt down beside him and tried to help him lay the pieces together.", "Gerda s’accroupit près de lui et voulut l’aider à assembler les morceaux."],
+"差了一块。": ["One piece was missing.", "Il manquait un morceau."],
+"还是差一块。加伊的脸更青了。": ["Still one piece missing. Kay’s face grew bluer.", "Il manquait encore un morceau. Le visage de Kay bleuit davantage."],
+"拼来拼去，总是差一块。": ["Whichever way they laid them, there was always one piece missing.", "On avait beau les assembler dans tous les sens, il manquait toujours un morceau."],
+"按冰雪女王说过的话，整个新世界和一双新冰鞋，现在都归他了。": ["By the Snow Queen’s own words, the whole new world and a pair of new skates were his now.", "Selon les paroles mêmes de la Reine des neiges, le nouveau monde tout entier et une paire de patins neufs étaient à lui désormais."],
+"那双新冰鞋就留在湖面上，谁也没有回头去拿。": ["The new skates were left lying on the lake. Neither of them went back for them.", "Les patins neufs restèrent sur le lac. Aucun des deux ne revint les chercher."],
+"这里从来没有热闹过。从来没开过一次舞会，连白狐狸小姐们的小茶会也没有过。冰雪女王的大殿又大，又空，又冷。": ["Mirth never reigned here; there was never even a little ball, never a little tea-party of white young lady foxes; vast, empty, and cold were the halls of the Snow Queen.", "La gaieté n’avait jamais régné ici ; jamais le moindre petit bal, jamais même un petit thé de jeunes demoiselles renardes blanches ; vastes, vides et glacées étaient les salles de la Reine des neiges."],
+"格尔达把画册拿给他看。": ["Afterwards, when Gerda brought her picture-book, he asked,", "Ensuite, quand Gerda lui apporta son livre d’images, il demanda :"],
+"这都是些什么丑八怪？": ["What horrid beasts have you there?", "Qu’est-ce que c’est que ces horribles bêtes ?"],
+"格尔达把那本画册拿了出来。两个人头碰头地翻着，里面的鸟和兽一只比一只好看。": ["Gerda brought out the picture-book full of beasts and of birds. They bent their heads together over it, and every beast and every bird looked lovelier than the last.", "Gerda sortit le livre d’images plein de bêtes et d’oiseaux. Ils le feuilletèrent tête contre tête, et chaque bête, chaque oiseau leur parut plus beau que le précédent."],
+"夏天，你们常常得到准许，从窗子爬出去，坐在玫瑰中间的小板凳上，玩得开心极了。最边上那株长歪了，奶奶不让剪，说歪的也开花。她说这株玫瑰是从地球上带来的那一株分出来的，传到你们手里，已经是第四代了。": ["In summer you often had permission to climb out of the windows and sit on your little stools among the roses, where you could play delightfully. The bush at the very end grew crooked; Grandma would not let anyone prune it. Crooked ones bloom too, she said. She said this rose was a cutting from the one brought from Earth; by the time it reached you two, it was the fourth generation.", "En été, vous aviez souvent la permission de sortir par les fenêtres pour vous asseoir sur vos petits tabourets au milieu des roses, et vous y jouiez merveilleusement. Le rosier tout au bout avait poussé de travers ; Grand-mère ne voulait pas qu’on le taille. Les tordus fleurissent aussi, disait-elle. Elle disait que ce rosier venait d’une bouture de celui qu’on avait apporté de la Terre ; arrivé jusqu’à vous, il en était à la quatrième génération."],
+"有一年你发高烧，加伊每天放学都从门缝里塞一张画进来。第三张画的是你，头顶冒着热气，像一壶刚烧开的水。画得一点也不像，你还是把它贴在了床头。": ["One year you had a high fever. Every day after school Kay slid a drawing under your door. The third one was of you, with steam rising from your head like a kettle just come to the boil. It looked nothing like you, and you stuck it up over your bed all the same.", "Une année, tu avais une forte fièvre. Chaque jour après l’école, Kay glissait un dessin sous ta porte. Le troisième, c’était toi, avec de la vapeur au-dessus de la tête, comme une bouilloire qui vient de bouillir. Il ne te ressemblait pas du tout, et tu l’as quand même collé au-dessus de ton lit."],
+"原版": ["Original", "Version courte"],
+"加长版": ["Extended", "Version longue"],
+"版本": ["Version", "Version"],
+"原版：短一些，七个故事一口气走完。": ["Original: shorter, all seven stories in one go.", "Version courte : les sept histoires d’une seule traite."],
+"加长版：多几段安徒生原文，冷舱里要亲手拼一次“永恒”。": ["Extended: more of Andersen’s own words, and in the cold vault you try to spell “Eternity” yourself.", "Version longue : davantage de passages d’Andersen, et dans la cale froide, tu essaies toi-même de former « Éternité »."],
+"（加长版）": [" (extended)", " (version longue)"]
 };</script>
 <script>
 (() => {
 'use strict';
+// 加长版开关：开始页上选「原版 / 加长版」，记在本地；接着玩时按存档里记的那一版来
+let LONG = false;
+try { LONG = localStorage.getItem('snowqueen-ver') === 'long'; } catch (e) {}
 const TAU = Math.PI * 2;
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -995,10 +1038,10 @@ function glow(c, x, y, r, col) { const g = c.createRadialGradient(x, y, 2, x, y,
 // ---------- 回忆 ----------
 const MEMS = [
   { id: 'm1', title: '窗上的小孔', text: '冬天，窗子常常冻上。你们就把铜钱放在暖气片上烤热，按在玻璃上，烫出一个圆圆的小孔。每个小孔里都有一只温和、亲切的眼睛往外看，一只是你的，一只是加伊的。' },
-  { id: 'm2', title: '玫瑰箱', text: '夏天，你们常常得到准许，从窗子爬出去，坐在玫瑰中间的小板凳上，玩得开心极了。奶奶说，这株玫瑰是从地球上带来的那一株分出来的，传到你们手里，已经是第四代了。' },
+  { id: 'm2', title: '玫瑰箱', get text() { return LONG ? '夏天，你们常常得到准许，从窗子爬出去，坐在玫瑰中间的小板凳上，玩得开心极了。最边上那株长歪了，奶奶不让剪，说歪的也开花。她说这株玫瑰是从地球上带来的那一株分出来的，传到你们手里，已经是第四代了。' : '夏天，你们常常得到准许，从窗子爬出去，坐在玫瑰中间的小板凳上，玩得开心极了。奶奶说，这株玫瑰是从地球上带来的那一株分出来的，传到你们手里，已经是第四代了。'; } },
   { id: 'm3', title: '雪橇', text: '加伊有一架小雪橇，是他爸爸拿旧货架改的。在船尾那条长坡道上，他拉着你往下滑，你一路尖叫，他笑得从雪橇上翻了下去。' },
   { id: 'm4', title: '玻璃珠', text: '你七岁生日那天，加伊送你一颗玻璃珠，说是从舷窗外面捞上来的星星。你知道是假的，还是揣在兜里揣了一整年。' },
-  { id: 'm5', title: '门缝里的画', text: '有一年你发高烧，加伊每天放学都从门缝里塞一张画进来。第三张画的是你，头顶冒着热气，像一壶刚烧开的水。' },
+  { id: 'm5', title: '门缝里的画', get text() { return LONG ? '有一年你发高烧，加伊每天放学都从门缝里塞一张画进来。第三张画的是你，头顶冒着热气，像一壶刚烧开的水。画得一点也不像，你还是把它贴在了床头。' : '有一年你发高烧，加伊每天放学都从门缝里塞一张画进来。第三张画的是你，头顶冒着热气，像一壶刚烧开的水。'; } },
   { id: 'm6', title: '缺齿的梳子', text: '奶奶每天在暖气片边上给你梳头。那把梳子是塑料的，缺了两个齿，梳到打结的地方，她就停一停，用手指慢慢捻开。' },
   { id: 'm7', title: '咯吱咯吱', text: '加伊的新靴子是拿他爸爸的旧靴子改的，走起来咯吱咯吱响。他在走廊里来回走了十几趟，就为了让你听见。' },
   { id: 'm8', title: '星图课', text: '星图课上，老师问白鹳号要开多少年。加伊举手说三百二十年，又转过来小声跟你说：到的时候我们早没了，所以船上得一直有小孩。全班都听见了。' },
@@ -1145,7 +1188,7 @@ function kid(c, x, y, o) {
   else { c.fillStyle = '#2a1f1a'; circ(c, 6, hy + .5, 1.4); c.fill(); }
   if (o.glint) { c.fillStyle = '#e4f7ff'; circ(c, 6.8, hy - .3, 1); c.fill(); }
   c.fillStyle = 'rgba(220,110,110,.35)'; circ(c, 6, hy + 4.5, 2); c.fill();
-  if (o.cold) { c.fillStyle = 'rgba(130,175,220,.4)'; circ(c, 1, hy, 10.6); c.fill(); }
+  if (o.cold) { c.fillStyle = 'rgba(130,175,220,' + (o.coldA || .4) + ')'; circ(c, 1, hy, 10.6); c.fill(); }
   c.restore();
 }
 function gerdaLook() {
@@ -1625,6 +1668,7 @@ async function kayEvent() {
   await say('加伊', '呸！这朵玫瑰被虫咬了！你看，这一朵长得多歪！说到底，这些玫瑰丑得很，跟种它们的箱子一个样！');
   f.kicked = true; sfx.thud();
   await narr('他朝箱子狠狠踢了一脚，扯下了一朵玫瑰。');
+  if (LONG) { await narr('格尔达把画册拿给他看。'); await say('加伊', '这都是些什么丑八怪？'); }
   f.vent = true; await wait(1100); kay.mag = true; kay.face = 1;
   await say('加伊', '格尔达，你从这块放大镜里看。');
   await narr('每一片雪花都变大了，像一朵华丽的花，又像一颗十个角的星星，好看极了。');
@@ -2097,10 +2141,16 @@ SCENES.s7 = {
       Prop(150, e => drawBush(e.x)),
       Prop(2000, () => drawPods()),
       Prop(2700, (e, t) => drawLake(t)),
+      ...(LONG ? [
+        Prop(1925, e => drawTeaTable(e.x)),
+        Trig(1880, async () => { await narr('这里从来没有热闹过。从来没开过一次舞会，连白狐狸小姐们的小茶会也没有过。冰雪女王的大殿又大，又空，又冷。'); }),
+        Prop(3046, () => { if (state.flags.skates) drawSkates(3046); }),
+        Use({ x: 3004, reach: 60, prompt: () => (state.flags.puzzle || 0) < 3 ? '帮加伊拼冰块' : '抱住加伊', when: () => state.flags.puzzle != null && !state.flags.freedKay, run: () => (state.flags.puzzle || 0) < 3 ? iceTry() : reunion() }),
+      ] : []),
       Guard(720, 'hedgehog'), Guard(980, 'snake'), Guard(1240, 'bear'), Guard(1520, 'flake'), Guard(1800, 'hedgehog'),
       Npc({ id: 'kay', x: 3030, face: -1, warm: false, draw: (e, t) => drawKayOnLake(e, t) }),
       Trig(2060, async () => { await narr('两边是一排一排的冷舱，玻璃上结满了霜。里面的人都睡着，等船到的那一天。'); }),
-      Trig(2880, finale),
+      Trig(2880, LONG ? finaleLong : finale),
     ];
   },
   async enter() {
@@ -2112,7 +2162,11 @@ SCENES.s7 = {
     toast(n ? '冷舱里没有暖和的地方。你一路看到的回忆，每一段都能哈出一口热气。{breath}。' : '你没带回忆进来。小口哈气也能化开冰，只是慢一点。{breath}。', 7);
     goal('去冷舱最里面找加伊');
   },
-  update(dt) { const e = state.eter; if (e) e.t += dt; },
+  update(dt) {
+    const e = state.eter; if (!e) return; e.t += dt;
+    if (e.fail && !e.cracked && e.t > 3.4) { e.cracked = true; sfx.crack(); }
+    if (e.fail && e.t > 4.8) state.eter = null;
+  },
 };
 function drawBush(x) { const c = ctx; paper(true); c.fillStyle = '#4b6b5a'; ell(c, x, FLOOR - 26, 50, 30); c.fill(); paper(false); c.fillStyle = 'rgba(255,255,255,.6)'; ell(c, x - 6, FLOOR - 50, 36, 8); c.fill(); c.fillStyle = '#c4303f'; for (let i = 0; i < 12; i++) { circ(c, x - 38 + (i * 23) % 76, FLOOR - 14 - (i * 17) % 36, 3); c.fill(); } }
 function drawPods() {
@@ -2127,8 +2181,8 @@ function drawLake(t) {
 }
 function drawKayOnLake(e, t) {
   const c = ctx, f = state.flags;
-  if (!state.eter) { c.fillStyle = '#eef8ff'; for (let i = 0; i < 22; i++) { const a = i * 2.4, rad = 34 + (i * 13) % 50; c.save(); c.translate(e.x + Math.cos(a) * rad, FLOOR - 4 + Math.sin(a) * 6); c.rotate(a); c.fillRect(-4, -2.5, 8, 5); c.restore(); } }
-  kid(c, e.x, FLOOR, { face: e.face, sit: !f.freedKay, coat: '#3e5f8e', hair: '#c9a25e', feet: 'boots', cold: !f.freedKay, glint: !f.freedKay, hug: f.freedKay });
+  if (!state.eter) { c.fillStyle = '#eef8ff'; for (let i = 0; i < 22; i++) { const a = i * 2.4, rad = 34 + (i * 13) % 50; c.save(); c.translate(3030 + Math.cos(a) * rad, FLOOR - 4 + Math.sin(a) * 6); c.rotate(a); c.fillRect(-4, -2.5, 8, 5); c.restore(); } }
+  kid(c, e.x, FLOOR, { face: e.face, walk: e.walk, moving: e.walking, sit: !f.freedKay, coat: '#3e5f8e', hair: '#c9a25e', feet: 'boots', cold: !f.freedKay, coldA: .4 + .12 * (f.puzzle || 0), glint: !f.freedKay, hug: f.freedKay && !e.walking });
 }
 async function finale() {
   const f = state.flags, kay = find('kay');
@@ -2156,7 +2210,58 @@ async function finale() {
   state.camFocus = null;
   await gotoScene('r1');
 }
-function startEternity(cx, cy) {
+// 加长版：理智之镜、她临走的话、加伊怎么被哄走的；拼冰块交给玩家
+async function finaleLong() {
+  const f = state.flags, kay = find('kay');
+  await narr('大殿正中是一个冻住的湖，裂成了一千块，每一块都一模一样，好像是哪个手巧的工匠做出来的。冰雪女王在家的时候，就坐在湖中间。她说她坐在“理智之镜”里，这是世界上独一无二、最好的东西。');
+  await narr('小加伊冻得发青，差不多都发黑了，可他自己一点也觉不出来，因为冰雪女王的吻已经吻走了他身上所有的寒意，他的心也差不多成了一块冰。他拖着一些又尖又平的冰块，用各种各样的法子把它们拼在一起，想拼出点什么来。');
+  await narr('冰雪女王走的时候说：“我要到暖和的地方去了，去看看那些黑锅炉。给它们刷一层白，本来就该这样；再说，这对温室里的橙子和葡萄也有好处。”');
+  await narr('说完她就飞走了。加伊一个人坐在好几里长的、空荡荡的冰殿里，看着那些冰块，想啊想，想得脑袋都快裂开了。他坐在那儿，僵硬得一动不动，别人准会以为他已经冻死了。');
+  await say('加伊', '冰雪女王说，要是我能拼出“永恒”这两个字，我就能自己做主，她就把整个新世界和一双新冰鞋都送给我。');
+  await say('加伊', '我跟她说，我会心算，连分数都会；我还知道每个国家有多少平方英里、住着多少人。她听着就笑。我就觉得，我会的那些都不够。');
+  await say('加伊', '她亲了我一下，我就不冷了。又亲了一下，我就把……把什么都忘了。她说不能再亲了，再亲就要把我亲死了。');
+  await say('加伊', '冷舱里的人都不会老。等船到了，我一醒来就能看见新世界。');
+  hideDialog(); await walkPlayer(kay.x - 26, 90); player.face = 1;
+  await say('格尔达', '加伊，亲爱的小加伊！我总算找到你了！');
+  await narr('可是他坐着一动不动，又僵又冷。');
+  hideDialog();
+  f.puzzle = 0; goal('帮加伊拼出“永恒”');
+}
+// 理智的冰块游戏：怎么拼都差一块；拼过三回，才想到抱住他
+async function iceTry() {
+  const f = state.flags;
+  if (!f.puzzle) await narr('格尔达蹲下来，想帮他拼。');
+  hideDialog();
+  state.camFocus = 3030; startEternity(3030, 250, true); await wait(4900);
+  f.puzzle++;
+  await narr(['差了一块。', '还是差一块。加伊的脸更青了。', '拼来拼去，总是差一块。'][f.puzzle - 1]);
+  hideDialog(); state.camFocus = null;
+  if (f.puzzle >= 3) goal('抱住加伊');
+}
+async function reunion() {
+  const f = state.flags, kay = find('kay');
+  bgm(null);
+  player.hug = true; player.cry = true;
+  await narr('小格尔达流下滚烫的眼泪。眼泪落在他胸口，渗进他心里，融化了那块冰，也把镜子的碎片冲走了。');
+  kay.cry = true;
+  await narr('他看着她，忽然哭了起来，哭得那么厉害，眼睛里那粒碎片也跟着眼泪滚了出来。他认出了她。');
+  f.freedKay = true; player.cry = false; goal('');
+  await say('加伊', '格尔达！亲爱的小格尔达！你这么久上哪儿去了？我又在哪儿呀？');
+  await say('加伊', '这儿多冷啊！多空，多冷啊！');
+  kay.cry = false; player.hug = false;
+  hideDialog();
+  state.camFocus = 3030; startEternity(3030, 250); await wait(4200);
+  await narr('这太美了，连冰块都高兴得跳起舞来。跳累了，它们就躺下来，正好拼成了冰雪女王要他拼的那两个字。这下他可以自己做主了。');
+  await narr('按冰雪女王说过的话，整个新世界和一双新冰鞋，现在都归他了。');
+  f.skates = true;
+  bgm('largo');
+  await narr('格尔达亲他的脸颊，脸颊就红润起来；亲他的眼睛，眼睛就跟她的一样亮；亲他的手和脚，他又健康快活了。两个人手拉着手，走出了大殿。');
+  hideDialog(); state.camFocus = null;
+  walkNpc(kay, kay.x - 300, 80); await walkPlayer(player.x - 300, 80);
+  await narr('那双新冰鞋就留在湖面上，谁也没有回头去拿。');
+  await gotoScene('r1');
+}
+function startEternity(cx, cy, fail) {
   // 西文的词比两个汉字长，画布放宽，字号按宽度缩
   const word = t('永恒'), W = lang === 'zh' ? 360 : 560, H = 170;
   const oc = document.createElement('canvas'); oc.width = W; oc.height = H; const o = oc.getContext('2d');
@@ -2165,17 +2270,60 @@ function startEternity(cx, cy) {
   o.fillStyle = '#fff'; o.textAlign = 'center'; o.textBaseline = 'middle'; o.fillText(word, W / 2, 90);
   const d = o.getImageData(0, 0, W, H).data, pts = [];
   for (let y = 0; y < H; y += 5) for (let x = 0; x < W; x += 5) if (d[(y * W + x) * 4 + 3] > 128) pts.push({ x0: cx + R(-110, 110), y0: FLOOR - 4 + R(-6, 4), x1: cx - W / 2 + x, y1: cy - 90 + y, d: R(0, .8), sp: R(-1, 1) });
-  state.eter = { pts, t: 0, cx, cy };
-  sfx.shatter(); setTimeout(() => sfx.chime(), 1800 / timeScale);
+  const miss = [];
+  if (fail && pts.length) {
+    let lo = Infinity, hi = -Infinity; for (const q of pts) { lo = Math.min(lo, q.x1); hi = Math.max(hi, q.x1); }
+    const mid = pts.filter(q => q.x1 > lo + (hi - lo) * .1 && q.x1 < hi - (hi - lo) * .1), ctr = mid[Math.floor(Math.random() * mid.length)] || pts[0], rad = lang === 'zh' ? 22 : 18;
+    for (let i = pts.length - 1; i >= 0; i--) if (Math.hypot(pts[i].x1 - ctr.x1, pts[i].y1 - ctr.y1) < rad) miss.push(pts.splice(i, 1)[0]);
+  }
+  state.eter = { pts, miss, t: 0, cx, cy, fail: !!fail };
+  sfx.shatter(); if (!fail) setTimeout(() => sfx.chime(), 1800 / timeScale);
+}
+// 冰雪女王的大殿：一张从来没人坐过的长桌，杯子全结着霜
+function drawTeaTable(x) {
+  const c = ctx, y = FLOOR - 46;
+  paper(true); c.fillStyle = '#cfe2ef'; c.fillRect(x - 70, y, 140, 7); paper(false);
+  c.fillStyle = '#b4cde0'; for (const dx of [-62, -18, 18, 62]) c.fillRect(x + dx - 2, y + 7, 4, 39);
+  for (let i = 0; i < 6; i++) {
+    const cx = x - 55 + i * 22;
+    c.fillStyle = '#eef7fc'; ell(c, cx, y - 1, 9, 2.4); c.fill();
+    c.fillStyle = '#dcebf5'; rr(c, cx - 4, y - 11, 8, 10, 2); c.fill();
+    c.fillStyle = 'rgba(255,255,255,.9)'; c.fillRect(cx - 4, y - 12, 8, 2);
+  }
+  c.fillStyle = 'rgba(255,255,255,.55)'; for (let i = 0; i < 8; i++) c.fillRect(x - 66 + i * 18, y + 1, 7, 1.5);
+}
+// 留在湖面上的那双新冰鞋
+function drawSkates(x) {
+  const c = ctx, y = FLOOR - 3;
+  for (const dx of [-9, 9]) {
+    c.fillStyle = '#f2ece2'; c.beginPath(); c.moveTo(x + dx - 7, y - 4); c.lineTo(x + dx + 3, y - 4); c.lineTo(x + dx + 3, y - 16); c.lineTo(x + dx - 3, y - 16); c.closePath(); c.fill();
+    c.fillRect(x + dx - 7, y - 8, 12, 5);
+    c.strokeStyle = '#9fb3c4'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x + dx - 9, y); c.lineTo(x + dx + 7, y); c.quadraticCurveTo(x + dx + 9, y, x + dx + 8, y - 2); c.stroke();
+  }
+}
+// 尾声里两个人一起翻的那本画册
+function drawPictureBook(x, y) {
+  const c = ctx; c.save(); c.translate(x, y); c.rotate(-.05);
+  paper(true); c.fillStyle = '#f4ecd8'; c.fillRect(-15, -9, 14, 18); c.fillRect(1, -9, 14, 18); paper(false);
+  c.fillStyle = '#8a5a34'; c.fillRect(-1, -9, 2, 18);
+  c.fillStyle = '#c4475a'; circ(c, -8, -2, 2.4); c.fill(); c.fillStyle = '#4f8a46'; circ(c, 8, 1, 2.6); c.fill(); c.fillStyle = '#3e5f8e'; ell(c, 7, -4, 3, 1.4); c.fill();
+  c.restore();
 }
 function drawEternity() {
   const e = state.eter; if (!e) return; const c = ctx;
   if (!e.pts.length) { const k = clamp(e.t / 2, 0, 1); c.globalAlpha = k; c.fillStyle = '#eaf6ff'; c.font = 'bold ' + (lang === 'zh' ? 120 : 84) + 'px ' + fontFam(); c.textAlign = 'center'; c.fillText(t('永恒'), e.cx, e.cy + 40); c.globalAlpha = 1; return; }
+  if (e.fail && e.miss && e.miss.length) {
+    const a = clamp((e.t - 2.4) / .5, 0, 1) * clamp(1 - (e.t - 3.4) / .4, 0, 1);
+    if (a > 0) { c.globalAlpha = a; c.strokeStyle = 'rgba(96,136,178,.75)'; c.lineWidth = 1; for (const p of e.miss) c.strokeRect(p.x1 - 2, p.y1 - 2, 4, 4); c.globalAlpha = 1; }
+  }
   for (const p of e.pts) {
     const k = easeIO(clamp((e.t - p.d) / 2.4, 0, 1)), hop = Math.sin(k * Math.PI) * 60;
-    const x = lerp(p.x0, p.x1, k) + Math.sin(e.t * 3 + p.sp * 5) * (1 - k) * 8, y = lerp(p.y0, p.y1, k) - hop;
+    let x = lerp(p.x0, p.x1, k) + Math.sin(e.t * 3 + p.sp * 5) * (1 - k) * 8, y = lerp(p.y0, p.y1, k) - hop, al = 1;
+    if (e.fail && e.t > 3.4) { const ft = e.t - 3.4; y += ft * ft * 260 * (1 + p.sp * .3); x += p.sp * ft * 30; al = clamp(1 - ft / 1.3, 0, 1); }
+    c.globalAlpha = al;
     c.fillStyle = 'rgba(200,232,255,.35)'; c.fillRect(x - 3.5, y - 3.5, 7, 7);
     c.fillStyle = '#f4fbff'; c.fillRect(x - 2, y - 2, 4, 4);
+    c.globalAlpha = 1;
   }
 }
 
@@ -2452,13 +2600,14 @@ SCENES.end = {
       Win(1150, 290, 38, null, { frost: 0, revealed: true, view: 'goal' }),
       Prop(930, (e, t) => drawGranny(e.x, t, true)),
       Prop(1000, (e, t) => drawRoseBox(e.x, t, true)),
-      Prop(1150, () => { kid(ctx, 1165, FLOOR - 8, { face: 1, sit: true, girl: true, coat: '#a7373f', hair: '#6b4430', feet: has('红鞋') ? 'red' : 'boots', scale: 1.18, noShadow: true }); kid(ctx, 1220, FLOOR - 8, { face: -1, sit: true, coat: '#3e5f8e', hair: '#c9a25e', feet: 'boots', scale: 1.22, noShadow: true }); }),
+      Prop(1150, () => { kid(ctx, 1165, FLOOR - 8, { face: 1, sit: true, girl: true, coat: '#a7373f', hair: '#6b4430', feet: has('红鞋') ? 'red' : 'boots', scale: 1.18, noShadow: true }); kid(ctx, 1220, FLOOR - 8, { face: -1, sit: true, coat: '#3e5f8e', hair: '#c9a25e', feet: 'boots', scale: 1.22, noShadow: true }); if (state.flags.book) drawPictureBook(1192, FLOOR - 50); }),
     ];
   },
   async enter() {
     state.used.clear();
     await narr('他们走进去，赶紧上楼到奶奶屋里。屋里的东西都还摆在老地方，挂钟嘀嗒嘀嗒地走，指针一圈一圈地转。可是一进门，他们就发现自己已经长大了。');
     await narr('屋顶上的玫瑰开着花，从开着的窗子垂进来。那两把孩子坐的小凳子还在，加伊和格尔达就在上面坐下，手拉着手。冰雪女王那里冷冰冰、空荡荡的豪华，他们都忘了，像忘了一场梦。奶奶坐在明亮的阳光灯下，大声念着一本旧书。');
+    if (LONG) { state.flags.book = true; await narr('格尔达把那本画册拿了出来。两个人头碰头地翻着，里面的鸟和兽一只比一只好看。'); }
     await narr('两个大人坐在那里，长大了，却还是孩子，至少心还是孩子的。这是夏天，温暖的、美好的夏天。');
     await narr('船历二一三年，夏。离抵达还有一百零七年。');
     hideDialog(); await wait(2600); showEnd();
@@ -2587,7 +2736,7 @@ function renderBook() {
 
 // ---------- 存档 ----------
 const SAVE_KEY = 'snowqueen-ship-v1';
-function save() { if (!state.sceneId || state.sceneId === 'end') return; try { localStorage.setItem(SAVE_KEY, JSON.stringify({ scene: state.sceneId, mem: [...state.mem], items: [...state.items] })); } catch (e) {} }
+function save() { if (!state.sceneId || state.sceneId === 'end') return; try { localStorage.setItem(SAVE_KEY, JSON.stringify({ scene: state.sceneId, mem: [...state.mem], items: [...state.items], long: LONG })); } catch (e) {} }
 function loadSave() { try { const s = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null'); return s && SCENES[s.scene] && s.scene !== 'end' ? s : null; } catch (e) { return null; } }
 function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch (e) {} }
 
@@ -2797,8 +2946,9 @@ function render(t) {
 const titleWin = { x: 0, y: 150, r: 80, frost: 1, mem: 'm1', revealed: false, glow: 0 };
 function drawTitle(t) {
   const c = ctx; const g = c.createLinearGradient(0, 0, 0, VIEW_H); g.addColorStop(0, '#1a1410'); g.addColorStop(1, '#0a0f1c'); c.fillStyle = g; c.fillRect(0, 0, viewW, VIEW_H);
-  glow(c, viewW / 2, 170, 260, 'rgba(234,164,92,.12)');
-  titleWin.x = viewW / 2; titleWin.frost = .62 + .3 * Math.sin(t * .45);
+  glow(c, viewW / 2, portrait ? 136 : 170, portrait ? 220 : 260, 'rgba(234,164,92,.12)');
+  // 竖屏画面矮，舷窗往上挪一点、小一点，给下面的标题和按钮让地方
+  titleWin.x = viewW / 2; titleWin.y = portrait ? 116 : 150; titleWin.r = portrait ? 66 : 80; titleWin.frost = .62 + .3 * Math.sin(t * .45);
   drawWin(titleWin, t); paper(false);
   if (Math.random() < .3) parts.push({ k: 'flake', x: R(0, viewW), y: -4, vx: R(-8, 8), vy: R(14, 26), life: 0, max: 30, r: R(.8, 2) });
   stepParts(1 / 60); drawParts();
@@ -2832,7 +2982,7 @@ function startGame(from) {
   $('title').hidden = true; $('end').hidden = true; $('hud').hidden = true;
   if (document.activeElement) document.activeElement.blur();
   parts.length = 0;
-  if (from) { state.mem = new Set(from.mem || []); state.items = new Set(from.items || []); state.faded = new Set(); state.used = new Set(); state.W = 100; state.mode = 'cut'; run(() => gotoScene(from.scene)); }
+  if (from) { LONG = !!from.long; applyVer(); state.mem = new Set(from.mem || []); state.items = new Set(from.items || []); state.faded = new Set(); state.used = new Set(); state.W = 100; state.mode = 'cut'; run(() => gotoScene(from.scene)); }
   else { resetRun(); bgm('twinkle'); run(prologue); }
 }
 $('btnNew').addEventListener('click', () => startGame(null));
@@ -2854,9 +3004,18 @@ function applyLang() {
   for (const el of document.querySelectorAll('[data-i18n-aria]')) el.setAttribute('aria-label', t(el.dataset.i18nAria));
   for (const el of document.querySelectorAll('[data-i18n-title]')) el.title = t(el.dataset.i18nTitle);
   for (const b of document.querySelectorAll('#langPick button')) { const on = b.dataset.lang === lang; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }
-  const s = loadSave(); if (s) $('btnCont').textContent = t('接着玩：') + t(SCENES[s.scene].kicker);
-  keysHint(); homeHint(); applyAudio(); hud();
+  const s = loadSave(); if (s) $('btnCont').textContent = t('接着玩：') + t(SCENES[s.scene].kicker) + (s.long ? t('（加长版）') : '');
+  applyVer(); keysHint(); homeHint(); applyAudio(); hud();
 }
+function applyVer() {
+  for (const b of document.querySelectorAll('#verPick button')) { const on = (b.dataset.ver === '1') === LONG; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }
+  $('verHint').textContent = t(LONG ? '加长版：多几段安徒生原文，冷舱里要亲手拼一次“永恒”。' : '原版：短一些，七个故事一口气走完。');
+}
+$('verPick').addEventListener('click', e => {
+  const b = e.target.closest('button[data-ver]'); if (!b) return;
+  LONG = b.dataset.ver === '1'; try { localStorage.setItem('snowqueen-ver', LONG ? 'long' : 'short'); } catch (_) {}
+  applyVer();
+});
 $('langPick').addEventListener('click', e => {
   const b = e.target.closest('button[data-lang]'); if (!b) return;
   lang = b.dataset.lang; try { localStorage.setItem('snowqueen-lang', lang); } catch (_) {}
@@ -2894,7 +3053,7 @@ async function pump(sec, step) {
 window.__sq = { state, player, cam, keys, get scene() { return scene; }, ents: () => ents, auto: false, pump,
   speed: k => { timeScale = k; }, act: () => { actHit = true; advHit = true; }, go: id => run(() => gotoScene(id)), collect, availMem,
   bgm, song, songs: () => Object.keys(SONGS), get bgmCur() { return bgmCur; } };
-try { window.claude && window.claude.hot && window.claude.hot.snapshot && window.claude.hot.snapshot(() => ({ scene: state.sceneId, mem: [...state.mem], items: [...state.items] })); } catch (e) {}
+try { window.claude && window.claude.hot && window.claude.hot.snapshot && window.claude.hot.snapshot(() => ({ scene: state.sceneId, mem: [...state.mem], items: [...state.items], long: LONG })); } catch (e) {}
 const hot = window.claude && window.claude.hot;
 if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
