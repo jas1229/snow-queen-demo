@@ -2,6 +2,8 @@
 #   play-local.html            本地双击就能玩
 #   docs/index.html            放在 GitHub Pages 上的那份，能「添加到主屏幕」，离线也能打开
 #   itch/snow-queen-itch.zip   传到 itch.io 的包（itch 文件夹存在时才生成）
+#   play-local-edit.html / artifact-edit.html   改稿台（游戏里直接改台词），后者发成单独的 artifact
+# 配乐录音在 docs/audio/，页面默认从 audio/ 找；本地双击的那两份改成从 docs/audio/ 找。
 # 谷歌字体改成不挡渲染的加载方式：连不上谷歌的时候页面照样马上出来，先用系统字体。
 import hashlib, json, pathlib, re, urllib.parse, zipfile
 here = pathlib.Path(__file__).parent
@@ -20,6 +22,8 @@ base_head = ('<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">'
              f'<meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">'
              '<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}'
              'body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>')
+LOCAL_AUDIO = "<script>window.SQ_AUDIO_BASE='docs/audio/';</script>"
+EDIT_FLAG = '<script>window.SQ_EDIT=true;</script>'
 plain_head = base_head + f'<link rel="icon" href="{icon}"></head><body>'
 pwa_head = (base_head +
             '<link rel="manifest" href="manifest.webmanifest">'
@@ -34,7 +38,9 @@ pwa_head = (base_head +
 plain = plain_head + body + '</body></html>'
 pwa = pwa_head + body + '</body></html>'
 
-(here / 'play-local.html').write_text(plain, encoding='utf-8')
+(here / 'play-local.html').write_text(plain.replace('</head>', LOCAL_AUDIO + '</head>', 1), encoding='utf-8')
+(here / 'play-local-edit.html').write_text(plain.replace('</head>', LOCAL_AUDIO + EDIT_FLAG + '</head>', 1).replace(f'<title>{title}</title>', '<title>冰雪女王改稿台</title>', 1), encoding='utf-8')
+(here / 'artifact-edit.html').write_text('<title>冰雪女王改稿台</title>\n' + EDIT_FLAG + '\n' + src[m.end():] if m else EDIT_FLAG + src, encoding='utf-8')
 
 docs = here / 'docs'
 docs.mkdir(exist_ok=True)
@@ -60,6 +66,7 @@ self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Pr
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  if (new URL(req.url).pathname.indexOf('/audio/') >= 0) return;  // 配乐文件按段请求，交给浏览器自己处理
   e.respondWith(fetch(req).then(res => { if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); } return res; })
     .catch(() => caches.match(req, { ignoreSearch: true }).then(r => r || caches.match('./index.html'))));
 });
@@ -70,4 +77,6 @@ itch = here / 'itch'
 if itch.is_dir():
     with zipfile.ZipFile(itch / 'snow-queen-itch.zip', 'w', zipfile.ZIP_DEFLATED) as z:
         z.writestr('index.html', plain)
+        for f in sorted((docs / 'audio').glob('*.mp3')):
+            z.write(f, 'audio/' + f.name)
 print('ok', ver)

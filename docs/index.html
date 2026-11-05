@@ -146,6 +146,32 @@ body{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 .touch .warm{font-size:12px;padding:6px 10px}
 .touch .prompt{pointer-events:auto;cursor:pointer}
 
+/* 改稿台：对话框上的「改这句」、顶上一条工具栏、改字的面板（只在改稿台那份里出现） */
+.dlg-edit,.card-edit{position:absolute;top:-13px;right:14px;z-index:4;font:600 12px/1 system-ui,sans-serif;padding:6px 11px;border-radius:999px;border:0;background:var(--ember);color:#1a1208;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.card-edit{top:auto;bottom:18px;right:18px}
+.ed-bar{position:fixed;z-index:30;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translateX(-50%);display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:center;max-width:calc(100% - 24px);background:rgba(10,14,24,.92);color:#efe7d8;border:1px solid rgba(234,164,92,.5);border-radius:10px;padding:5px 10px;font:12px/1.4 system-ui,sans-serif}
+.ed-bar b{color:#eaa45c;letter-spacing:.1em}
+.ed-bar .pill{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;max-width:none}
+.ed-bar .ctl{display:inline-flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.ed-bar .ctl[hidden]{display:none}
+.ed-bar label{display:inline-flex;gap:4px;align-items:center;cursor:pointer}
+.ed-bar select,.ed-bar button{font:inherit;color:inherit;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:2px 6px;cursor:pointer;max-width:12em}
+.ed-bar .warn{color:#e2846a}
+.ed-panel{position:fixed;inset:0;z-index:40;background:rgba(4,7,14,.62);display:flex;align-items:center;justify-content:center;padding:16px}
+.ed-card{width:min(640px,100%);max-height:calc(100% - 16px);overflow:auto;background:#141b29;color:#efe7d8;border:1px solid rgba(234,164,92,.45);border-radius:12px;padding:16px;display:grid;gap:10px;font:14px/1.6 var(--f-body)}
+.ed-head{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.ed-head b{font-family:var(--f-title);color:#eaa45c;font-size:1.05em;letter-spacing:.08em;font-weight:400}
+.ed-meta,.ed-info,.ed-tip{font:12px/1.5 system-ui,sans-serif;color:#9aa4b5}
+.ed-orig summary{cursor:pointer;font:12px system-ui,sans-serif;color:#9aa4b5}
+.ed-orig p{margin:6px 0 0;color:#c9c1b2;line-height:1.8}
+.ed-ta{width:100%;min-height:10em;resize:vertical;font:15px/1.9 var(--f-body);color:#efe7d8;background:#0b111c;border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:8px 10px;box-sizing:border-box}
+.ed-tools,.ed-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ed-actions{justify-content:flex-end}
+.ed-card button{font:13px/1 system-ui,sans-serif;color:#efe7d8;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);border-radius:8px;padding:8px 12px;cursor:pointer}
+.ed-card button.primary{background:#eaa45c;color:#1a1208;border-color:#eaa45c;font-weight:600}
+.ed-card label{font:13px system-ui,sans-serif;display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.ed-card button:focus-visible,.ed-bar button:focus-visible,.ed-bar select:focus-visible,.dlg-edit:focus-visible,.card-edit:focus-visible{outline:2px solid #eaa45c;outline-offset:2px}
+
 /* 开始页的版本选择（原版 / 加长版）；竖屏地方小，不放那句说明，免得标题顶到舷窗上 */
 .s-ver{display:inline-flex;gap:2px;padding:2px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);margin-top:4px}
 .s-ver button{background:none;border:0;border-radius:999px;color:var(--ink-2);font-family:var(--f-title);font-size:.88em;letter-spacing:.1em;padding:4px 16px;cursor:pointer}
@@ -219,7 +245,7 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
       <h2 class="s-name" data-i18n="船尾的冰雪女王">船尾的冰雪女王</h2>
       <p class="s-sub" id="endStat"></p>
       <div class="s-actions"><button class="btn" id="btnAgain" type="button" data-i18n="从头再玩">从头再玩</button><button class="btn ghost" id="btnEndBook" type="button" data-i18n="翻开小册子">翻开小册子</button></div>
-      <div class="s-credit"><span data-i18n="改编自安徒生《冰雪女王》（1844）。画面、文字和声音都还是草稿。">改编自安徒生《冰雪女王》（1844）。画面、文字和声音都还是草稿。</span><br><span data-i18n="配乐是莫扎特、帕赫贝尔、格里格、佩措尔德、勃拉姆斯、巴赫、萨蒂、德沃夏克的曲子，用合成器弹的。">配乐是莫扎特、帕赫贝尔、格里格、佩措尔德、勃拉姆斯、巴赫、萨蒂、德沃夏克的曲子，用合成器弹的。</span></div>
+      <div class="s-credit"><span data-i18n="改编自安徒生《冰雪女王》（1844）。画面、文字和声音都还是草稿。">改编自安徒生《冰雪女王》（1844）。画面、文字和声音都还是草稿。</span><br><span data-i18n="配乐是公开授权的真人录音：Stefano Ligoratti（莫扎特，CC BY 3.0，有剪辑）、美国空军乐团（帕赫贝尔、德沃夏克）、Musopen（格里格、佩措尔德）、石坂纪美子（巴赫）、Robin Alciatore（萨蒂），勃拉姆斯那首是八音盒。来源见 README。">配乐是公开授权的真人录音：Stefano Ligoratti（莫扎特，CC BY 3.0，有剪辑）、美国空军乐团（帕赫贝尔、德沃夏克）、Musopen（格里格、佩措尔德）、石坂纪美子（巴赫）、Robin Alciatore（萨蒂），勃拉姆斯那首是八音盒。来源见 README。</span></div>
     </div>
     <div id="book" class="book" hidden role="dialog" aria-label="格尔达的小册子" data-i18n-aria="格尔达的小册子">
       <div class="book-in">
@@ -495,7 +521,6 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "从头再玩": ["Play again", "Rejouer"],
 "翻开小册子": ["Open the booklet", "Ouvrir le carnet"],
 "改编自安徒生《冰雪女王》（1844）。画面、文字和声音都还是草稿。": ["After Hans Christian Andersen’s “The Snow Queen” (1844). Art, text and sound are all still drafts.", "D’après « La Reine des neiges » de Hans Christian Andersen (1844). Images, textes et sons sont encore des ébauches."],
-"配乐是莫扎特、帕赫贝尔、格里格、佩措尔德、勃拉姆斯、巴赫、萨蒂、德沃夏克的曲子，用合成器弹的。": ["Music by Mozart, Pachelbel, Grieg, Petzold, Brahms, Bach, Satie and Dvořák, played on a synthesizer.", "Musiques de Mozart, Pachelbel, Grieg, Petzold, Brahms, Bach, Satie et Dvořák, jouées au synthétiseur."],
 "格尔达的小册子": ["Gerda’s Booklet", "Le carnet de Gerda"],
 "合上": ["Close", "Fermer"],
 "向左走": ["Walk left", "Aller à gauche"],
@@ -696,7 +721,8 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "版本": ["Version", "Version"],
 "原版：短一些，七个故事一口气走完。": ["Original: shorter, all seven stories in one go.", "Version courte : les sept histoires d’une seule traite."],
 "加长版：多几段安徒生原文，冷舱里要亲手拼一次“永恒”。": ["Extended: more of Andersen’s own words, and in the cold vault you try to spell “Eternity” yourself.", "Version longue : davantage de passages d’Andersen, et dans la cale froide, tu essaies toi-même de former « Éternité »."],
-"（加长版）": [" (extended)", " (version longue)"]
+"（加长版）": [" (extended)", " (version longue)"],
+"配乐是公开授权的真人录音：Stefano Ligoratti（莫扎特，CC BY 3.0，有剪辑）、美国空军乐团（帕赫贝尔、德沃夏克）、Musopen（格里格、佩措尔德）、石坂纪美子（巴赫）、Robin Alciatore（萨蒂），勃拉姆斯那首是八音盒。来源见 README。": ["The music is openly licensed recordings by real players: Stefano Ligoratti (Mozart, CC BY 3.0, edited), the United States Air Force Band (Pachelbel, Dvořák), Musopen (Grieg, Petzold), Kimiko Ishizaka (Bach) and Robin Alciatore (Satie); the Brahms is a music box. Sources in the README.", "La musique : des enregistrements sous licence libre, joués par de vrais musiciens : Stefano Ligoratti (Mozart, CC BY 3.0, montage), l’orchestre de l’US Air Force (Pachelbel, Dvořák), Musopen (Grieg, Petzold), Kimiko Ishizaka (Bach) et Robin Alciatore (Satie) ; le Brahms est une boîte à musique. Sources dans le README."]
 };</script>
 <script>
 (() => {
@@ -958,21 +984,28 @@ function musicInit() {
     const cv = ac.createConvolver(); cv.buffer = ir; const wet = ac.createGain(); wet.gain.value = .3;
     musicOut.connect(cv); cv.connect(wet); wet.connect(master);
   } catch (e) {}
+  recInit();
   if (bgmWant) bgm(bgmWant, true);
 }
-// 换曲子：旧的淡出，新的淡入；同一首就接着放
+// 换曲子：旧的淡出，新的淡入；同一首就接着放。有录音先放录音，放不出来再用合成器
 function bgm(id, force) {
   id = id || null;
-  if (!force && id === bgmWant && (bgmCur || !ac)) return;
+  if (!force && id === bgmWant && (bgmCur || recCur || !ac)) return;
   bgmWant = id;
   if (!ac || !musicOut) return;
-  if (bgmCur && bgmCur.id === id) return;
-  const now = ac.currentTime;
-  if (bgmCur) {
-    const g = bgmCur.g; g.gain.cancelScheduledValues(now); g.gain.setValueAtTime(Math.max(.0001, g.gain.value), now); g.gain.linearRampToValueAtTime(.0001, now + 1.8);
-    setTimeout(() => { try { g.disconnect(); } catch (e) {} }, 4500); bgmCur = null;
-  }
+  if ((bgmCur && bgmCur.id === id) || (recCur && recCur.id === id)) return;
+  synthStop(); recStop();
+  if (id && REC[id] && recPlay(id)) return;
+  synthStart(id);
+}
+function synthStop() {
+  if (!bgmCur) return;
+  const now = ac.currentTime, g = bgmCur.g; g.gain.cancelScheduledValues(now); g.gain.setValueAtTime(Math.max(.0001, g.gain.value), now); g.gain.linearRampToValueAtTime(.0001, now + 1.8);
+  setTimeout(() => { try { g.disconnect(); } catch (e) {} }, 4500); bgmCur = null;
+}
+function synthStart(id) {
   const s = id && song(id); if (!s) return;
+  const now = ac.currentTime;
   const g = ac.createGain(); g.gain.setValueAtTime(.0001, now); g.gain.linearRampToValueAtTime(s.vol, now + 2.2); g.connect(musicOut);
   bgmCur = { id, g, spb: 60 / s.bpm, len: s.len, parts: s.parts.map(p => ({ p, i: 0, base: now + .4 })) };
   if (!bgmTimer) bgmTimer = setInterval(bgmTick, 200);
@@ -992,13 +1025,69 @@ function bgmTick() {
     }
   }
 }
+// ---------- 真人录音 ----------
+// 每段配一首公有领域（或注明作者就能用）的真人录音，来源和授权见 README 和片尾。
+// 文件在 audio/ 下；放得出来就放录音，文件没到、浏览器不让放，就退回上面的合成器。
+const REC = { twinkle: 'twinkle', twinkleWarm: 'twinkle-end', canon: 'canon', morning: 'morning', minuet: 'minuet', mountain: 'mountain', lullaby: 'lullaby', prelude: 'prelude', gymno: 'gymno', largo: 'largo' };
+const REC_BASE = typeof window.SQ_AUDIO_BASE === 'string' ? window.SQ_AUDIO_BASE : 'audio/';
+const REC_GAIN = .75;
+const REC_SILENT = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYyLjEyLjEwMQAAAAAAAAAAAAAA//NwwAAAAAAAAAAAAEluZm8AAAAPAAAACAAAA/oAR0dHR0dHR0dHR0dHYmJiYmJiYmJiYmJifHx8fHx8fHx8fHx8fJaWlpaWlpaWlpaWlrGxsbGxsbGxsbGxsbHLy8vLy8vLy8vLy8vl5eXl5eXl5eXl5eXl////////////////AAAAAExhdmM2Mi4yOAAAAAAAAAAAAAAAACQC1AAAAAAAAAP6yyu0PwAAAAAAAAAAAAAAAAD/80DEAAAAA0gAAAAATEFNRTMuMTAwVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsRbAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQMSkAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NCxKMAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NAxKQAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80LEowAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/80DEpAAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zQsSjAAADSAAAAABVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==';
+// 本地双击打开（file://）时浏览器不让 WebAudio 接管音频文件，就直接调播放器音量
+const recDirect = !/^https?:$/.test(location.protocol);
+let recOut = null, recCur = null;
+const recPool = [];
+const recVol = () => soundOn && musicOn ? REC_GAIN : 0;
+function recInit() {
+  if (recPool.length || typeof Audio === 'undefined') return;
+  if (!recDirect) { recOut = ac.createGain(); recOut.gain.value = recVol(); recOut.connect(master); }
+  for (let i = 0; i < 2; i++) {
+    const el = new Audio(); el.preload = 'auto'; el.loop = true;
+    const slot = { el, g: null, busy: false, id: null, fadeT: 0 };
+    if (!recDirect) { try { const n = ac.createMediaElementSource(el); slot.g = ac.createGain(); slot.g.gain.value = .0001; n.connect(slot.g); slot.g.connect(recOut); } catch (e) { slot.g = null; } }
+    // iPhone 要在点按的那一下先放过，之后换曲子才放得出声
+    el.src = REC_SILENT; const pr = el.play(); if (pr && pr.then) pr.then(() => { if (!slot.busy) el.pause(); }).catch(() => {});
+    recPool.push(slot);
+  }
+  document.addEventListener('visibilitychange', () => { const c = recCur; if (!c) return; if (document.hidden) c.slot.el.pause(); else { const pr = c.slot.el.play(); if (pr && pr.catch) pr.catch(() => {}); } });
+}
+function recFade(slot, to, sec, then) {
+  clearTimeout(slot.fadeT); clearInterval(slot.fadeT); slot.fadeT = 0;
+  if (slot.g) {
+    const now = ac.currentTime, g = slot.g.gain; g.cancelScheduledValues(now); g.setValueAtTime(Math.max(.0001, g.value), now); g.linearRampToValueAtTime(Math.max(.0001, to), now + sec);
+    if (then) slot.fadeT = setTimeout(then, sec * 1000 + 80);
+  } else {
+    const el = slot.el, from = el.volume, t0 = performance.now();
+    slot.fadeT = setInterval(() => { const k = Math.min(1, (performance.now() - t0) / (sec * 1000)); el.volume = clamp(from + (to - from) * k, 0, 1); if (k >= 1) { clearInterval(slot.fadeT); slot.fadeT = 0; if (then) then(); } }, 50);
+  }
+}
+function recPlay(id) {
+  const slot = recPool.find(x => !x.busy) || recPool.find(x => !recCur || x !== recCur.slot);
+  if (!slot) return false;
+  clearTimeout(slot.fadeT); clearInterval(slot.fadeT);
+  slot.busy = true; slot.id = id;
+  const el = slot.el;
+  try { el.pause(); } catch (e) {}
+  if (slot.g) slot.g.gain.value = .0001; else el.volume = 0;
+  const fail = () => { if (slot.id !== id) return; slot.busy = false; slot.id = null; if (recCur && recCur.slot === slot) recCur = null; if (bgmWant === id && !bgmCur && ac) synthStart(id); };
+  el.onerror = fail; el.loop = true; el.src = REC_BASE + REC[id] + '.mp3';
+  const pr = el.play(); if (pr && pr.catch) pr.catch(fail);
+  recFade(slot, slot.g ? 1 : recVol(), 2.2);
+  recCur = { id, slot };
+  return true;
+}
+function recStop() {
+  if (!recCur) return;
+  const slot = recCur.slot; recCur = null;
+  recFade(slot, 0, 1.8, () => { if (!recCur || recCur.slot !== slot) { try { slot.el.pause(); } catch (e) {} slot.busy = false; slot.id = null; } });
+}
 // 声音按钮三档：全开、只留音效、全关；M 键单独开关音乐
 let audioMode = 0;
 try { audioMode = clamp(parseInt(localStorage.getItem('snowqueen-audio') || '0', 10) || 0, 0, 2); } catch (e) {}
 function applyAudio(keep) {
   soundOn = audioMode < 2; musicOn = audioMode === 0;
   const b = $('soundBtn'); b.textContent = t(['声音 开', '只留音效', '声音 关'][audioMode]); b.setAttribute('aria-pressed', String(audioMode === 0));
-  if (ac) { const t = ac.currentTime; master.gain.setTargetAtTime(soundOn ? .5 : 0, t, .08); if (musicOut) musicOut.gain.setTargetAtTime(musicOn ? 1.5 : 0, t, .25); }
+  if (ac) { const t = ac.currentTime; master.gain.setTargetAtTime(soundOn ? .5 : 0, t, .08); if (musicOut) musicOut.gain.setTargetAtTime(musicOn ? 1.5 : 0, t, .25); if (recOut) recOut.gain.setTargetAtTime(musicOn ? REC_GAIN : 0, t, .25); }
+  for (const x of recPool) if (!x.g && x.busy) recFade(x, recVol(), .3);
   if (!soundOn) breathSound(false);
   if (keep) try { localStorage.setItem('snowqueen-audio', String(audioMode)); } catch (e) {}
 }
@@ -1397,9 +1486,9 @@ function flushFrames() { while (frameWaiters.length) frameWaiters.shift()(); }
 // ---------- 对话、卡片、提示 ----------
 const dlg = $('dialog'), dlgName = $('dlgName'), dlgText = $('dlgText');
 let dlgFull = '', dlgShown = 0, dlgTyping = false, dlgPending = null, dlgAt = 0;
-function showDialog(name, text, isNarr) {
+function showDialog(name, text, isNarr, raw) {
   dlg.hidden = false; dlg.classList.toggle('narr', !!isNarr);
-  dlgName.textContent = t(name || ''); dlgFull = t(text); dlgShown = 0; dlgText.textContent = '';
+  dlgName.textContent = t(name || ''); dlgFull = raw ? text : t(text); dlgShown = 0; dlgText.textContent = '';
   dlgTyping = true; dlg.classList.add('typing'); dlgAt = performance.now();
 }
 function finishType() { dlgShown = dlgFull.length; dlgText.textContent = dlgFull; dlgTyping = false; dlg.classList.remove('typing'); if (dlgText.scrollHeight > dlgText.clientHeight) dlgText.scrollTop = dlgText.scrollHeight; }
@@ -1412,8 +1501,167 @@ function typeStep(dt) {
   if (n >= dlgFull.length) finishType();
 }
 function hideDialog() { dlg.hidden = true; }
-function say(name, text) { return new Promise(res => { showDialog(name, text, false); dlgPending = () => { if (dlgTyping) { finishType(); return false; } res(); return true; }; }); }
-function narr(text) { return new Promise(res => { showDialog('', text, true); dlgPending = () => { if (dlgTyping) { finishType(); return false; } res(); return true; }; }); }
+// 一句台词可以分几个框出：文字里的换行就是翻到下一框（改稿台里改的也这样存）
+const EDIT = { on: !!window.SQ_EDIT, map: new Map(), auto: false, cur: null, restart: null, db: null };
+function lineParts(text) {
+  const zhEdit = EDIT.on && lang === 'zh';
+  let parts = String(zhEdit ? editText(text) : t(text)).split('\n').map(x => x.trim()).filter(Boolean);
+  if (zhEdit) parts = parts.map(x => t(x));
+  return parts.length ? parts : [''];
+}
+async function speak(name, text, isNarr) {
+  for (let i = 0; ;) {
+    const parts = lineParts(text); if (i >= parts.length) break;
+    EDIT.cur = { name, text, isNarr, i, n: parts.length };
+    const r = await new Promise(res => {
+      showDialog(name, parts[i], isNarr, true);
+      dlgPending = () => { if (dlgTyping) { finishType(); return false; } res(1); return true; };
+      EDIT.restart = () => res(0);
+    });
+    i = r ? i + 1 : 0;
+  }
+  EDIT.cur = null; EDIT.restart = null;
+}
+function say(name, text) { return speak(name, text, false); }
+function narr(text) { return speak('', text, true); }
+// 序章的卡片也一样能分几页
+async function cardSay(text) {
+  for (let i = 0; ;) {
+    const parts = lineParts(text); if (i >= parts.length) break;
+    $('cardText').textContent = parts[i]; $('cardHint').hidden = false;
+    EDIT.cur = { name: '', text, isNarr: true, card: true, i, n: parts.length };
+    const r = await new Promise(res => { dlgAt = performance.now(); dlgPending = () => { res(1); return true; }; EDIT.restart = () => res(0); });
+    i = r ? i + 1 : 0;
+  }
+  EDIT.cur = null; EDIT.restart = null;
+}
+
+// ---- 改稿台 start ----（只在改稿台那份里打开：页面先设 window.SQ_EDIT = true。台词改动存在 artifact 的数据库里，Claude 读得到）
+function fnv(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return ('0000000' + h.toString(16)).slice(-8); }
+const clen = x => [...x].length;
+// 自动拆：按句号、问号、叹号断开，再把短句拼回去，一框不超过 46 字左右
+function autoSplit(str) {
+  if (clen(str) <= 50) return str;
+  const bits = str.match(/[^。！？…]+(?:[。！？…]+[”’」』）]*)?/g) || [str];
+  const out = []; let cur = '';
+  for (const x of bits) { if (cur && clen(cur + x) > 46) { out.push(cur); cur = x; } else cur += x; }
+  if (cur) out.push(cur);
+  return out.join('\n');
+}
+function editText(orig) { const e = EDIT.map.get(orig); return e ? e.text : EDIT.auto ? autoSplit(orig) : orig; }
+let edBtn = null, edCardBtn = null, edPanel = null, edBar = null;
+function edCount() {
+  if (!edBar) return;
+  let book = 0; for (const v of EDIT.map.values()) if (v.book) book++;
+  edBar.querySelector('.cnt').textContent = '· 已改 ' + EDIT.map.size + (book ? ' · 画册 ' + book : '');
+}
+function edWarn(msg) { if (edBar) { const w = edBar.querySelector('.warn'); w.textContent = msg || ''; w.hidden = !msg; } }
+function edSaveLocal() { try { localStorage.setItem('snowqueen-edits', JSON.stringify([...EDIT.map])); } catch (e) {} }
+async function edSave(orig, text, book) {
+  text = text.split('\n').map(x => x.trim()).filter(Boolean).join('\n');
+  const same = (!text || text === orig) && !book;
+  if (same) EDIT.map.delete(orig); else EDIT.map.set(orig, { text: text || orig, book });
+  edCount();
+  if (!EDIT.db) { edSaveLocal(); return; }
+  try {
+    const ref = EDIT.db.doc('edits/e' + fnv(orig));
+    if (same) await ref.delete(); else await ref.set({ orig, text: text || orig, book, at: Date.now() });
+  } catch (e) { edWarn('没存上（' + ((e && e.code) || '出错了') + '），先点「复制改动清单」留一份'); }
+}
+function edInfo() {
+  const ta = edPanel.querySelector('.ed-ta'), parts = ta.value.split('\n').map(x => x.trim()).filter(Boolean);
+  const lens = parts.map(clen), orig = edPanel.dataset.orig;
+  edPanel.querySelector('.ed-info').textContent = parts.length ? '分成 ' + parts.length + ' 框：' + lens.join(' / ') + ' 字（最长一框出字 ' + (Math.max(...lens) / 44).toFixed(1) + ' 秒；原句 ' + clen(orig) + ' 字）' : '空着就是用原句';
+}
+function edOpen() {
+  const cur = EDIT.cur; if (!cur || !edPanel) return;
+  if (lang !== 'zh') { toast('改稿只改中文，先在开始页切回中文', 3); return; }
+  const orig = cur.text, e = EDIT.map.get(orig);
+  edPanel.dataset.orig = orig;
+  edPanel.querySelector('.ed-who').textContent = cur.card ? '序章' : (cur.name || '旁白');
+  edPanel.querySelector('.ed-meta').textContent = '原句 ' + clen(orig) + ' 字' + (cur.n > 1 ? '，现在分 ' + cur.n + ' 框，停在第 ' + (cur.i + 1) + ' 框' : '');
+  edPanel.querySelector('.ed-orig p').textContent = orig;
+  edPanel.querySelector('.ed-ta').value = editText(orig);
+  edPanel.querySelector('.ed-book').checked = !!(e && e.book);
+  edInfo(); edPanel.hidden = false;
+  keys.left = keys.right = keys.breath = false;
+  setTimeout(() => edPanel.querySelector('.ed-ta').focus(), 30);
+}
+function edClose() { edPanel.hidden = true; }
+function edCopy() {
+  const out = [];
+  for (const [orig, v] of EDIT.map) out.push('原句：' + orig + '\n改成：' + v.text.split('\n').join(' ／ ') + '\n画册：' + (v.book ? '放完整原文' : '不放'));
+  const text = out.length ? out.join('\n\n') : '还没有改动。', btn = edBar.querySelector('.copy');
+  const done = ok => { btn.textContent = ok ? '复制好了' : '复制不了，直接跟 Claude 说'; setTimeout(() => { btn.textContent = '复制改动清单'; }, 2400); };
+  try { navigator.clipboard.writeText(text).then(() => done(true), () => done(false)); } catch (e) { done(false); }
+}
+function edJump(id) {
+  if (!id || !SCENES[id]) return;
+  edClose();
+  if (!$('title').hidden || state.mode === 'title') { startGame({ scene: id, mem: MEMS.map(m => m.id), items: [], long: LONG }); return; }
+  if (scriptOn) { toast('这段说完再跳', 2); return; }
+  state.flags = {}; run(() => gotoScene(id));
+}
+async function editInit() {
+  document.documentElement.classList.add('edit-on');
+  try { EDIT.auto = localStorage.getItem('snowqueen-edit-auto') === '1'; } catch (e) {}
+  edBtn = document.createElement('button'); edBtn.type = 'button'; edBtn.className = 'dlg-edit'; edBtn.textContent = '✎ 改这句';
+  edBtn.addEventListener('click', e => { e.stopPropagation(); edOpen(); }); dlg.appendChild(edBtn);
+  edCardBtn = document.createElement('button'); edCardBtn.type = 'button'; edCardBtn.className = 'card-edit'; edCardBtn.textContent = '✎ 改这页';
+  edCardBtn.addEventListener('click', e => { e.stopPropagation(); edOpen(); }); card.appendChild(edCardBtn);
+  edBar = document.createElement('div'); edBar.className = 'ed-bar';
+  // 平时只是一个小按钮，点开才是整条工具栏，免得挡住左上角的章节名
+  edBar.innerHTML = '<button type="button" class="pill" aria-expanded="false"><b>改稿台</b> <span class="cnt"></span> ▾</button><span class="ctl" hidden><label><input type="checkbox" class="auto"> 长句自动拆</label><select class="jump" aria-label="跳到哪一段"><option value="">跳到…</option></select><button type="button" class="copy">复制改动清单</button></span><span class="warn" hidden></span>';
+  const pill = edBar.querySelector('.pill'), ctl = edBar.querySelector('.ctl');
+  pill.addEventListener('click', () => { ctl.hidden = !ctl.hidden; pill.setAttribute('aria-expanded', String(!ctl.hidden)); });
+  const sel = edBar.querySelector('.jump');
+  for (const id of ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 'r1', 'r2', 'r3', 'end']) { const o = document.createElement('option'); o.value = id; o.textContent = SCENES[id].chapter + (id === 's2' ? '（水渠）' : id === 's3' ? '（花园）' : ''); sel.appendChild(o); }
+  sel.addEventListener('change', () => { const id = sel.value; sel.value = ''; edJump(id); });
+  const au = edBar.querySelector('.auto'); au.checked = EDIT.auto;
+  au.addEventListener('change', () => { EDIT.auto = au.checked; try { localStorage.setItem('snowqueen-edit-auto', EDIT.auto ? '1' : '0'); } catch (e) {} if (EDIT.restart) EDIT.restart(); });
+  edBar.querySelector('.copy').addEventListener('click', edCopy);
+  document.body.appendChild(edBar);
+  edPanel = document.createElement('div'); edPanel.className = 'ed-panel'; edPanel.hidden = true; edPanel.setAttribute('role', 'dialog'); edPanel.setAttribute('aria-label', '改这句');
+  edPanel.innerHTML = '<div class="ed-card"><div class="ed-head"><b class="ed-who"></b><span class="ed-meta"></span></div>'
+    + '<details class="ed-orig"><summary>原句</summary><p></p></details>'
+    + '<textarea class="ed-ta" rows="7" aria-label="改成"></textarea><div class="ed-info"></div>'
+    + '<div class="ed-tools"><button type="button" data-a="split">按句子拆开</button><button type="button" data-a="join">合成一框</button><button type="button" data-a="reset">恢复原句</button><label><input type="checkbox" class="ed-book"> 放进通关画册（完整原文）</label></div>'
+    + '<div class="ed-actions"><button type="button" data-a="cancel">取消</button><button type="button" data-a="save" class="primary">存好，这句重放</button></div>'
+    + '<div class="ed-tip">一行就是一个对话框，回车就是翻页。删掉的字就不出现了；勾上画册，完整原文通关后在画册里看。</div></div>';
+  const ta = edPanel.querySelector('.ed-ta');
+  ta.addEventListener('input', edInfo);
+  edPanel.addEventListener('click', e => {
+    const a = e.target.closest('button') && e.target.closest('button').dataset.a; const orig = edPanel.dataset.orig;
+    if (e.target === edPanel) { edClose(); return; }
+    if (!a) return;
+    if (a === 'split') { ta.value = autoSplit(ta.value.split('\n').join('')); edInfo(); }
+    else if (a === 'join') { ta.value = ta.value.split('\n').map(x => x.trim()).join(''); edInfo(); }
+    else if (a === 'reset') { ta.value = orig; edInfo(); }
+    else if (a === 'cancel') edClose();
+    else if (a === 'save') { edSave(orig, ta.value, edPanel.querySelector('.ed-book').checked); edClose(); if (EDIT.restart && EDIT.cur && EDIT.cur.text === orig) EDIT.restart(); }
+  });
+  edPanel.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); edClose(); } if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); edPanel.querySelector('[data-a="save"]').click(); } });
+  document.body.appendChild(edPanel);
+  edCount();
+  let db = null;
+  try { db = window.claude && window.claude.use ? await window.claude.use('db') : null; } catch (e) { db = null; }
+  EDIT.db = db;
+  if (!db) {
+    try { for (const [k, v] of JSON.parse(localStorage.getItem('snowqueen-edits') || '[]')) EDIT.map.set(k, v); } catch (e) {}
+    edCount(); edWarn('改动只存在这个浏览器里');
+    return;
+  }
+  let got = false; const timer = setTimeout(() => { if (!got) edWarn('暂时连不上存储，改动可能存不下来'); }, 10000);
+  db.collection('edits').onSnapshot(snap => {
+    for (const ch of snap.docChanges()) {
+      const v = ch.doc.data() || {}; if (!v.orig) continue;
+      if (ch.type === 'removed') EDIT.map.delete(v.orig); else EDIT.map.set(v.orig, { text: String(v.text || v.orig), book: !!v.book });
+    }
+    edCount();
+    if (!snap.metadata.fromCache) { got = true; clearTimeout(timer); edWarn(''); }
+  }, err => { clearTimeout(timer); edWarn('存储断开了（' + ((err && err.code) || '出错') + '），改动先点「复制改动清单」留一份'); });
+}
+// ---- 改稿台 end ----
 
 const card = $('card');
 async function showCard(kicker, title, text, waitKey) {
@@ -2682,6 +2930,7 @@ function unlockAudio() { audioInit(); if (ac && ac.state === 'suspended') ac.res
 addEventListener('pointerdown', unlockAudio, true);
 addEventListener('keydown', e => {
   unlockAudio();
+  if (EDIT.on && ((edPanel && !edPanel.hidden) || (e.target && e.target.closest && e.target.closest('textarea, input, select')))) return;
   if (e.code === 'KeyM' && !e.repeat) { audioMode = audioMode === 0 ? 1 : 0; applyAudio(true); if (state.mode !== 'title') toast(audioMode === 0 ? '音乐 开' : '音乐 关', 1.6); }
   if (!$('title').hidden || !$('end').hidden) return;
   if (!bookEl.hidden) { if (e.code === 'Escape' || e.code === 'KeyB' || e.code === 'Tab') { e.preventDefault(); closeBook(); } return; }
@@ -2972,7 +3221,7 @@ async function prologue() {
     '白鹳号是一艘世代船。从出发到抵达，要开三百二十年。船上的人在船上出生，在船上长大，一代一代往下传。',
     '船尾有一面大镜子，早年间用来测星。后来有人在镜子上动了手脚：好的、美的东西照进去，就缩得几乎看不见；没用的、丑的东西照进去，倒放得又大又显眼。最美的风景照进去，像一摊煮烂的菠菜；最好的人照进去，样子吓人，脸扭得认不出来。',
     '有一天，镜子裂了，碎成了一亿多片。有的碎片还没有一粒沙子大，顺着通风管飘遍了全船。它们一钻进人的眼睛，就留在那儿，那人看什么都是歪的，只看得见坏的一面。还有人心里扎进了一小片，那就可怕了：那颗心会变得像一块冰。',
-  ]) { $('cardText').textContent = t(text); $('cardHint').hidden = false; await new Promise(res => { dlgAt = performance.now(); dlgPending = () => { res(); return true; }; }); }
+  ]) await cardSay(text);
   state.fade = 1; await hideCard();
   await gotoScene('s1');
 }
@@ -3051,8 +3300,10 @@ async function pump(sec, step) {
 }
 window.__sq = { state, player, cam, keys, get scene() { return scene; }, ents: () => ents, auto: false, pump,
   speed: k => { timeScale = k; }, act: () => { actHit = true; advHit = true; }, go: id => run(() => gotoScene(id)), collect, availMem,
-  bgm, song, songs: () => Object.keys(SONGS), get bgmCur() { return bgmCur; } };
+  bgm, song, songs: () => Object.keys(SONGS), get bgmCur() { return bgmCur; }, get recCur() { return recCur && recCur.id; },
+  get recInfo() { const c = recCur; return c && { id: c.id, t: +c.slot.el.currentTime.toFixed(2), paused: c.slot.el.paused, src: c.slot.el.src.split('/').pop(), err: c.slot.el.error && c.slot.el.error.code, gain: c.slot.g ? +c.slot.g.gain.value.toFixed(3) : c.slot.el.volume }; } };
 try { window.claude && window.claude.hot && window.claude.hot.snapshot && window.claude.hot.snapshot(() => ({ scene: state.sceneId, mem: [...state.mem], items: [...state.items], long: LONG })); } catch (e) {}
+if (EDIT.on) editInit();
 const hot = window.claude && window.claude.hot;
 if (hot && hot.ready) hot.ready(boot); else boot((hot && hot.data) || {});
 })();
