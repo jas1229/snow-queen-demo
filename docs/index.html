@@ -136,6 +136,11 @@ body{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
 #below .goal{order:3;flex:1 1 100%;background:none;padding:0 2px;font-size:13px}
 #below .prompt{position:static;transform:none;align-self:center;pointer-events:auto;font-size:14px;padding:8px 18px}
 #below .mempop{position:static;width:100%}
+/* 原文段落长：对话框放不下时在框里滚动，字出到哪儿跟到哪儿 */
+.dialog{max-height:calc(100% - 28px);display:flex;flex-direction:column}
+.dlg-text{overflow-y:auto;min-height:0;flex:0 1 auto}
+#frame.pad-on .dialog{max-height:calc(100% - 60px)}
+#below .dialog{max-height:none;flex:0 1 auto;min-height:0}
 #app.portrait .book{position:fixed;z-index:20}
 .touch .chip{padding:6px 12px;font-size:13px}
 .touch .warm{font-size:12px;padding:6px 10px}
@@ -228,9 +233,7 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "只留音效": ["Effects only", "Bruitages seuls"],
 "声音 关": ["Sound off", "Son : non"],
 "窗上的小孔": ["The Peephole", "Le petit trou dans la vitre"],
-"冬天，窗子冻上了。你们把铜钱放在暖气片上烤热，按在玻璃上，烫出一个圆孔。孔那头有一只眼睛眨了一下，是加伊。": ["In winter the windows froze over. You two warmed copper coins on the radiator and pressed them to the glass until they melted a round hole. On the other side an eye blinked. It was Kay.", "En hiver, les vitres gelaient. Vous faisiez chauffer des pièces de cuivre sur le radiateur et vous les colliez contre la vitre, jusqu’à y faire fondre un petit trou rond. De l’autre côté, un œil cligna. C’était Kay."],
 "玫瑰箱": ["The Rose Box", "La caisse de roses"],
-"夏天，两只小板凳摆在玫瑰箱旁边。奶奶说，这株玫瑰是从地球上带来的那一株分出来的，传到你们手里，已经是第四代了。": ["In summer, two little stools stood beside the rose box. Grandma said this rose was a cutting from the one brought from Earth. By the time it reached you two, it was the fourth generation.", "En été, deux petits tabourets attendaient près de la caisse de roses. Grand-mère disait que ce rosier venait d’une bouture de celui qu’on avait apporté de la Terre. Arrivé jusqu’à vous, il en était à la quatrième génération."],
 "雪橇": ["The Sled", "La luge"],
 "加伊有一架小雪橇，是他爸爸拿旧货架改的。在船尾那条长坡道上，他拉着你往下滑，你一路尖叫，他笑得从雪橇上翻了下去。": ["Kay had a little sled his father had made from an old cargo rack. On the long ramp toward the stern he pulled you down with him. You screamed all the way, and he laughed so hard he tumbled off.", "Kay avait une petite luge que son père avait faite avec un vieux casier de soute. Sur la longue rampe vers la poupe, il t’entraînait dans la descente. Tu hurlais tout du long, et lui riait tellement qu’il tombait de la luge."],
 "玻璃珠": ["The Glass Marble", "La bille de verre"],
@@ -272,33 +275,14 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "船历二一一年，冬。白鹳号正经过两颗恒星之间最暗的一段。暖气开到了最大，舷窗还是结了霜。": ["Ship’s year 211, winter. The White Stork is passing through the darkest stretch between two stars. The heating is turned all the way up, and still the portholes have frosted over.", "An 211 du vaisseau, hiver. La Cigogne blanche traverse le passage le plus sombre entre deux étoiles. Le chauffage est au maximum, et pourtant les hublots ont givré."],
 "哈气": ["Breathe", "Souffle"],
 "奶奶": ["Grandma", "Grand-mère"],
-"又跟窗户较劲呢？外头飘的那些冰屑，是白蜜蜂。": ["Fighting with the window again? Those flecks of ice drifting outside are white bees.", "Encore en guerre contre la vitre ? Ces paillettes de glace qui flottent dehors, ce sont des abeilles blanches."],
-"白蜜蜂也有蜂后吗？": ["Do the white bees have a queen too?", "Les abeilles blanches ont une reine, elles aussi ?"],
-"有啊，冰雪女王。哪儿冰屑多，她就往哪儿飞。夜里她贴着舷窗往里看，看一眼，窗上就结一层冰花。": ["They do. The Snow Queen. Wherever the ice is thickest, that’s where she flies. At night she presses her face to the portholes and looks in, and wherever she looks, frost flowers grow on the glass.", "Bien sûr : la Reine des neiges. Là où la glace est la plus épaisse, c’est là qu’elle vole. La nuit, elle colle son visage aux hublots pour regarder à l’intérieur, et partout où elle pose les yeux, des fleurs de givre poussent sur la vitre."],
 "窗子冻得厚，多哈几口气。": ["The window’s frozen thick. Breathe on it a few more times.", "La vitre est bien gelée. Souffle encore un peu dessus."],
 "去吧，加伊在外头等你呢。": ["Go on, Kay’s waiting for you outside.", "Va, Kay t’attend dehors."],
 "加伊这孩子，今天是怎么了。": ["What’s got into Kay today?", "Qu’est-ce qui lui prend, à Kay, aujourd’hui ?"],
 "你要去找他？……路上冷，看见暖气片就歇一歇。": ["You’re going to look for him? … It’s cold out there. Whenever you see a radiator, stop and rest a while.", "Tu vas le chercher ? … Il fait froid en route. Chaque fois que tu vois un radiateur, arrête-toi un peu."],
-"奶奶又讲冰雪女王了吧？她要是敢进来，我就把她搁暖气片上，烤化她。": ["Grandma’s been telling Snow Queen stories again, hasn’t she? If she ever dares come in here, I’ll sit her on the radiator and melt her.", "Grand-mère t’a encore parlé de la Reine des neiges, hein ? Si elle ose entrer, je la pose sur le radiateur et elle fond."],
-"你小点声，她会听见的。": ["Shh, she’ll hear you.", "Moins fort, elle va t’entendre."],
-"听见就听见。你看这朵，开得多……": ["Let her. Look at this one, it’s so…", "Tant pis. Regarde celle-là, elle est si…"],
-"哎！": ["Ow!", "Aïe !"],
-"心口扎了一下。眼睛里也进东西了。": ["Something stabbed me in the chest. And there’s something in my eye.", "Quelque chose m’a piqué au cœur. Et j’ai quelque chose dans l’œil."],
-"我看看。……什么也没有啊。": ["Let me see. … There’s nothing there.", "Fais voir. … Il n’y a rien."],
-"好像出来了。": ["I think it’s gone.", "On dirait que c’est parti."],
-"你哭丧着脸干什么？难看死了。": ["Why the long face? You look awful.", "Pourquoi tu fais cette tête ? Tu es affreuse."],
-"我没哭。": ["I’m not crying.", "Je ne pleure pas."],
-"这朵被虫咬了，那朵长歪了。这箱破玫瑰，跟装它的箱子一样丑。": ["This one’s been eaten by bugs, that one’s crooked. These stupid roses are as ugly as the box they’re in.", "Celle-ci est mangée par les vers, celle-là pousse de travers. Ces roses minables sont aussi laides que leur caisse."],
-"过来看。冰花，一个毛病都没有，六个角一样长。比真花强多了。": ["Come and look. Ice flowers. Not a single flaw, all six points exactly the same length. Much better than real flowers.", "Viens voir. Des fleurs de glace. Pas un seul défaut, les six branches exactement de la même longueur. Bien mieux que les vraies fleurs."],
-"要是它们不化就好了。": ["If only they didn’t melt.", "Si seulement elles ne fondaient pas."],
 "加伊……": ["Kay…", "Kay…"],
-"别跟着我。我去船尾玩雪橇了，那边才有意思。": ["Don’t follow me. I’m going sledding at the stern. That’s where the fun is.", "Ne me suis pas. Je vais faire de la luge à la poupe, c’est là que c’est bien."],
 "那天晚上，加伊没有回家。": ["That night, Kay didn’t come home.", "Ce soir-là, Kay ne rentra pas."],
 "第二天。": ["The next day.", "Le lendemain."],
 "阿诺": ["Arno", "Arno"],
-"你找加伊？他昨天把雪橇挂在一辆白色的货车后头，跟着走了。": ["Looking for Kay? Yesterday he hooked his sled onto the back of a white cargo cart and went off with it.", "Tu cherches Kay ? Hier, il a accroché sa luge derrière un chariot blanc et il est parti avec."],
-"那车一直往船尾开，开得飞快。车上坐着一个穿白衣服的高个子女人，回头冲他点了点头。": ["The cart drove straight for the stern, really fast. A tall woman dressed in white was sitting in it. She turned around and nodded at him.", "Le chariot filait droit vers la poupe, à toute vitesse. Une grande femme vêtue de blanc était assise dedans. Elle s’est retournée et lui a fait un signe de tête."],
-"后来就没人见过他了。大人们说，他是掉进冷却河里了。": ["Nobody’s seen him since. The grown-ups say he fell into the coolant river.", "Personne ne l’a revu depuis. Les grands disent qu’il est tombé dans la rivière de refroidissement."],
 "我不信。": ["I don’t believe it.", "Je n’y crois pas."],
 "去船尾找加伊（一直往右走）": ["Go to the stern and find Kay (keep heading right)", "Va chercher Kay à la poupe (toujours vers la droite)"],
 "第三个故事 · 会魔法的老太太的花园": ["Third Story · The Garden of the Woman Who Knew Magic", "Troisième histoire · Le jardin de la vieille qui savait la magie"],
@@ -308,64 +292,30 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "上船，把鞋扔远一点": ["Get in the boat and throw the shoes farther", "Monter dans la barque et lancer les souliers plus loin"],
 "循环水渠从船头一直流到船尾。船上的人都说，掉进水里的东西，水会把它带到该去的地方。": ["The recycling canal runs all the way from the bow to the stern. People on the ship say that whatever falls into the water, the water carries where it needs to go.", "Le canal de recyclage coule de la proue jusqu’à la poupe. À bord, on dit que tout ce qui tombe dans l’eau, l’eau l’emporte là où il doit aller."],
 "到水渠边上去": ["Go to the edge of the canal", "Aller au bord du canal"],
-"水渠，是你把加伊带走了吗？": ["Canal, did you take Kay away?", "Canal, est-ce toi qui as emporté Kay ?"],
-"我把我的新红鞋给你，你把他还给我。": ["I’ll give you my new red shoes if you give him back to me.", "Je te donne mes souliers rouges tout neufs, et toi, tu me le rends."],
-"水把鞋推回了岸边，像是不肯收。": ["The water pushed the shoes back to the bank, as if it wouldn’t take them.", "L’eau repoussa les souliers vers la berge, comme si elle n’en voulait pas."],
-"是我扔得太近了。": ["I didn’t throw them far enough.", "Je ne les ai pas lancés assez loin."],
-"格尔达爬上一条小船，站在船尾，把鞋使劲扔了出去。": ["Gerda climbed into a little boat, stood at the back and threw the shoes as hard as she could.", "Gerda grimpa dans une petite barque, se mit à l’arrière et lança les souliers de toutes ses forces."],
-"系船的绳子本来就没拴紧。鞋落进水里的时候，小船也离了岸，顺着水往船尾漂。": ["The boat’s rope had never been tied properly. As the shoes hit the water, the little boat slipped away from the bank and drifted off toward the stern.", "L’amarre n’avait jamais été bien serrée. Quand les souliers touchèrent l’eau, la barque quitta la berge et se mit à dériver vers la poupe."],
 "红鞋给了水渠。光着脚，冷得快一些。": ["The red shoes went to the canal. Barefoot, you’ll get cold faster.", "Les souliers rouges sont au canal. Pieds nus, on a froid plus vite."],
 "顺着水渠往船尾漂": ["Drift down the canal toward the stern", "Dériver sur le canal vers la poupe"],
 "按住 ◀ 扶住墙，船就停下；停在窗下哈气": ["Hold ◀ to grab the wall and stop the boat; stop under a window to breathe on it", "Maintenez ◀ pour vous tenir au mur et arrêter la barque ; arrêtez-vous sous une fenêtre pour souffler dessus"],
 "按住 ← 扶住墙，船就停下；停在窗下哈气": ["Hold ← to grab the wall and stop the boat; stop under a window to breathe on it", "Maintenez ← pour vous tenir au mur et arrêter la barque ; arrêtez-vous sous une fenêtre pour souffler dessus"],
 "老太太": ["Old Woman", "La vieille femme"],
-"哎哟，可怜的小东西，你怎么一个人漂到这么远的水上来了？": ["Oh my, you poor little thing, how did you come to drift so far all by yourself?", "Oh là là, pauvre petite, comment as-tu dérivé si loin toute seule ?"],
-"一个戴大草帽的老太太拿拐杖勾住船头，把船拉到了岸边。她的草帽上画满了花。": ["An old woman in a big straw hat hooked the boat with her walking stick and pulled it to the bank. Her hat was painted all over with flowers.", "Une vieille femme coiffée d’un grand chapeau de paille accrocha la barque avec sa canne et la tira jusqu’à la berge. Son chapeau était tout peint de fleurs."],
-"上来吧，到我园子里坐坐。告诉我你是谁，从哪儿来。": ["Come up and sit in my garden a while. Tell me who you are and where you’ve come from.", "Monte, viens t’asseoir dans mon jardin. Dis-moi qui tu es et d’où tu viens."],
 "牵牛花": ["Morning Glory", "Le volubilis"],
-"我顺着管子爬到最高的地方往下看。有个姑娘靠在栏杆上，手里攥着一封信。她等的人一直没来，灯都熄了，她还站着。": ["I climbed up the pipe to the very top and looked down. A young woman was leaning on the railing with a letter clutched in her hand. The one she was waiting for never came. The lights went out, and still she stood there.", "J’ai grimpé le long du tuyau tout en haut, et j’ai regardé en bas. Une jeune femme s’appuyait à la rambarde, une lettre serrée dans la main. Celui qu’elle attendait n’est jamais venu. Les lumières se sont éteintes, et elle était toujours là."],
-"……她在等谁呢？": ["…Who was she waiting for?", "… Qui attendait-elle ?"],
-"我只说我看见的。": ["I only tell what I saw.", "Je ne raconte que ce que j’ai vu."],
 "那不是加伊。": ["That isn’t Kay.", "Ce n’est pas Kay."],
 "雪花莲": ["Snowdrop", "La perce-neige"],
-"两根绳子拴着一块木板，两个小孩站在上面荡秋千，一边荡一边吹肥皂泡。一个泡泡飞进了通风口，啪，没了。两个小孩笑得从板子上掉了下来。": ["A plank hung from two ropes, and two children stood on it swinging and blowing soap bubbles. One bubble floated into a vent. Pop, gone. The two children laughed so hard they fell off the plank.", "Une planche pendait à deux cordes, et deux enfants s’y balançaient debout en soufflant des bulles de savon. Une bulle s’envola dans une bouche d’aération : pop, partie. Les deux enfants rirent tellement qu’ils tombèrent de la planche."],
-"两个小孩……": ["Two children…", "Deux enfants…"],
 "你讲的是你自己看见的，我知道。": ["You’re telling what you saw yourself. I know.", "Tu racontes ce que toi, tu as vu. Je sais."],
 "毛茛": ["Buttercup", "Le bouton-d’or"],
-"早上太阳灯一亮，门口坐着一个老奶奶晒太阳。她孙女从外头跑回来，在她脸上亲了一下。那一下，比我身上的黄颜色还亮。": ["In the morning, when the sun lamps came on, an old grandmother sat in her doorway warming herself. Her granddaughter came running home and kissed her on the cheek. That kiss was brighter than my yellow.", "Le matin, quand les lampes-soleil s’allumaient, une vieille grand-mère s’asseyait sur le pas de sa porte pour se chauffer. Sa petite-fille revint en courant et l’embrassa sur la joue. Ce baiser-là brillait plus que mon jaune."],
-"奶奶……": ["Grandma…", "Grand-mère…"],
 "你要是在找什么，别往地里找了。老太太把玫瑰全按进了土里，就她自己草帽上画的那一朵，她忘了。": ["If you’re looking for something, don’t look in the ground. The old woman pushed all the roses down into the earth. All but the one painted on her own hat. She forgot that one.", "Si tu cherches quelque chose, ne cherche pas dans la terre. La vieille a enfoncé toutes les roses sous le sol. Sauf celle qui est peinte sur son chapeau : celle-là, elle l’a oubliée."],
-"我奶奶也在等我。我会回去的。": ["My grandma is waiting for me too. I’ll go back.", "Ma grand-mère m’attend, elle aussi. Je rentrerai."],
 "蒲公英": ["Dandelion", "Le pissenlit"],
 "通风口一开，我就把孩子们全送出去了，一个也没留。它们飞到哪儿去了，我也不知道。": ["When the vent opened, I sent all my children out. I didn’t keep a single one. Where they flew to, I don’t know.", "Quand la bouche d’aération s’est ouverte, j’ai envoyé tous mes enfants, je n’en ai gardé aucun. Où ils sont allés, je ne sais pas."],
 "它们会落在好地方的。": ["They’ll land somewhere good.", "Ils se poseront dans un bon endroit."],
 "水仙": ["Narcissus", "Le narcisse"],
-"我能看见我自己。水里那个是我。真好看，真好看。": ["I can see myself. That one in the water is me. So lovely, so lovely.", "Je me vois. Celui qui est dans l’eau, c’est moi. Que je suis beau, que je suis beau."],
-"我问的不是这个……": ["That’s not what I asked…", "Ce n’est pas ce que je demandais…"],
-"我问的不是这个！": ["That’s not what I asked!", "Ce n’est pas ce que je demandais !"],
 "看看门边的草帽": ["Look at the straw hat by the door", "Regarder le chapeau près de la porte"],
 "和老太太说话": ["Talk to the old woman", "Parler à la vieille femme"],
 "再吃颗樱桃吧，孩子。这儿多好，一年到头都是夏天。": ["Have another cherry, child. Isn’t it lovely here? It’s summer all year round.", "Reprends une cerise, mon enfant. On est bien ici, c’est l’été toute l’année."],
 "你要走啦？……那就走吧。路上当心。": ["You’re leaving? … Then go. Take care on the way.", "Tu t’en vas ? … Alors va. Fais attention en chemin."],
 "外面好冷。我……我出去干什么来着？": ["It’s so cold out there. Why… why was I going out again?", "Il fait si froid dehors. Pourquoi… pourquoi je voulais sortir, déjà ?"],
-"门边挂着一块船历牌。格尔达跑出园门，才看见上面写的是：秋。园子里的灯一直是夏天，她在里面待了整整三个月。": ["A ship’s calendar hung by the gate. Only as Gerda ran out did she see what it said: autumn. The garden lights had always been summer. She had stayed inside for three whole months.", "Un calendrier de bord était accroché près du portail. Ce n’est qu’en sortant en courant que Gerda vit ce qui y était écrit : automne. Dans le jardin, les lampes faisaient toujours l’été ; elle y était restée trois mois entiers."],
-"园子里的灯一年到头都是夏天。花开得比格尔达见过的所有花都大。": ["The lights in the garden were summer all year round. The flowers were bigger than any Gerda had ever seen.", "Dans le jardin, les lampes faisaient l’été toute l’année. Les fleurs étaient plus grandes que toutes celles que Gerda avait jamais vues."],
-"我一直想要一个你这样的小姑娘。吃樱桃吧。": ["I’ve always wanted a little girl like you. Have some cherries.", "J’ai toujours voulu une petite fille comme toi. Mange des cerises."],
 "您见过一个男孩吗？叫加伊，穿蓝外套……": ["Have you seen a boy? His name is Kay, he’s wearing a blue coat…", "Vous avez vu un garçon ? Il s’appelle Kay, il porte un manteau bleu…"],
-"没见过。可他总会路过这儿的，别着急。先坐下，我给你梳梳头。": ["I haven’t. But he’s bound to pass this way sooner or later, don’t worry. Sit down first and let me comb your hair.", "Non. Mais il finira bien par passer par ici, ne t’inquiète pas. Assieds-toi, je vais te peigner."],
-"她拿一把金梳子给格尔达梳头。梳一下，格尔达就忘掉一点。": ["She combed Gerda’s hair with a golden comb. With every stroke, Gerda forgot a little more.", "Elle peigna Gerda avec un peigne d’or. À chaque coup de peigne, Gerda oubliait un peu."],
-"老太太把草帽挂在门边，拄着拐杖进了园子。她拿拐杖朝玫瑰丛一指，玫瑰就一株一株沉进了土里。她怕格尔达看见玫瑰，会想起什么来。": ["The old woman hung her straw hat by the door and went into the garden on her stick. She pointed the stick at the roses, and one by one they sank into the earth. She was afraid that if Gerda saw roses, she would remember something.", "La vieille accrocha son chapeau près de la porte et entra dans le jardin, appuyée sur sa canne. Elle pointa sa canne vers les rosiers, et un à un ils s’enfoncèrent dans la terre. Elle avait peur qu’en voyant des roses, Gerda ne se souvienne de quelque chose."],
 "格尔达好像忘了自己是来干什么的。在园子里走走看。": ["Gerda seems to have forgotten why she came. Take a walk around the garden.", "Gerda semble avoir oublié pourquoi elle est venue. Promenez-vous dans le jardin."],
 "园门": ["Gate", "Portail"],
-"老太太的草帽挂在门边。帽檐上画满了花，最中间是一朵玫瑰。": ["The old woman’s straw hat hung by the door. Its brim was painted all over with flowers, and in the very middle was a rose.", "Le chapeau de la vieille était accroché près de la porte. Le bord était tout peint de fleurs, et au beau milieu, il y avait une rose."],
-"格尔达盯着那朵玫瑰看了很久。": ["Gerda stared at that rose for a long time.", "Gerda regarda cette rose très longtemps."],
-"玫瑰……家里的玫瑰箱……": ["Roses… the rose box at home…", "Des roses… la caisse de roses, à la maison…"],
-"加伊！": ["Kay!", "Kay !"],
-"我在这儿待了多久了？加伊还在等我！": ["How long have I been here? Kay is still waiting for me!", "Depuis combien de temps je suis ici ? Kay m’attend toujours !"],
-"她跑到玫瑰沉下去的那块地上，蹲下来哭了。眼泪落进土里，土里一下子冒出一丛玫瑰，跟沉下去以前一模一样。": ["She ran to the patch of ground where the roses had sunk, crouched down and cried. Her tears fell into the soil, and all at once a whole bush of roses sprang up, exactly as it had been before.", "Elle courut là où les rosiers s’étaient enfoncés, s’accroupit et pleura. Ses larmes tombèrent dans la terre, et d’un coup tout un rosier en jaillit, exactement comme avant."],
 "玫瑰": ["The Roses", "Les roses"],
-"我们在土底下待了好久。死了的人都在底下，加伊不在那儿。": ["We were under the ground for a long time. The dead are all down there. Kay isn’t.", "Nous sommes restées longtemps sous la terre. Les morts sont tous là-dessous. Kay n’y est pas."],
-"那他还活着！谢谢你们！": ["Then he’s alive! Thank you!", "Alors il est vivant ! Merci !"],
 "她还想起了奶奶。": ["She remembered Grandma, too.", "Elle se souvint aussi de Grand-mère."],
 "从园门出去，接着往船尾走": ["Leave by the gate and keep going toward the stern", "Sortir par le portail et continuer vers la poupe"],
 "第四个故事 · 王子和公主": ["Fourth Story · The Prince and the Princess", "Quatrième histoire · Le prince et la princesse"],
@@ -373,33 +323,15 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "王子和公主": ["The Prince and the Princess", "Le prince et la princesse"],
 "掀开红色的那片花瓣": ["Lift the red petal", "Soulever le pétale rouge"],
 "乌鸦": ["Crow", "La corneille"],
-"别怕，墙上那些是梦。它们来接睡着的人的心思，带出去玩一夜。": ["Don’t be scared, those things on the walls are dreams. They come to fetch the thoughts of sleeping people and take them out for the night.", "N’aie pas peur, ce sont des rêves, sur les murs. Ils viennent chercher les pensées des dormeurs pour les emmener jouer toute la nuit."],
-"外面已经很冷了。格尔达光着脚，一步一步往前走。": ["It was already very cold outside. Barefoot, Gerda walked on, one step at a time.", "Dehors, il faisait déjà très froid. Pieds nus, Gerda avançait, un pas après l’autre."],
 "往前走": ["Keep walking", "Avancer"],
 "掀开红色的那片花瓣，看看是不是加伊": ["Lift the red petal and see if it’s Kay", "Soulever le pétale rouge pour voir si c’est Kay"],
-"嘎！小姑娘，光着脚上哪儿去？": ["Caw! Little girl, where are you going in bare feet?", "Croa ! Petite, où vas-tu comme ça, pieds nus ?"],
-"我在找一个男孩，叫加伊。你见过他吗？": ["I’m looking for a boy called Kay. Have you seen him?", "Je cherche un garçon qui s’appelle Kay. Tu l’as vu ?"],
-"也许见过，也许。": ["Maybe I have. Maybe.", "Peut-être. Peut-être bien."],
-"舰桥上的女船长，是全船最聪明的人，大伙儿背地里叫她公主。前些日子她说要找个领航员，得是能跟她说上话的。": ["The captain up on the bridge is the cleverest person on the whole ship. Behind her back, everyone calls her the princess. A while ago she said she wanted a navigator, someone she could really talk to.", "La capitaine, là-haut sur la passerelle, est la personne la plus intelligente du vaisseau. Dans son dos, tout le monde l’appelle la princesse. Il y a quelque temps, elle a annoncé qu’elle cherchait un navigateur, quelqu’un avec qui elle pourrait vraiment parler."],
-"来了好多人，一进舰桥就说不出话了。最后来了个半大孩子，谁也不怕，船长问什么他都答得上。他走路的时候，靴子咯吱咯吱响。": ["Lots of people came, and the moment they stepped onto the bridge they couldn’t say a word. Then at last a half-grown boy came along who wasn’t afraid of anyone, and he could answer everything the captain asked. When he walked, his boots creaked.", "Beaucoup de gens sont venus, et dès qu’ils entraient sur la passerelle, ils restaient muets. Et puis enfin est arrivé un grand garçon qui n’avait peur de personne et qui répondait à toutes les questions de la capitaine. Quand il marchait, ses bottes grinçaient."],
-"是加伊！他有一双新靴子，走起来就咯吱咯吱响！": ["That’s Kay! He has new boots that creak when he walks!", "C’est Kay ! Il a des bottes neuves qui grincent quand il marche !"],
-"正门你进不去，穿制服的人会把你轰出来。夜里我带你走后面的楼梯。": ["You’ll never get in the front way. The people in uniforms will chase you out. Tonight I’ll take you up the back stairs.", "Par la grande porte, tu n’entreras pas, les gens en uniforme te chasseraient. Cette nuit, je t’emmènerai par l’escalier de derrière."],
-"等到船上熄了灯，乌鸦来接她。大伙儿叫那两个人王子和公主，叫着叫着，就忘了他们本来叫什么。": ["When the lights went out on the ship, the crow came for her. People called those two the prince and the princess, and after a while they forgot what their real names had been.", "Quand on éteignit les lumières du vaisseau, la corneille vint la chercher. Tout le monde appelait ces deux-là le prince et la princesse, et à force, on avait oublié leurs vrais noms."],
 "跟着乌鸦": ["Follow the crow", "Suivre la corneille"],
-"两张床像两朵百合，挂在一根金色的茎上。一朵白的，一朵红的。格尔达掀开红色的那一片，看见一截褐色的脖子。": ["The two beds were like two lilies hanging from one golden stem, one white, one red. Gerda lifted the red petal and saw the back of a brown neck.", "Les deux lits étaient comme deux lys suspendus à une même tige dorée, l’un blanc, l’autre rouge. Gerda souleva le pétale rouge et aperçut une nuque brune."],
-"她把灯举近了些。床上的人醒了，转过头来。": ["She held the lamp closer. The one in the bed woke and turned around.", "Elle approcha la lampe. Le dormeur s’éveilla et se retourna."],
-"不是加伊。": ["It wasn’t Kay.", "Ce n’était pas Kay."],
 "领航员": ["Navigator", "Le navigateur"],
-"你是谁？半夜跑到这儿来干什么？": ["Who are you? What are you doing here in the middle of the night?", "Qui es-tu ? Qu’est-ce que tu fais ici en pleine nuit ?"],
-"白色的那朵也醒了。格尔达一边哭，一边把事情从头讲了一遍：玫瑰箱，碎片，白色的货车，水渠，花园。": ["The white one woke up too. Crying, Gerda told the whole story from the beginning: the rose box, the splinter, the white cart, the canal, the garden.", "Le lys blanc s’éveilla aussi. En pleurant, Gerda raconta toute l’histoire depuis le début : la caisse de roses, l’éclat, le chariot blanc, le canal, le jardin."],
 "女船长": ["Captain", "La capitaine"],
-"可怜的孩子。今晚就睡在这儿吧。": ["Poor child. Sleep here tonight.", "Pauvre enfant. Dors ici cette nuit."],
 "第二天早上。": ["The next morning.", "Le lendemain matin."],
 "你要去船尾，那一路越走越冷。这双靴子你穿上，这个手笼也拿着。": ["If you’re going to the stern, it gets colder the farther you go. Put on these boots, and take this muff too.", "Si tu vas à la poupe, plus tu avanceras, plus il fera froid. Mets ces bottes, et prends ce manchon aussi."],
 "得到靴子和手笼。冷得慢一些了。": ["You got boots and a muff. The cold will be slower now.", "Des bottes et un manchon : le froid viendra moins vite."],
 "有辆送补给的车要去废弃区，我让他们捎你一段。再往后，就没有车了。": ["A supply cart is heading to the derelict deck. I’ll have them give you a ride. Beyond that there are no more carts.", "Un chariot de ravitaillement part pour le pont désaffecté, je leur demanderai de t’emmener. Après, il n’y a plus de chariots."],
-"嘎。一路小心。": ["Caw. Take care on the way.", "Croa. Prends soin de toi."],
-"乌鸦飞上一根管子，冲着车子拍了好一会儿翅膀。": ["The crow flew up onto a pipe and flapped its wings at the cart for a long time.", "La corneille se percha sur un tuyau et battit longtemps des ailes vers le chariot."],
 "第五个故事 · 小强盗女孩": ["Fifth Story · The Little Robber Girl", "Cinquième histoire · La petite brigande"],
 "第五个故事": ["Fifth Story", "Cinquième histoire"],
 "小强盗女孩": ["The Little Robber Girl", "La petite brigande"],
@@ -416,39 +348,14 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "和小强盗女孩说话": ["Talk to the little robber girl", "Parler à la petite brigande"],
 "得先跟小强盗女孩说一声。": ["I should tell the little robber girl first.", "Il faut d’abord prévenir la petite brigande."],
 "补给车开进废弃区，灯一盏比一盏少。车停了，几个人从黑地方钻出来，把车围住了。": ["The supply cart rolled into the derelict deck, where the lights grew fewer and fewer. The cart stopped. Several figures crept out of the dark and surrounded it.", "Le chariot entra dans le pont désaffecté, où les lampes se faisaient de plus en plus rares. Il s’arrêta. Des silhouettes sortirent de l’ombre et l’encerclèrent."],
-"这靴子不错，手笼也不错。小东西细皮嫩肉的，拿去换点吃的正好。": ["Nice boots. Nice muff too. And the little thing’s so soft and tender, she’d trade for a good bit of food.", "Jolies bottes. Joli manchon aussi. Et la petite est bien tendre, on en tirerait de quoi manger."],
-"她是我的！她得陪我玩！": ["She’s mine! She has to play with me!", "Elle est à moi ! Elle doit jouer avec moi !"],
-"小强盗女孩一口咬在她妈耳朵上。老强盗婆疼得直跳，换东西的事就没再提。": ["The little robber girl bit her mother on the ear. The old robber woman hopped about in pain, and nobody mentioned trading again.", "La petite brigande mordit l’oreille de sa mère. La vieille sautilla de douleur, et on ne parla plus d’échange."],
-"跟我来。只要我不生你的气，他们就不敢碰你。": ["Come with me. As long as I’m not angry with you, they won’t dare touch you.", "Viens avec moi. Tant que je ne suis pas fâchée contre toi, ils n’oseront pas te toucher."],
 "跟着小强盗女孩，去她的窝": ["Follow the little robber girl to her den", "Suivre la petite brigande jusqu’à son repaire"],
 "走快点！": ["Hurry up!", "Plus vite !"],
-"你一个人走到这儿的？": ["You walked all the way here by yourself?", "Tu es venue jusqu’ici toute seule ?"],
-"我在找加伊。": ["I’m looking for Kay.", "Je cherche Kay."],
-"格尔达又把她的事讲了一遍。": ["Gerda told her story all over again.", "Gerda raconta encore une fois son histoire."],
-"鞋呢？你来的时候光着脚？": ["Where are your shoes? You came barefoot?", "Et tes chaussures ? Tu es venue pieds nus ?"],
-"鞋给水渠了。这双是船长给的。": ["I gave my shoes to the canal. These are from the captain.", "J’ai donné mes souliers au canal. Celles-ci, c’est la capitaine qui me les a données."],
-"傻。": ["Silly.", "Idiote."],
-"房梁上那几只鸽子是我的，柱子上拴的那头鹿也是我的。鹿老想跑，我每天晚上拿刀背在它脖子上刮一刮，它就老实了。": ["Those pigeons up in the rafters are mine, and the reindeer tied to the post is mine too. It’s always trying to run away, so every night I scrape the back of my knife along its neck, and then it behaves.", "Les pigeons sur la poutre sont à moi, et le renne attaché au poteau aussi. Il veut toujours se sauver, alors chaque soir je lui passe le dos de mon couteau sur le cou, et il se tient tranquille."],
-"我困了。你睡我旁边。": ["I’m sleepy. You sleep next to me.", "J’ai sommeil. Tu dors à côté de moi."],
-"小强盗女孩一手搂着格尔达，一手攥着刀，没一会儿就打起了呼噜。格尔达睡不着。": ["With one arm around Gerda and the other hand clutching her knife, the little robber girl was soon snoring. Gerda couldn’t sleep.", "Un bras autour de Gerda, l’autre main serrée sur son couteau, la petite brigande se mit vite à ronfler. Gerda ne pouvait pas dormir."],
 "小强盗女孩睡得正香，手里还攥着刀。": ["The little robber girl was fast asleep, still clutching her knife.", "La petite brigande dormait à poings fermés, le couteau toujours à la main."],
-"你们夜里说话那么大声，我全听见了。": ["You were all talking so loudly last night, I heard every word.", "Vous parliez si fort cette nuit, j’ai tout entendu."],
 "她拿刀割断了拴鹿的绳子。": ["She cut the reindeer’s rope with her knife.", "D’un coup de couteau, elle trancha la corde du renne."],
-"走吧，你。好好驮着她，一直驮到冷舱去。": ["Off you go. Carry her well, all the way to the cold vault.", "Va, toi. Porte-la bien, jusqu’à la cale froide."],
-"手笼我留下了，太好看了。你戴我妈的手套，大是大了点，暖和。": ["I’m keeping the muff, it’s too pretty. You can wear my mum’s mittens. They’re a bit big, but they’re warm.", "Je garde le manchon, il est trop joli. Mets les moufles de ma mère : un peu grandes, mais chaudes."],
 "手笼留给了小强盗女孩，换来她妈妈的大手套。": ["The muff stays with the little robber girl, in exchange for her mother’s big mittens.", "Le manchon reste à la petite brigande, en échange des grosses moufles de sa mère."],
-"别哭了。我最见不得人哭。": ["Stop crying. I can’t stand it when people cry.", "Arrête de pleurer. Je ne supporte pas qu’on pleure."],
-"格尔达爬上鹿背。小强盗女孩打开门，在后面喊了一句什么，风太大，没听清。": ["Gerda climbed onto the reindeer’s back. The little robber girl opened the door and shouted something after them, but the wind was too strong to hear it.", "Gerda grimpa sur le dos du renne. La petite brigande ouvrit la porte et cria quelque chose derrière eux, mais le vent était trop fort pour entendre."],
 "骑着驯鹿往船尾去": ["Ride the reindeer toward the stern", "Partir vers la poupe à dos de renne"],
 "鸽子": ["Pigeons", "Les pigeons"],
-"咕咕，咕咕。我们见过加伊。": ["Coo, coo. We’ve seen Kay.", "Rou, rou. Nous avons vu Kay."],
-"一辆白色的货车从我们窝顶上开过去，冰雪女王坐在车上，加伊坐在她旁边，脸冻得发青。": ["A white cargo cart drove right over our nest. The Snow Queen was sitting in it, and Kay sat beside her, his face blue with cold.", "Un chariot blanc est passé juste au-dessus de notre nid. La Reine des neiges était assise dedans, et Kay à côté d’elle, le visage bleu de froid."],
-"车往船尾的冷舱开去了。那边一年到头都是冰。问问那头鹿吧，它知道。": ["The cart went off to the cold vault at the stern. It’s ice there all year round. Ask the reindeer, it knows.", "Le chariot est parti vers la cale froide, à la poupe. Là-bas, c’est la glace toute l’année. Demande au renne, il sait."],
 "问问驯鹿": ["Ask the reindeer", "Demander au renne"],
-"冷舱那边我熟。我是在那边的牧场舱生的，冰原上我能跑一整天。": ["I know the cold vault well. I was born in the pasture deck over there. I can run across the ice field all day long.", "La cale froide, je la connais bien. Je suis né au pont des pâturages, là-bas. Sur la glace, je peux courir toute une journée."],
-"冰雪女王的宫殿在最里头，冷舱最深的地方。": ["The Snow Queen’s palace is right at the far end, in the deepest part of the cold vault.", "Le palais de la Reine des neiges est tout au fond, dans la partie la plus profonde de la cale froide."],
-"你能带我去吗？": ["Can you take me there?", "Tu peux m’y emmener ?"],
-"只要绳子解开。": ["If only someone would untie this rope.", "Si seulement on détachait cette corde."],
 "天亮了。": ["Morning came.", "Le jour se leva."],
 "去找小强盗女孩": ["Go and find the little robber girl", "Aller voir la petite brigande"],
 "第六个故事 · 拉普兰女人和芬兰女人": ["Sixth Story · The Lapp Woman and the Finn Woman", "Sixième histoire · La Lapone et la Finnoise"],
@@ -457,41 +364,15 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "驯鹿驮着格尔达跑进了船尾。这里是一整片冰原，发动机的光从冰底下透上来，一会儿绿，一会儿紫。": ["The reindeer carried Gerda into the stern. Here lay one great field of ice, with the light of the engines glowing up through it, now green, now purple.", "Le renne emporta Gerda jusqu’à la poupe. Là s’étendait un immense champ de glace, et la lumière des moteurs montait à travers, tantôt verte, tantôt violette."],
 "往船尾去": ["Head for the stern", "Aller vers la poupe"],
 "骑着鹿走得快，鹿身上也暖和。": ["Riding the reindeer is fast, and it keeps you warm.", "À dos de renne, on va vite, et il tient chaud."],
-"驯鹿在一间矮棚子前停下。棚子里只有一个老太太，守着一盏灯烤鱼。": ["The reindeer stopped in front of a low hut. Inside there was only an old woman, grilling fish over a lamp.", "Le renne s’arrêta devant une cabane basse. Dedans, il n’y avait qu’une vieille femme qui faisait griller du poisson sur une lampe."],
 "拉普兰老太太": ["Lapp Woman", "La Lapone"],
-"哎哟，可怜的孩子，你们还有好远的路要走。冰雪女王在最里头，每天晚上都放那种青光。": ["Oh dear, you poor things, you still have such a long way to go. The Snow Queen is at the far end, and every night she sends up that blue light.", "Oh, pauvres petits, vous avez encore un long chemin à faire. La Reine des neiges est tout au fond, et chaque nuit elle allume cette lumière bleue."],
-"我没有纸，给你在这条鳕鱼干上写几个字。往前走，有个芬兰老太太，她知道得比我多。": ["I have no paper, so I’ll write you a few words on this dried cod. Further on lives a Finn woman. She knows more than I do.", "Je n’ai pas de papier, je vais t’écrire quelques mots sur cette morue séchée. Plus loin, il y a une Finnoise. Elle en sait plus que moi."],
 "得到一条写了字的鳕鱼干。": ["You got a dried cod with writing on it.", "Une morue séchée couverte d’écriture."],
-"芬兰老太太的屋子热得像蒸笼。格尔达一进门，就把手套和靴子都脱了。": ["The Finn woman’s house was as hot as a steamer. As soon as Gerda came in, she took off her mittens and her boots.", "Chez la Finnoise, il faisait chaud comme dans une étuve. À peine entrée, Gerda ôta ses moufles et ses bottes."],
-"老太太把鳕鱼干上的字读了三遍，记住了，就把鱼丢进了汤锅。鱼还能吃，她从来不浪费东西。": ["The old woman read the writing on the cod three times until she knew it by heart, then dropped the fish into the soup pot. It was still good to eat, and she never wasted anything.", "La vieille lut trois fois ce qui était écrit sur la morue, l’apprit par cœur, puis jeta le poisson dans la marmite. Il était encore bon, et elle ne gaspillait jamais rien."],
-"你那么有本事，一根线能拴住全船的风。你就不能给这孩子一点力气，让她打得过冰雪女王吗？": ["You’re so clever, you can tie up all the winds of the ship with a single thread. Can’t you give this child a little strength, enough to beat the Snow Queen?", "Toi qui es si savante, tu peux attacher tous les vents du vaisseau avec un seul fil. Tu ne pourrais pas donner un peu de force à cette enfant, assez pour vaincre la Reine des neiges ?"],
-"芬兰老太太把驯鹿拉到墙角，小声说话。": ["The Finn woman drew the reindeer into a corner and spoke in a low voice.", "La Finnoise entraîna le renne dans un coin et lui parla à voix basse."],
 "芬兰老太太": ["Finn Woman", "La Finnoise"],
-"加伊确实在冰雪女王那儿。他样样称心，觉得那是全船最好的地方。那是因为他眼睛里有一粒碎片，心里也有一粒。不把碎片弄出来，他就做不回原来的加伊了。": ["Kay is indeed with the Snow Queen. He likes everything there and thinks it’s the best place on the whole ship. That’s because he has a splinter in his eye and another in his heart. Unless they come out, he can never be the old Kay again.", "Kay est bien chez la Reine des neiges. Tout lui plaît là-bas, il croit que c’est le meilleur endroit du vaisseau. C’est parce qu’il a un éclat dans l’œil, et un autre dans le cœur. Tant qu’on ne les aura pas retirés, il ne redeviendra jamais le Kay d’avant."],
-"我给不了她更多的本事了。你看看，人肯帮她，鹿肯驮她，她光着脚走了大半条船。这本事是她自己的。": ["I can’t give her any more strength than she has. Look at her: people want to help her, a reindeer is willing to carry her, she has walked barefoot across most of the ship. That strength is her own.", "Je ne peux pas lui donner plus de force qu’elle n’en a. Regarde-la : les gens veulent l’aider, un renne accepte de la porter, elle a traversé pieds nus la moitié du vaisseau. Cette force-là est à elle."],
-"从这儿往里两里地，就是冰雪女王的园子。把她放在那丛红果子旁边，别站着说闲话，赶紧回来。": ["A mile further in is the Snow Queen’s garden. Set her down beside the bush with the red berries, and don’t stand around chattering. Come straight back.", "À une lieue d’ici commence le jardin de la Reine des neiges. Dépose-la près du buisson aux baies rouges, ne reste pas à bavarder, et reviens vite."],
-"她把格尔达抱上鹿背。驯鹿撒开腿就跑。": ["She lifted Gerda onto the reindeer’s back, and the reindeer ran off as fast as it could.", "Elle hissa Gerda sur le dos du renne, qui partit au grand galop."],
-"跑出去好远，格尔达才想起来：靴子和手套都落在那间屋子里了。": ["Only when they were far away did Gerda remember: her boots and mittens were still in that house.", "Ce n’est que bien plus loin que Gerda s’en souvint : ses bottes et ses moufles étaient restées dans la maison."],
 "第七个故事 · 冰雪女王的宫殿里发生的事": ["Seventh Story · What Happened in the Snow Queen’s Palace", "Septième histoire · Ce qui se passa au palais de la Reine des neiges"],
 "第七个故事": ["Seventh Story", "Septième histoire"],
 "冰雪女王的宫殿里发生的事": ["What Happened in the Snow Queen’s Palace", "Ce qui se passa au palais de la Reine des neiges"],
 "两边是一排一排的冷舱，玻璃上结满了霜。里面的人都睡着，等船到的那一天。": ["On both sides were rows and rows of sleep pods, their glass thick with frost. The people inside were all asleep, waiting for the day the ship arrives.", "De chaque côté s’alignaient des caissons de sommeil, la vitre couverte de givre. Ceux qui étaient dedans dormaient tous, en attendant le jour où le vaisseau arriverait."],
-"驯鹿把她放在一丛结着红果子的灌木旁边，亲了亲她，掉下几颗大眼泪，转身跑了回去。": ["The reindeer set her down by a bush covered in red berries, kissed her, shed a few big tears, and turned and ran back.", "Le renne la déposa près d’un buisson couvert de baies rouges, l’embrassa, versa quelques grosses larmes, puis fit demi-tour et repartit en courant."],
-"格尔达站在那里，没有鞋，也没有手套。": ["Gerda stood there with no shoes and no mittens.", "Gerda resta là, sans chaussures ni moufles."],
-"冰雪女王的雪花卫兵朝她飘过来。有的像竖起刺的刺猬，有的像缠成一团的蛇，有的像毛都炸开的小熊。": ["The Snow Queen’s snowflake guards came drifting toward her. Some looked like hedgehogs with their spines up, some like knots of snakes, some like little bears with their fur standing on end.", "Les gardes-flocons de la Reine des neiges s’avancèrent vers elle en flottant. Certains ressemblaient à des hérissons piquants, d’autres à des nœuds de serpents, d’autres encore à des oursons au poil hérissé."],
 "去冷舱最里面找加伊": ["Find Kay at the far end of the cold vault", "Trouver Kay au fond de la cale froide"],
-"加伊坐在冰湖中间，冻得发青，自己却一点也觉不出来。他在用冰块拼字，拼了拆，拆了又拼。": ["Kay sat in the middle of the frozen lake, blue with cold, though he couldn’t feel it at all. He was arranging pieces of ice into a word, putting it together, taking it apart, putting it together again.", "Kay était assis au milieu du lac gelé, bleu de froid, sans rien sentir du tout. Il assemblait des morceaux de glace pour former un mot, les défaisait, recommençait."],
-"冰雪女王不在。宝座上空空的。": ["The Snow Queen wasn’t there. The throne stood empty.", "La Reine des neiges n’était pas là. Le trône était vide."],
-"冰雪女王说，我要是拼得出“永恒”两个字，我就能自己做主了。新世界归我，她还送我一双新冰鞋。": ["The Snow Queen said if I can spell out the word “Eternity”, I’ll be my own master. The new world will be mine, and she’ll give me a new pair of skates.", "La Reine des neiges a dit que si j’arrive à écrire le mot « Éternité », je serai mon propre maître. Le nouveau monde sera à moi, et elle me donnera des patins neufs."],
 "冷舱里的人都不会老。等船到了，我一醒来就能看见新世界。": ["Nobody in the cold vault ever grows old. When the ship arrives, I’ll wake up and see the new world straight away.", "Dans la cale froide, personne ne vieillit. Quand le vaisseau arrivera, je me réveillerai et je verrai tout de suite le nouveau monde."],
-"加伊！是我，格尔达！": ["Kay! It’s me, Gerda!", "Kay ! C’est moi, Gerda !"],
-"加伊一动不动，又硬又冷。": ["Kay didn’t move. He was stiff and cold.", "Kay ne bougeait pas, raide et froid."],
-"格尔达抱住他哭了。眼泪落在他胸口，渗了进去，把那一小块冰化开了，也把碎片冲了出来。": ["Gerda threw her arms around him and cried. Her tears fell on his chest and soaked in, melting the little lump of ice there and washing the splinter out.", "Gerda le serra dans ses bras et pleura. Ses larmes tombèrent sur sa poitrine, pénétrèrent jusqu’au cœur, firent fondre le petit morceau de glace et emportèrent l’éclat."],
-"加伊看着她，忽然也哭起来，哭得那么厉害，眼睛里那粒碎片跟着眼泪滚了出来。": ["Kay looked at her and suddenly began to cry too, so hard that the splinter in his eye rolled out with his tears.", "Kay la regarda et se mit soudain à pleurer lui aussi, si fort que l’éclat de son œil roula dehors avec ses larmes."],
-"格尔达！你上哪儿去了，去了这么久？我这又是在哪儿？": ["Gerda! Where have you been all this time? And where am I?", "Gerda ! Où étais-tu passée, tout ce temps ? Et moi, où suis-je ?"],
-"这儿好冷。怎么这么空。": ["It’s so cold here. And so empty.", "Qu’il fait froid ici. Et que c’est vide."],
-"冰块高兴得跳起舞来。跳累了，它们自己躺下来，正好拼成了那两个字。": ["The pieces of ice were so happy they began to dance. When they grew tired, they lay down by themselves and spelled out that very word.", "Les morceaux de glace se mirent à danser de joie. Quand ils furent fatigués, ils se couchèrent d’eux-mêmes et formèrent exactement ce mot."],
-"加伊什么都不用拼了。两个人手拉着手，往船头走。": ["Kay didn’t have to spell anything anymore. Hand in hand, the two of them set off toward the bow.", "Kay n’avait plus rien à écrire. Main dans la main, tous deux repartirent vers la proue."],
 "永恒": ["ETERNITY", "ÉTERNITÉ"],
 "那个小黄点。我当时说还有一百一十年，其实是瞎数的。": ["That little yellow dot. I said a hundred and ten years, but I was just guessing.", "Le petit point jaune. J’avais dit cent dix ans, mais en vrai je comptais au hasard."],
 "后来我去问了星图老师，是一百一十二年。一直没敢告诉你。": ["Later I asked the star-map teacher. It was a hundred and twelve. I never dared tell you.", "Après, j’ai demandé à la maîtresse d’astronomie : c’était cent douze. Je n’ai jamais osé te le dire."],
@@ -513,12 +394,9 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "归途 · 冰原化了": ["The Way Home · The Ice Field Thaws", "Le retour · La glace fond"],
 "归途": ["The Way Home", "Le retour"],
 "冰原化了": ["The Ice Field Thaws", "La glace fond"],
-"两个人手拉着手走出冷舱。他们走到哪儿，哪儿的风就停下来，冰底下的光一点一点暖了。": ["Hand in hand, the two of them walked out of the cold vault. Wherever they went, the wind dropped, and the light beneath the ice grew warmer little by little.", "Main dans la main, ils sortirent de la cale froide. Partout où ils passaient, le vent tombait, et la lumière sous la glace se réchauffait peu à peu."],
 "往船头走（一直往左）": ["Head for the bow (keep going left)", "Aller vers la proue (toujours vers la gauche)"],
 "回去的路往左走。": ["The way home is to the left.", "Le chemin du retour, c’est vers la gauche."],
-"红果子灌木旁边，驯鹿还在那儿等着。它身边多了一头小母鹿，奶胀得鼓鼓的。": ["By the red-berry bush, the reindeer was still waiting. Beside it stood a young doe, her udder full of milk.", "Près du buisson aux baies rouges, le renne attendait toujours. À côté de lui se tenait une jeune femelle, les mamelles gonflées de lait."],
 "我就知道你们会出来。": ["I knew you’d come out.", "Je savais que vous sortiriez."],
-"小母鹿让两个孩子喝了热乎乎的奶，又在他们嘴上各亲了一下。": ["The doe gave the two children warm milk to drink and kissed each of them on the mouth.", "La jeune renne donna aux deux enfants du lait tout chaud et les embrassa chacun sur la bouche."],
 "两个都上来。先去芬兰老太太那儿。": ["Both of you, climb on. First we’ll go to the Finn woman.", "Montez tous les deux. D’abord, chez la Finnoise."],
 "骑着驯鹿往船头去": ["Ride the reindeer toward the bow", "Partir vers la proue à dos de renne"],
 "芬兰老太太的屋子还是热得像蒸笼。老太太看见他们，把手在围裙上擦了擦。": ["The Finn woman’s house was as hot as a steamer, as ever. When she saw them, she wiped her hands on her apron.", "Chez la Finnoise, il faisait toujours chaud comme dans une étuve. En les voyant, elle s’essuya les mains sur son tablier."],
@@ -531,7 +409,6 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "跟我那架雪橇差不多大。": ["It’s about the same size as my sled.", "Il est à peu près de la taille de ma luge."],
 "你那架呢？": ["Where’s yours?", "Et la tienne ?"],
 "挂在白色货车后头，不知道丢哪儿去了。": ["Still hooked to the back of the white cart, I suppose. I don’t know where it ended up.", "Restée accrochée derrière le chariot blanc. Je ne sais pas où elle est passée."],
-"冰原走到了头，地上冒出来第一撮绿芽。": ["At the edge of the ice field, the first green shoots were poking out of the ground.", "Au bout du champ de glace, les premières pousses vertes sortaient de terre."],
 "我就送到这儿了。再往前，不是我们鹿走的地方。": ["This is as far as I go. Beyond here isn’t a place for reindeer.", "Je m’arrête ici. Plus loin, ce n’est plus un pays pour les rennes."],
 "格尔达抱着驯鹿的脖子，好半天才撒手。小母鹿拿鼻子拱了拱加伊的手心。": ["Gerda hugged the reindeer’s neck for a long time before she let go. The doe nuzzled Kay’s palm.", "Gerda serra longtemps le cou du renne avant de le lâcher. La jeune renne poussa du museau la paume de Kay."],
 "再见！": ["Goodbye!", "Au revoir !"],
@@ -539,21 +416,13 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "接着往船头走（往左）": ["Keep heading for the bow (to the left)", "Continuer vers la proue (vers la gauche)"],
 "归途 · 骑马的姑娘": ["The Way Home · The Girl on Horseback", "Le retour · La fille à cheval"],
 "骑马的姑娘": ["The Girl on Horseback", "La fille à cheval"],
-"废弃区的管子上冒出了嫩芽。房梁上有鸟在叫，不知道是谁家的。": ["Tender shoots had sprouted on the pipes of the derelict deck. Birds were singing up in the rafters; whose, nobody knew.", "Sur les tuyaux du pont désaffecté, de jeunes pousses étaient sorties. Des oiseaux chantaient sur les poutres, on ne savait pas à qui ils étaient."],
 "接着往船头走": ["Keep heading for the bow", "Continuer vers la proue"],
-"前面嗒嗒嗒跑过来一匹马。马上坐着一个姑娘，头上戴一顶亮红的帽子，腰里别着一把刀。": ["Clip-clop, clip-clop: a horse came trotting toward them. On it sat a girl in a bright red cap, with a knife tucked in her belt.", "Clip-clop, clip-clop : un cheval arrivait au trot. Dessus, une fille coiffée d’un bonnet rouge vif, un couteau glissé à la ceinture."],
 "是你！": ["It’s you!", "C’est toi !"],
-"一个在马上，一个在马下，两个人拉着手直嚷嚷。": ["One up on the horse, one down on the ground, the two of them held hands and shrieked.", "L’une à cheval, l’autre à pied, elles se tenaient les mains en poussant des cris."],
 "小强盗女孩拿马鞭朝加伊一指。": ["The little robber girl pointed her riding crop at Kay.", "La petite brigande pointa sa cravache vers Kay."],
-"你倒好，满船乱跑。我倒想知道，你值不值得人家光着脚跑到船尾去找你。": ["Well, look at you, gadding all over the ship. I’d like to know if you were worth somebody running barefoot all the way to the stern.", "Toi, alors, tu vagabondes dans tout le vaisseau. J’aimerais bien savoir si tu valais la peine qu’on coure pieds nus jusqu’à la poupe pour toi."],
 "格尔达拍拍她的脸，问船长和领航员怎么样了。": ["Gerda patted her cheek and asked how the captain and the navigator were.", "Gerda lui tapota la joue et demanda des nouvelles de la capitaine et du navigateur."],
-"出船外修天线去了，说要好几个月才回来。走之前托人捎话，靴子不用还了。": ["They’ve gone outside the ship to fix the antenna. They said it’ll be months before they’re back. Before they left, they sent word that you can keep the boots.", "Ils sont sortis du vaisseau réparer l’antenne, ils en ont pour des mois. Avant de partir, ils ont fait dire que tu pouvais garder les bottes."],
 "乌鸦呢？": ["And the crow?", "Et la corneille ?"],
 "老了，飞不大动了。天天蹲在舰桥底下的暖气管上，逢人就讲它领过一个光脚的小姑娘，一天讲八遍。": ["Old now, can hardly fly. It sits on the heating pipe under the bridge all day and tells anyone who’ll listen how it once guided a barefoot little girl. Eight times a day.", "Elle a vieilli, elle ne vole presque plus. Elle reste toute la journée sur le tuyau de chauffage sous la passerelle, et elle raconte à tout le monde qu’elle a guidé une petite fille pieds nus. Huit fois par jour."],
-"该你们讲了。你是怎么把他弄回来的？": ["Your turn now. How did you get him back?", "À vous de raconter. Comment tu l’as ramené ?"],
 "格尔达和加伊你一句我一句，从头讲了一遍。": ["Gerda and Kay told the whole story from the beginning, taking turns.", "Gerda et Kay racontèrent tout depuis le début, chacun à son tour."],
-"小强盗女孩听完，拍着巴掌喊了一串谁也听不懂的话，大概是她们强盗家说“好”的意思。": ["When they’d finished, the little robber girl clapped her hands and shouted a string of words nobody could understand. Probably robber-speak for “good”.", "Quand ils eurent fini, la petite brigande battit des mains et cria une suite de mots que personne ne comprit. Sans doute « bravo » dans la langue des brigands."],
-"我在家闷坏了，要往船尾那头去看看。哪天路过你们船头，我去找你们玩。": ["I was bored to death at home, so I’m off to see what’s down at the stern. If I’m ever passing by the bow, I’ll come and visit you.", "Je m’ennuyais à mourir à la maison, alors je vais voir du côté de la poupe. Si un jour je passe par la proue, je viendrai vous voir."],
 "她弯下腰，一手拉住格尔达，一手拉住加伊，使劲握了握，一拨马头，跑进了废弃区。": ["She leaned down, took Gerda’s hand in one hand and Kay’s in the other, gave them a hard squeeze, then turned her horse and galloped off into the derelict deck.", "Elle se pencha, prit la main de Gerda d’un côté, celle de Kay de l’autre, les serra fort, puis fit tourner son cheval et fila au galop dans le pont désaffecté."],
 "舰桥底下的暖气管上蹲着一只乌鸦，羽毛乱蓬蓬的。": ["On the heating pipe under the bridge sat a crow with scruffy, ruffled feathers.", "Sur le tuyau de chauffage, sous la passerelle, une corneille était perchée, les plumes tout ébouriffées."],
 "嘎！我就说她会回来的。我跟谁都这么说。": ["Caw! I said she’d come back. I told everyone.", "Croa ! Je l’avais bien dit, qu’elle reviendrait. Je l’ai dit à tout le monde."],
@@ -564,7 +433,6 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "归途 · 春天跟着走": ["The Way Home · Spring Follows Them", "Le retour · Le printemps les suit"],
 "春天跟着走": ["Spring Follows Them", "Le printemps les suit"],
 "看看水边那团红的": ["Look at the red thing by the water", "Regarder la tache rouge au bord de l’eau"],
-"水渠里的冰全化了，水哗哗地往船头流。他们每走一步，脚边就冒出一朵花来。": ["The ice in the canal had all melted, and the water rushed toward the bow. With every step they took, a flower sprang up at their feet.", "La glace du canal avait entièrement fondu, et l’eau courait vers la proue. À chacun de leurs pas, une fleur poussait à leurs pieds."],
 "顺着水渠往船头走": ["Follow the canal toward the bow", "Suivre le canal vers la proue"],
 "水边的芦苇里卡着一双红鞋。": ["A pair of red shoes was caught in the reeds at the water’s edge.", "Une paire de souliers rouges était prise dans les roseaux, au bord de l’eau."],
 "这不是你的鞋吗？": ["Aren’t those your shoes?", "Ce ne sont pas tes souliers ?"],
@@ -574,12 +442,8 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "格尔达把靴子脱下来拎在手里，换上了红鞋。": ["Gerda took off her boots, carried them in her hand, and put on the red shoes.", "Gerda ôta ses bottes, les prit à la main et enfila les souliers rouges."],
 "红鞋回来了。": ["The red shoes are back.", "Les souliers rouges sont revenus."],
 "船头的钟响了。": ["The bell at the bow was ringing.", "La cloche de la proue sonnait."],
-"他们认出了那一排舷窗，认出了走廊尽头那扇门。是奶奶家。": ["They recognized the row of portholes, and the door at the end of the corridor. It was Grandma’s.", "Ils reconnurent la rangée de hublots, et la porte au bout du couloir. C’était chez Grand-mère."],
 "回家": ["Go home", "Rentrer à la maison"],
 "尾声": ["Epilogue", "Épilogue"],
-"奶奶家的门没锁。屋里的东西都跟原来一样，挂钟嘀嗒嘀嗒地走。": ["Grandma’s door wasn’t locked. Everything inside was just as it had been, and the clock on the wall went tick, tock.", "La porte de Grand-mère n’était pas fermée à clé. À l’intérieur, tout était comme avant, et la pendule faisait tic-tac."],
-"玫瑰箱里的玫瑰正开着。奶奶坐在阳光灯底下，照着念一本旧书。": ["The roses in the rose box were in bloom. Grandma sat under the sun lamp, reading aloud from an old book.", "Les roses de la caisse étaient en fleur. Grand-mère était assise sous la lampe-soleil et lisait à voix haute un vieux livre."],
-"他们在玫瑰箱旁边的小板凳上坐下来，膝盖顶到了下巴。这才发现，两个人都长高了。": ["They sat down on the little stools beside the rose box, and their knees came up to their chins. Only then did they notice that both of them had grown.", "Ils s’assirent sur les petits tabourets près de la caisse de roses, les genoux sous le menton. C’est alors seulement qu’ils s’aperçurent qu’ils avaient grandi tous les deux."],
 "船历二一三年，夏。离抵达还有一百零七年。": ["Ship’s year 213, summer. One hundred and seven years until arrival.", "An 213 du vaisseau, été. Encore cent sept ans avant l’arrivée."],
 "音乐 开": ["Music on", "Musique : oui"],
 "音乐 关": ["Music off", "Musique : non"],
@@ -593,8 +457,6 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "第一个故事": ["First Story", "Première histoire"],
 "镜子和碎片": ["The Mirror and the Splinters", "Le miroir et ses éclats"],
 "白鹳号是一艘世代船。从出发到抵达，要开三百二十年。船上的人在船上出生，在船上长大，一代一代往下传。": ["The White Stork is a generation ship. From departure to arrival, the voyage takes three hundred and twenty years. People are born on board and grow up on board, one generation after another.", "La Cigogne blanche est un vaisseau-génération. Entre le départ et l’arrivée, il faut trois cent vingt ans. On naît à bord, on grandit à bord, et les générations se succèdent."],
-"船尾有一面大镜子，早年间用来测星。后来有人在镜面上动了手脚：玫瑰照进去，只看得见虫眼；人脸照进去，只看得见斑。": ["At the stern there was a great mirror, used in the early years to measure the stars. Later someone tampered with it: reflect a rose in it, and you saw only the wormholes; reflect a face, and you saw only the blemishes.", "À la poupe, il y avait un grand miroir qui servait autrefois à mesurer les étoiles. Plus tard, quelqu’un le trafiqua : une rose s’y reflétait, on ne voyait que ses trous de vers ; un visage s’y reflétait, on ne voyait que ses taches."],
-"有一天，镜子裂了。碎片比灰还细，顺着通风管飘遍了全船。进了眼睛，看什么都只看得见毛病。扎进心口，心就慢慢凉成一块冰。": ["One day the mirror cracked. The splinters were finer than dust, and they drifted through the air vents all over the ship. If one got in your eye, you saw nothing but faults. If one lodged in your heart, your heart slowly cooled into a lump of ice.", "Un jour, le miroir se fendit. Les éclats, plus fins que la poussière, se répandirent dans tout le vaisseau par les conduits d’aération. Si l’un d’eux vous entrait dans l’œil, on ne voyait plus que des défauts. S’il se plantait dans le cœur, le cœur se refroidissait lentement jusqu’à devenir un bloc de glace."],
 "接着玩：": ["Continue: ", "Continuer : "],
 "走到窗前，{breath}哈气": ["Walk up to the window and {breath} to breathe on it", "Approchez-vous de la fenêtre et {breath} pour souffler dessus"],
 "听{n}说话": ["Listen to the {n}", "Écouter {n}"],
@@ -628,7 +490,173 @@ html[lang=en] .mem h3,html[lang=fr] .mem h3,html[lang=en] .mempop .t,html[lang=f
 "空格": ["Space", "Espace"],
 "按住哈气": ["hold to breathe", "maintenir pour souffler"],
 "互动 / 继续": ["use / continue", "agir / continuer"],
-"音乐": ["music", "musique"]
+"音乐": ["music", "musique"],
+"“一个人”这几个字，格尔达听得很明白，也觉得这里头的意思有多深。她把自己的事全告诉了乌鸦，问它有没有看见加伊。": ["The word “alone” Gerda understood quite well, and felt how much was expressed by it. So she told the crow her whole history, and asked if it had not seen Kay.", "Le mot « seule », Gerda le comprenait très bien, et elle sentait tout ce qu’il voulait dire. Elle raconta donc toute son histoire à la corneille et lui demanda si elle n’avait pas vu Kay."],
+"“嚓——嚓——”天上传来一阵声音，好像有人在打喷嚏。": ["“Ddsa! Ddsa!” was heard in the sky. It was just as if somebody was sneezing.", "« Ddsa ! Ddsa ! » entendit-on dans le ciel. On aurait dit que quelqu’un éternuait."],
+"“斯尼普，斯纳普，斯努尔，巴塞卢勒！”小强盗女孩说。": ["“Schnipp-schnapp-schnurre-basselurre,” said the little robber girl.", "« Snip-snap-snurre-basselurre », dit la petite brigande."],
+"一个老太太拄着一根弯弯的拐杖走出来。她头上戴着一顶宽边大草帽，帽子上画满了最漂亮的花。": ["An old woman came out, leaning upon a crooked stick. She had a large broad-brimmed hat on, painted with the most splendid flowers.", "Une vieille femme sortit, appuyée sur une canne crochue. Elle portait un grand chapeau à larges bords, peint des plus belles fleurs."],
+"不是小加伊！": ["It was not little Kay!", "Ce n’était pas le petit Kay !"],
+"两个大人坐在那里，长大了，却还是孩子，至少心还是孩子的。这是夏天，温暖的、美好的夏天。": ["There sat the two grown-up persons; grown-up, and yet children; children at least in heart; and it was summer-time; summer, glorious summer!", "Ils étaient assis là, tous les deux grandis, grandis et pourtant enfants, enfants du moins par le cœur ; et c’était l’été, le chaud, le bienheureux été."],
+"两棵树中间挂着一块长木板，那是秋千。两个小姑娘坐在上面荡来荡去，衣服白得像雪，帽子上飘着长长的绿绸带。她们的哥哥站在秋千上，一只手拿着小杯子，一只手拿着泥烟斗，在吹肥皂泡。秋千荡着，泡泡飘着，变出各种好看的颜色。一只小黑狗想跳上秋千，秋千一荡，它摔了下来，汪汪地叫。泡泡破了！一架秋千，一个破掉的泡泡，这就是我的歌。": ["Between the trees a long board is hanging—it is a swing. Two little girls are sitting in it, and swing themselves backwards and forwards; their frocks are as white as snow, and long green silk ribands flutter from their bonnets. Their brother stands up in the swing; in one hand he has a little cup, and in the other a clay-pipe. He is blowing soap-bubbles. The swing moves, and the bubbles float in charming changing colors. The little black dog jumps up to try to get into the swing. It moves, the dog falls down, barks, and is angry. The bubble bursts! A swing, a bursting bubble—such is my song!", "Entre les arbres pend une longue planche : c’est une balançoire. Deux petites filles y sont assises et se balancent ; leurs robes sont blanches comme la neige, et de longs rubans de soie verte flottent à leurs chapeaux. Leur frère se tient debout sur la balançoire ; d’une main il tient une petite tasse, de l’autre une pipe en terre. Il souffle des bulles de savon. La balançoire va et vient, et les bulles flottent en changeant de couleurs. Le petit chien noir saute pour monter sur la balançoire ; elle bouge, il tombe, il aboie, il se fâche. La bulle éclate ! Une balançoire, une bulle qui crève, voilà ma chanson !"],
+"也许水渠会把我带到小加伊那儿去。": ["Perhaps the canal will carry me to little Kay.", "Peut-être que le canal va m’emmener jusqu’au petit Kay."],
+"于是她爬进芦苇丛里的一条小船，走到最远的那一头，把鞋扔了出去。": ["So she clambered into a boat which lay among the rushes, went to the farthest end, and threw out the shoes.", "Alors elle grimpa dans une barque qui était parmi les roseaux, alla tout au bout et lança les souliers."],
+"人一群一群地来，挤得要命。在走廊里一个个都能说会道，可是一进舰桥，看见穿制服的卫兵、亮堂堂的大厅，一站到船长面前，就只会把自己说过的最后一个字重复一遍。": ["People came in crowds; there was a crush and a hurry. They could all talk well enough out in the corridors; but as soon as they came onto the bridge, and saw the guards in uniform and the great bright halls, and stood before the captain, all they could do was to repeat the last word they had uttered.", "Les gens venaient en foule, on se bousculait. Dans les couloirs, ils parlaient tous très bien ; mais dès qu’ils arrivaient sur la passerelle, qu’ils voyaient les gardes en uniforme et les grandes salles illuminées, et qu’ils se tenaient devant la capitaine, ils ne savaient que répéter le dernier mot qu’ils avaient dit."],
+"人能想得到的每一种花、每一个季节的花，都在这里开得正盛，哪本画册也没有这么鲜艳、这么好看。园子里的灯一年到头都是夏天。": ["Every flower that one could think of, and of every season, stood there in fullest bloom; no picture-book could be gayer or more beautiful. The lights in the garden were summer all year round.", "Toutes les fleurs qu’on peut imaginer, de toutes les saisons, s’y épanouissaient à la fois ; aucun livre d’images n’était plus gai ni plus beau. Dans le jardin, les lampes faisaient l’été toute l’année."],
+"什么，你真的这么想吗？": ["What, do you really think so?", "Quoi, tu le crois vraiment ?"],
+"今天晚上你跟我睡，跟我所有的动物一起。": ["You shall sleep with me tonight, with all my animals.", "Cette nuit, tu dormiras avec moi, avec toutes mes bêtes."],
+"他们不会杀你的，就算我生你的气也不会。到那时候，我自己动手。": ["They shall not kill you, even if I am angry with you: then I will do it myself.", "Ils ne te tueront pas, même si je suis fâchée contre toi : c’est moi qui le ferai, alors."],
+"他们在一座小屋前停下来。那屋子寒碜得很，屋顶一直垂到地上，门矮得一家人进出都得趴着爬。屋里只有一个拉普兰老太太，守着一盏油灯在收拾鱼。格尔达冻得话都说不出来了。": ["They stopped before a little house, which looked very miserable. The roof reached to the ground, and the door was so low that the family had to creep in and out on their stomachs. Nobody was at home except an old Lapp woman, who was dressing fish by the light of an oil lamp. Gerda was so chilled that she could not speak.", "Ils s’arrêtèrent devant une petite maison bien misérable. Le toit touchait le sol, et la porte était si basse que la famille devait ramper sur le ventre pour entrer et sortir. Il n’y avait personne, sauf une vieille Lapone qui préparait du poisson à la lueur d’une lampe à huile. Gerda avait si froid qu’elle ne pouvait pas parler."],
+"他们手拉着手走出大殿，一路谈着老奶奶，谈着屋顶上的玫瑰。他们走到哪儿，哪儿的风就停了，光就亮起来。": ["They took each other by the hand and wandered forth out of the great hall; they talked of their old grandmother, and of the roses upon the roof; and wherever they went, the winds ceased raging, and the light came back.", "Ils se prirent par la main et sortirent de la grande salle ; ils parlaient de leur vieille grand-mère et des roses sur le toit ; et partout où ils passaient, les vents se calmaient et la lumière revenait."],
+"他们留她在舰桥上住下，过快活的日子。可是她只求要一辆小车、一双小鞋，她说，她还要到大千世界里去找加伊。": ["They offered to let her stay on the bridge and lead a happy life; but she begged only for a little cart and a small pair of shoes; then, she said, she would go forth again into the wide world and look for Kay.", "On lui proposa de rester sur la passerelle et d’y vivre heureuse ; mais elle ne demanda qu’une petite voiture et une paire de souliers : elle voulait, dit-elle, repartir dans le vaste monde chercher Kay."],
+"他们认出了那一排舷窗，认出了这个大船舱，这就是他们住的地方。": ["They recognised the row of portholes, and the great deck; it was the one in which they dwelt.", "Ils reconnurent la rangée de hublots et le grand pont : c’était là qu’ils habitaient."],
+"他们走到那丛结着红果子的灌木旁边，驯鹿正在那儿等着他们。它还带来了一头小母鹿，奶胀得鼓鼓的。": ["When they reached the bush with the red berries, they found the reindeer waiting for them. He had brought another, a young one, with him, whose udder was filled with milk.", "Quand ils arrivèrent au buisson aux baies rouges, ils y trouvèrent le renne qui les attendait. Il avait amené une jeune renne dont les mamelles étaient pleines de lait."],
+"他们走进去，赶紧上楼到奶奶屋里。屋里的东西都还摆在老地方，挂钟嘀嗒嘀嗒地走，指针一圈一圈地转。可是一进门，他们就发现自己已经长大了。": ["They went in and hastened up to their grandmother’s room, where everything was standing as before. The clock said “tick! tack!” and the hands moved round; but as they entered, they noticed that they were now grown up.", "Ils entrèrent et montèrent vite chez leur grand-mère, où tout était à sa place comme autrefois. La pendule faisait « tic, tac » et les aiguilles tournaient ; mais en entrant, ils s’aperçurent qu’ils étaient devenus grands."],
+"他只有脖子像加伊，不过他年轻，也很英俊。公主从白百合花瓣里探出头来，问出了什么事。小格尔达哭了起来，把她的事，还有乌鸦帮她的事，从头到尾讲了一遍。": ["He was only like Kay about the neck; but he was young and handsome. And out of the white lily leaves the princess peeped, too, and asked what was the matter. Then little Gerda cried, and told her her whole history, and all that the crow had done for her.", "Il ne ressemblait à Kay que par la nuque ; mais il était jeune et beau. La princesse, elle aussi, passa la tête hors des pétales du lys blanc et demanda ce qui se passait. Alors la petite Gerda se mit à pleurer et raconta toute son histoire, et tout ce que la corneille avait fait pour elle."],
+"他朝箱子狠狠踢了一脚，扯下了一朵玫瑰。": ["And then he gave the box a good kick with his foot, and pulled a rose off.", "Puis il donna un bon coup de pied dans la caisse et arracha une rose."],
+"他没打这儿过。不过他准会来的，你别难过。尝尝我的樱桃，看看我的花吧，我的花比画册里的还好看，每一朵都能讲一整个故事。": ["He has not passed this way. But no doubt he will come; don’t be sad. Taste my cherries, and look at my flowers; they are finer than any in a picture-book, and each of them can tell a whole story.", "Il n’est pas passé par ici. Mais il viendra sûrement, ne sois pas triste. Goûte mes cerises et regarde mes fleurs : elles sont plus belles que dans n’importe quel livre d’images, et chacune peut raconter toute une histoire."],
+"他看着她，忽然哭了起来，哭得那么厉害，眼睛里那粒碎片也跟着眼泪滚了出来。他认出了她。": ["He looked at her and suddenly burst into tears; he wept so much that the splinter rolled out of his eye, and he recognised her.", "Il la regarda et fondit soudain en larmes ; il pleura tant que l’éclat roula hors de son œil, et il la reconnut."],
+"他肯定没有死。我们在土底下待过，死了的人都在那儿，加伊不在。": ["Dead he certainly is not. We have been in the earth where all the dead are, but Kay was not there.", "Mort, il ne l’est certainement pas. Nous avons été sous la terre, là où sont tous les morts, et Kay n’y était pas."],
+"他走进去的时候，靴子咯吱咯吱响得厉害，可他一点儿也不怕。": ["His boots creaked, too, so loudly, but still he was not at all afraid.", "Ses bottes grinçaient très fort, mais il n’avait pas peur du tout."],
+"你们在上面说什么？冰雪女王到哪儿去了？你们知道吗？": ["What is that you say up there? Where did the Snow Queen go to? Do you know?", "Qu’est-ce que vous dites là-haut ? Où est allée la Reine des neiges ? Vous le savez ?"],
+"你倒是挺会到处乱跑的！我倒真想知道，你值不值得别人为你从世界的这一头跑到那一头。": ["You are a fine fellow for tramping about! I should like to know, faith, if you deserve that one should run from one end of the world to the other for your sake.", "Tu es un fameux vagabond, toi ! Je voudrais bien savoir si tu mérites qu’on coure d’un bout du monde à l’autre pour toi."],
+"你光着脚，进不了舰桥，穿制服的卫兵不会让你进去的。可是别哭，你还是能进去。我知道一条小小的后楼梯，能一直通到卧室。": ["You cannot get onto the bridge, for you are barefooted: the guards in uniform would not allow it. But do not cry, you shall come in still. I know a little back stair that leads to the bedchamber.", "Tu ne peux pas entrer sur la passerelle, tu es pieds nus : les gardes en uniforme ne le permettraient pas. Mais ne pleure pas, tu entreras quand même. Je connais un petit escalier de derrière qui mène jusqu’à la chambre."],
+"你哭什么？这样子真难看！我又没怎么样。": ["What are you crying for? You look so ugly! There’s nothing the matter with me.", "Pourquoi pleures-tu ? Tu es si laide comme ça ! Je n’ai rien du tout."],
+"你找加伊？我们只看见他把小雪橇拴在一辆又大又漂亮的货车后头。那车涂得雪白，里面坐着一个人，裹着粗糙的白毛皮斗篷，戴着白毛皮帽子。": ["Looking for Kay? All we saw was him tie his little sledge to a large and splendid cart. It was painted quite white, and there was someone in it wrapped up in a rough white mantle of fur, with a white fur cap on.", "Tu cherches Kay ? Tout ce qu’on a vu, c’est qu’il a attaché sa petite luge derrière un grand et beau chariot. Il était peint tout en blanc, et quelqu’un était assis dedans, enveloppé d’un manteau de fourrure blanche, avec un bonnet de fourrure blanche."],
+"你看这朵，开得多……": ["Look at this one, it’s so…", "Regarde celle-là, elle est si…"],
+"你看，多巧妙！比真花有意思多了！一点毛病都没有，规规矩矩的，只要它们不化就好了！": ["Look, how clever! That’s much more interesting than real flowers! They are as exact as possible; there is not a fault in them, if only they did not melt!", "Regarde comme c’est bien fait ! C’est bien plus intéressant que les vraies fleurs ! Elles sont parfaitement régulières, il n’y a pas un défaut, si seulement elles ne fondaient pas !"],
+"你睡觉的时候也拿着刀吗？": ["Do you intend to keep your knife while you sleep?", "Tu gardes ton couteau pour dormir ?"],
+"你给我安静点！不然我叫你安静！": ["Do you choose to be quiet? If you don’t, I shall make you.", "Tu vas te taire ? Sinon, je vais te faire taire, moi !"],
+"你讲的也许很好听，可是你讲得这么伤心，一句也没提到加伊。": ["What you relate may be very pretty, but you tell it in so melancholy a manner, and do not mention Kay.", "Ce que tu racontes est peut-être très joli, mais tu le dis d’une façon si triste, et tu ne parles pas de Kay."],
+"你说的是加伊吗？": ["Is it Kay that you mean?", "C’est de Kay que tu parles ?"],
+"你那么聪明，我知道你能用一根线把全船的风都系起来。水手解开第一个结，就有顺风；解开第二个，风就刮得猛了；解开第三个、第四个，就会狂风大作，连树林都刮倒。你能不能给这小姑娘喝一点什么，让她有十二个人的力气，打败冰雪女王？": ["You are so clever; you can, I know, twist all the winds of the ship together in a single thread. If the seaman loosens one knot, then he has a good wind; if a second, then it blows pretty stiffly; if he undoes the third and fourth, then it rages so that the forests are upturned. Will you give the little maiden something to drink, that she may possess the strength of twelve men, and vanquish the Snow Queen?", "Tu es si savante ; je sais que tu peux nouer tous les vents du vaisseau dans un seul fil. Quand le marin défait le premier nœud, il a bon vent ; le deuxième, le vent souffle fort ; s’il défait le troisième et le quatrième, la tempête se déchaîne et renverse les forêts. Ne veux-tu pas donner à la petite quelque chose à boire, pour qu’elle ait la force de douze hommes et qu’elle vainque la Reine des neiges ?"],
+"其实并没有出来。那正是魔镜的一粒碎片。可怜的加伊，心里也扎进了一片，那颗心很快就会变得像一块冰。现在已经不疼了，可碎片还在那儿。": ["But it was not. It was just one of those splinters of the magic mirror; and poor Kay had got another piece right in his heart. It will soon become like ice. It did not hurt any longer, but there it was.", "Mais il n’était pas sorti. C’était justement un de ces éclats du miroir magique ; et le pauvre Kay en avait reçu un autre en plein cœur. Son cœur allait bientôt devenir comme de la glace. Il n’avait plus mal, mais l’éclat était là."],
+"再见！再见！": ["Farewell! Farewell!", "Adieu ! Adieu !"],
+"冬天，窗子常常冻上。你们就把铜钱放在暖气片上烤热，按在玻璃上，烫出一个圆圆的小孔。每个小孔里都有一只温和、亲切的眼睛往外看，一只是你的，一只是加伊的。": ["In winter the windows were often frozen over; but then you heated copper coins on the radiator, laid them on the pane, and had a capital peep-hole, quite nicely rounded. Out of each peeped a gentle friendly eye: one was yours, and one was Kay’s.", "En hiver, les vitres étaient souvent gelées ; alors vous faisiez chauffer des pièces de cuivre sur le radiateur et vous les posiez contre la vitre : cela faisait un joli petit trou bien rond. À chaque trou, un œil doux et amical regardait dehors : l’un était le tien, l’autre celui de Kay."],
+"冰雪女王能进来吗？": ["Can the Snow Queen come in?", "La Reine des neiges peut-elle entrer ?"],
+"冰雪女王说，要是我能拼出“永恒”这两个字，我就能自己做主，她就把整个新世界和一双新冰鞋都送给我。": ["The Snow Queen said, if I can spell out the word “Eternity”, I shall be my own master, and she will make me a present of the whole new world and a pair of new skates.", "La Reine des neiges a dit que si je trouve le mot « Éternité », je serai mon propre maître, et qu’elle me fera cadeau du nouveau monde tout entier et d’une paire de patins neufs."],
+"冰雪女王飞到暖和的地方去了。加伊一个人坐在好几里长的、空荡荡的冰殿里，看着那些冰块，想啊想，想得脑袋都快裂开了。他坐在那儿，僵硬得一动不动，别人准会以为他已经冻死了。": ["The Snow Queen had flown away to warm lands. Kay sat quite alone in the empty halls of ice that were miles long, and looked at the blocks of ice, and thought and thought till his skull was almost cracked. There he sat quite benumbed and motionless; one would have imagined he was frozen to death.", "La Reine des neiges s’était envolée vers les pays chauds. Kay était resté tout seul dans les salles de glace vides, longues de plusieurs lieues ; il regardait les morceaux de glace et réfléchissait, réfléchissait, à s’en fendre la tête. Il restait là, raide et immobile ; on aurait dit qu’il était mort de froid."],
+"冷得刀割一样，她这才发觉。可是驯鹿不敢停下来，一直跑着。": ["She noticed it only from the cutting frost. But the reindeer dared not stand still; on he ran.", "C’est le froid mordant qui l’en avertit. Mais le renne n’osait pas s’arrêter ; il courait toujours."],
+"出船外去了。": ["They are gone outside the ship.", "Ils sont partis hors du vaisseau."],
+"到了第三天，来了一个小个子，没车也没马，大摇大摆地走上了舰桥。他的眼睛跟你的一样亮，长着漂亮的长头发，可是衣服很破旧。": ["On the third day a little personage, without horse or cart, came marching right boldly up onto the bridge; his eyes shone like yours, he had beautiful long hair, but his clothes were very shabby.", "Le troisième jour arriva un petit bonhomme, sans cheval ni voiture, qui monta tout hardiment sur la passerelle ; ses yeux brillaient comme les tiens, il avait de beaux cheveux longs, mais ses habits étaient bien pauvres."],
+"前些日子她说，她要找一个领航员，得是别人跟他说话、他答得上来的那种，不能光是看上去神气。光看上去神气的人，太没意思了。": ["A while ago she said she would have a navigator who knew how to give an answer when he was spoken to—not one who looked only as if he were a great personage, for that is so tiresome.", "Il y a quelque temps, elle a dit qu’elle voulait un navigateur qui sache répondre quand on lui parle, et pas un qui ait seulement l’air d’un grand personnage, car c’est si ennuyeux."],
+"前面跑来一匹好马。马上坐着一个年轻姑娘，头上戴着亮红的帽子，腰里别着刀。是那个小强盗女孩，她在家里待腻了，想出去走走。": ["A magnificent horse came along. On it sat a young damsel with a bright-red cap on her head, and a knife in her belt. It was the little robber girl, who, tired of being at home, had set out to see the world.", "Un magnifique cheval arrivait. Dessus, une jeune fille portait un bonnet rouge vif et un couteau à la ceinture. C’était la petite brigande qui, fatiguée de rester à la maison, était partie voir le monde."],
+"加伊和格尔达手拉着手往前走。这是美好的春天，到处是花，到处是绿。水渠里的冰全化了，他们每走一步，脚边就冒出一朵花来。": ["Kay and Gerda took each other’s hand: it was lovely spring weather, with abundance of flowers and of greenery. The ice in the canal had all melted, and with every step they took, a flower sprang up at their feet.", "Kay et Gerda se prirent par la main : c’était le beau temps du printemps, avec des fleurs et de la verdure en abondance. La glace du canal avait fondu, et à chacun de leurs pas, une fleur poussait à leurs pieds."],
+"加伊，亲爱的小加伊！我总算找到你了！": ["Kay, sweet little Kay! Have I then found you at last?", "Kay, mon petit Kay ! Je t’ai donc enfin trouvé !"],
+"十二个人的力气！那有什么用！": ["The strength of twelve men! Much good that would be!", "La force de douze hommes ! Ça lui servirait à grand-chose !"],
+"可怜的孩子，你们还有好远好远的路要跑呢。冰雪女王在最里头，每天晚上都点起蓝色的烟火。": ["Poor things, you have far to run still. The Snow Queen is at the far end, and burns blue lights every evening.", "Pauvres petits, vous avez encore bien loin à courir. La Reine des neiges est tout au fond, et chaque soir elle allume des feux bleus."],
+"可怜的小东西！": ["Poor little thing!", "Pauvre petite !"],
+"可怜的小孩子！你怎么会跑到这条又宽又急的水渠上，让水推着在这大千世界里乱漂呢？": ["Poor little child! How did you get upon the large rapid canal, to be driven about so in the wide world!", "Pauvre petite enfant ! Comment es-tu arrivée sur ce grand canal rapide, à être emportée ainsi dans le vaste monde ?"],
+"可怜的格尔达站在那里，没有鞋，也没有手套，站在这又可怕、又冰冷的冷舱正中间。": ["There stood poor Gerda now, without shoes or gloves, in the very middle of the dreadful icy cold vault.", "La pauvre Gerda restait là, sans souliers ni moufles, au beau milieu de la terrible cale glacée."],
+"可是他坐着一动不动，又僵又冷。": ["But he sat quite still, benumbed and cold.", "Mais il restait immobile, raide et froid."],
+"可是小船没有拴住，她这么一动，船就离了岸。她发觉了，赶紧想回去，可是还没来得及，船已经离岸一米多，顺着水很快地往船尾漂去。": ["But the boat was not fastened, and the motion she made set it drifting from the shore. She noticed this and hastened to get back; but before she could do so, the boat was more than a yard from the bank, and was gliding quickly onward toward the stern.", "Mais la barque n’était pas attachée, et le mouvement qu’elle fit l’éloigna de la rive. Elle s’en aperçut et voulut vite revenir ; mais avant qu’elle ait pu le faire, la barque était déjà à plus d’un mètre du bord et glissait rapidement vers la poupe."],
+"可是我很快就会回家的，还要把加伊一起带回去。": ["But I will soon come home, and then I will bring Kay with me.", "Mais je vais bientôt rentrer, et je ramènerai Kay avec moi."],
+"可是驯鹿一个劲地替格尔达求情，格尔达也含着泪，可怜巴巴地望着她。芬兰老太太眨眨眼睛，把驯鹿拉到墙角，小声说起话来。": ["But the reindeer begged so hard for little Gerda, and Gerda looked so imploringly with tearful eyes at the Finn woman, that she winked, and drew the reindeer aside into a corner, where they whispered together.", "Mais le renne supplia tant pour la petite Gerda, et Gerda regardait la Finnoise d’un air si suppliant, les yeux pleins de larmes, qu’elle cligna des yeux et attira le renne dans un coin, où ils se mirent à chuchoter."],
+"可能是，可能是！": ["It may be—it may be!", "Peut-être bien, peut-être bien !"],
+"呸！这朵玫瑰被虫咬了！你看，这一朵长得多歪！说到底，这些玫瑰丑得很，跟种它们的箱子一个样！": ["Ah, that rose is cankered! And look, this one is quite crooked! After all, these roses are very ugly! They are just like the box they are planted in!", "Pouah ! Cette rose est rongée par les vers ! Et regarde, celle-là est toute de travers ! Au fond, ces roses sont bien laides ! Elles sont comme la caisse où on les a plantées !"],
+"咕咕！咕咕！我们看见过小加伊！一只白母鸡驮着他的雪橇，他自己坐在冰雪女王的车里，从我们窝顶上低低地开过去。": ["Coo! Coo! We have seen little Kay! A white hen carries his sledge; he himself sat in the cart of the Snow Queen, which passed low over our nest.", "Rou ! Rou ! Nous avons vu le petit Kay ! Une poule blanche porte sa luge ; lui-même était assis dans la voiture de la Reine des neiges, qui est passée tout bas au-dessus de notre nid."],
+"哎呀！我没穿靴子！我没戴手套！": ["Oh! I have not got my boots! I have not brought my gloves!", "Oh ! Je n’ai pas mes bottes ! Je n’ai pas mes moufles !"],
+"哎呀，我耽搁得太久了！秋天都来了，我不能再歇着了。": ["Dear me, how long I have stayed! Autumn is come. I must not rest any longer.", "Mon Dieu, comme je suis restée longtemps ! L’automne est venu. Je ne dois plus me reposer."],
+"哎哟！心口猛地扎了一下！眼睛里也进去什么东西了！": ["Oh! I feel such a sharp pain in my heart; and now something has got into my eye!", "Oh ! J’ai eu un élancement au cœur ! Et maintenant j’ai quelque chose dans l’œil !"],
+"啊，加伊！可怜的小加伊！": ["Oh, Kay! Poor little Kay!", "Oh, Kay ! Mon pauvre petit Kay !"],
+"啊，她的一双小脚多么柔嫩，多么累啊！四周又冷又阴湿，到处都那么黑暗，那么凄凉。": ["Oh, how tender and wearied her little feet were! All around it looked so cold and raw. Oh, how dark and comfortless it was in the dreary world!", "Oh, que ses petits pieds étaient tendres et fatigués ! Tout autour, il faisait froid et humide. Oh, que le monde était sombre et triste !"],
+"啊，我耽搁了多久啊！我是出来找加伊的！你们知道他在哪儿吗？你们觉得他已经死了吗？": ["Oh, how long I have stayed! I intended to look for Kay! Don’t you know where he is? Do you think he is dead and gone?", "Oh, comme je me suis attardée ! Je voulais chercher Kay ! Vous ne savez pas où il est ? Vous croyez qu’il est mort ?"],
+"啊，那是加伊！": ["Oh! That was Kay!", "Oh ! C’était Kay !"],
+"嘎！嘎！你好！你好！你一个人上哪儿去呀？": ["Caw! Caw! Good day! Good day! Where are you going all alone?", "Croa ! Croa ! Bonjour ! Bonjour ! Où vas-tu comme ça, toute seule ?"],
+"园门锁着，她使劲摇那根生锈的门闩，摇松了，门开了。小格尔达光着脚跑进了大千世界。她跑不动了，坐在一块大石头上往四周一看，才发现夏天已经过去，已经是晚秋了。园子里一年到头都是太阳和花，所以看不出来。": ["The gate was locked, but she shook the rusted bolt till it was loosened, and the gate opened; and little Gerda ran off barefooted into the wide world. At last she could run no longer; she sat down on a large stone, and when she looked about her, she saw that the summer had passed; it was late in the autumn, but one could not tell that in the beautiful garden, where there was always sunshine and flowers the whole year round.", "Le portail était fermé, mais elle secoua le verrou rouillé jusqu’à ce qu’il cède, et le portail s’ouvrit ; la petite Gerda s’enfuit pieds nus dans le vaste monde. Quand elle ne put plus courir, elle s’assit sur une grosse pierre, regarda autour d’elle et vit que l’été était passé : on était à la fin de l’automne. Dans le beau jardin, où il y avait toute l’année du soleil et des fleurs, on ne s’en apercevait pas."],
+"夏天，你们常常得到准许，从窗子爬出去，坐在玫瑰中间的小板凳上，玩得开心极了。奶奶说，这株玫瑰是从地球上带来的那一株分出来的，传到你们手里，已经是第四代了。": ["In summer you often had permission to climb out of the windows and sit on your little stools among the roses, where you could play delightfully. Grandma said this rose was a cutting from the one brought from Earth; by the time it reached you two, it was the fourth generation.", "En été, vous aviez souvent la permission de sortir par les fenêtres pour vous asseoir sur vos petits tabourets au milieu des roses, et vous y jouiez merveilleusement. Grand-mère disait que ce rosier venait d’une bouture de celui qu’on avait apporté de la Terre ; arrivé jusqu’à vous, il en était à la quatrième génération."],
+"她一眼就认出了格尔达，格尔达也认出了她。两个人见了面，高兴极了。": ["She recognised Gerda immediately, and Gerda knew her too. It was a joyful meeting.", "Elle reconnut Gerda tout de suite, et Gerda la reconnut aussi. Quelles retrouvailles joyeuses !"],
+"她准是到冷舱去了，那边一年到头都是冰雪。问问拴在那儿的驯鹿吧。": ["She is no doubt gone to the cold vault, for there is always snow and ice there. Only ask the reindeer, who is tethered there.", "Elle est sans doute partie pour la cale froide, car il y a toujours de la neige et de la glace là-bas. Demande donc au renne qui est attaché là."],
+"她在花坛中间跑来跑去，找了又找，一朵也没找到。她坐下来哭了。她的热泪正好落在一株玫瑰沉下去的地方，眼泪一润湿泥土，那株玫瑰就一下子冒了出来，开得跟沉下去的时候一样鲜艳。": ["She ran about amongst the flower-beds, and looked, and looked, but there was not one to be found. She then sat down and wept; but her hot tears fell just where a rose-bush had sunk; and when her warm tears watered the ground, the bush shot up suddenly, as fresh and blooming as when it had been swallowed up.", "Elle courut parmi les plates-bandes, chercha, chercha, mais il n’y en avait pas une seule. Alors elle s’assit et pleura ; mais ses larmes chaudes tombèrent juste à l’endroit où un rosier s’était enfoncé ; et quand elles mouillèrent la terre, le rosier jaillit d’un coup, aussi frais et fleuri qu’au moment où il avait disparu."],
+"她多胖、多好看啊！准是吃核桃仁长大的。跟一只养肥了的小羊一样好，一定好吃得很！": ["How plump, how beautiful she is! She must have been fed on nut-kernels. She is as good as a fatted lamb! How nice she will be!", "Qu’elle est grasse, qu’elle est jolie ! On a dû la nourrir de noisettes. Elle vaut un agneau engraissé ! Qu’elle sera bonne !"],
+"她大声叫他的名字，把灯朝他举过去，那些梦又呼啦一下涌回了屋里。他醒了，转过头来——": ["She called him quite loud by name, held the lamp towards him—the dreams rushed back again into the chamber—he awoke, turned his head, and—", "Elle l’appela tout haut par son nom, approcha la lampe — les rêves revinrent en foule dans la chambre — il s’éveilla, tourna la tête, et —"],
+"她得陪我玩！她要把手笼、把漂亮衣服都给我，还要跟我睡一张床！": ["She shall play with me! She shall give me her muff, and her pretty frock; she shall sleep in my bed!", "Elle va jouer avec moi ! Elle va me donner son manchon et sa jolie robe, et elle dormira dans mon lit !"],
+"她朝我们这些小家伙吹了一口气，除了我们俩，全都死了。咕咕！咕咕！": ["She blew upon us young ones; and all died except we two. Coo! Coo!", "Elle a soufflé sur nous, les petits, et tous sont morts, sauf nous deux. Rou ! Rou !"],
+"她觉得蓝色的水波好像古怪地朝她点了点头。她脱下红鞋，这是她最宝贵的东西，把两只都扔进了水渠。": ["And, as it seemed to her, the blue waves nodded in a strange manner. Then she took off her red shoes, the most precious things she possessed, and threw them both into the canal.", "Et il lui sembla que les vagues bleues lui faisaient de drôles de signes de tête. Alors elle ôta ses souliers rouges, ce qu’elle avait de plus précieux, et les jeta tous les deux dans le canal."],
+"好，我们现在开始讲吧。等讲到故事的结尾，我们知道的就会比现在多。": ["Now then, let us begin. When we are at the end of the story, we shall know more than we know now.", "Allons, commençons. Quand nous serons à la fin de l’histoire, nous en saurons plus que maintenant."],
+"小加伊冻得发青，差不多都发黑了，可他自己一点也觉不出来，因为冰雪女王的吻已经吻走了他身上所有的寒意，他的心也差不多成了一块冰。他拖着一些又尖又平的冰块，用各种各样的法子把它们拼在一起，想拼出点什么来。": ["Little Kay was quite blue, yes nearly black with cold; but he did not notice it, for the Snow Queen had kissed away all feeling of cold from his body, and his heart was almost a lump of ice. He was dragging along some pointed flat pieces of ice, which he laid together in all possible ways, for he wanted to make something with them.", "Le petit Kay était tout bleu, presque noir de froid ; mais il ne s’en apercevait pas, car la Reine des neiges, par ses baisers, lui avait ôté toute sensation de froid, et son cœur était presque un bloc de glace. Il traînait des morceaux de glace plats et pointus qu’il assemblait de toutes les façons possibles, car il voulait en faire quelque chose."],
+"小加伊确实在冰雪女王那儿。他觉得那里样样称心，以为那是世界上最好的地方。可那是因为他眼睛里有一粒镜子碎片，心里也有一粒。得先把它们弄出来，不然他永远回不到人群里来，冰雪女王会一直管着他。": ["’Tis true little Kay is at the Snow Queen’s, and finds everything there quite to his taste; he thinks it the very best place in the world. But the reason of that is, he has a splinter of glass in his eye, and in his heart. These must be got out first; otherwise he will never go back to mankind, and the Snow Queen will retain her power over him.", "C’est vrai, le petit Kay est chez la Reine des neiges, et tout là-bas est à son goût ; il croit que c’est le meilleur endroit du monde. Mais c’est parce qu’il a un éclat de verre dans l’œil et un autre dans le cœur. Il faut d’abord les retirer ; sinon il ne reviendra jamais parmi les hommes, et la Reine des neiges gardera son pouvoir sur lui."],
+"小强盗女孩一只胳膊搂着格尔达的脖子，一只手攥着刀，呼噜打得谁都听得见。格尔达却合不上眼，她不知道自己是活还是死。": ["The little robber girl wound her arm round Gerda’s neck, held the knife in the other hand, and snored so loud that everybody could hear her; but Gerda could not close her eyes, for she did not know whether she was to live or die.", "La petite brigande passa un bras autour du cou de Gerda, garda le couteau dans l’autre main et ronfla si fort que tout le monde l’entendait ; mais Gerda ne put fermer l’œil, car elle ne savait pas si elle allait vivre ou mourir."],
+"小强盗女孩在她妈妈耳朵上咬了一口，又咬了一口，老强盗婆疼得直跳，绕着圈子跑。强盗们哈哈大笑：“瞧，她跟她的小丫头跳舞呢！”": ["The little robber girl bit her mother in the ear, and then gave her another bite, so that she jumped and ran round with the pain; and the robbers laughed, and said, “Look, how she is dancing with the little one!”", "La petite brigande mordit sa mère à l’oreille, puis la mordit encore, si bien que la vieille sauta et tourna en rond de douleur ; et les brigands riaient : « Regardez comme elle danse avec sa petite ! »"],
+"小格尔达害怕极了，哭了起来。可是除了麻雀，谁也听不见她。麻雀沿着岸飞，唱着，好像在安慰她：“我们在这儿！我们在这儿！”": ["Little Gerda was very frightened, and began to cry; but no one heard her except the sparrows, and they flew along the bank, and sang as if to comfort her, “Here we are! Here we are!”", "La petite Gerda eut très peur et se mit à pleurer ; mais personne ne l’entendit, sauf les moineaux, qui volaient le long de la rive et chantaient comme pour la consoler : « Nous sommes là ! Nous sommes là ! »"],
+"小格尔达流下滚烫的眼泪。眼泪落在他胸口，渗进他心里，融化了那块冰，也把镜子的碎片冲走了。": ["Then little Gerda shed burning tears; and they fell on his bosom, they penetrated to his heart, they thawed the lump of ice, and consumed the splinters of the looking-glass.", "Alors la petite Gerda versa des larmes brûlantes ; elles tombèrent sur sa poitrine, pénétrèrent jusqu’à son cœur, firent fondre le bloc de glace et emportèrent l’éclat du miroir."],
+"小母鹿把热乎乎的奶给两个孩子喝，又亲了亲他们的嘴。": ["The young doe gave the two children her warm milk, and kissed their lips.", "La jeune renne donna aux deux enfants son lait tout chaud et les embrassa sur la bouche."],
+"屋子中间，一根粗粗的金茎上挂着两张床，每一张都像一朵百合花。一张是白的，公主睡在里面；一张是红的，格尔达要在这里找小加伊。她把一片红花瓣往后一掀，看见了一截褐色的脖子。": ["In the middle of the room, from a thick golden stem, hung two beds, each of which resembled a lily. One was white, and in this lay the princess; the other was red, and it was here that Gerda was to look for little Kay. She bent back one of the red leaves, and saw a brown neck.", "Au milieu de la chambre, à une grosse tige d’or, pendaient deux lits qui ressemblaient chacun à un lys. L’un était blanc, et la princesse y dormait ; l’autre était rouge, et c’est là que Gerda devait chercher le petit Kay. Elle écarta un des pétales rouges et vit une nuque brune."],
+"屋里热得要命，芬兰老太太自己几乎什么都没穿。她个子矮小，脏兮兮的。她马上解开小格尔达的衣服，脱下她的大手套和靴子，不然会热坏的；又往驯鹿头上放了一块冰。": ["There was such a heat inside that the Finn woman herself went about almost naked. She was small and dirty. She immediately loosened little Gerda’s clothes and pulled off her thick gloves and boots, for otherwise the heat would have been too great; and she laid a piece of ice on the reindeer’s head.", "Il faisait si chaud à l’intérieur que la Finnoise allait presque nue. Elle était petite et sale. Elle défit tout de suite les vêtements de la petite Gerda et lui ôta ses grosses moufles et ses bottes, sinon elle aurait eu trop chaud ; puis elle posa un morceau de glace sur la tête du renne."],
+"屋顶上的玫瑰开着花，从开着的窗子垂进来。那两把孩子坐的小凳子还在，加伊和格尔达就在上面坐下，手拉着手。冰雪女王那里冷冰冰、空荡荡的豪华，他们都忘了，像忘了一场梦。奶奶坐在明亮的阳光灯下，大声念着一本旧书。": ["The roses on the roof hung blooming in at the open window; there stood the little children’s stools, and Kay and Gerda sat down on them, holding each other by the hand. They had both forgotten the cold empty splendour of the Snow Queen, as though it had been a dream. Grandmother sat in the bright light of the sun lamp, and read aloud from an old book.", "Les roses du toit pendaient, fleuries, par la fenêtre ouverte ; les petits tabourets des enfants étaient toujours là, et Kay et Gerda s’y assirent en se tenant par la main. Ils avaient oublié tous deux la splendeur froide et vide de la Reine des neiges, comme un mauvais rêve. Grand-mère était assise dans la lumière de la lampe-soleil et lisait tout haut un vieux livre."],
+"怎么！这儿一朵玫瑰也没有吗？": ["What! Are there no roses here?", "Quoi ! Il n’y a pas de roses ici ?"],
+"我不能给她比她现在更大的力量了。你难道看不出她的力量有多大？你看不出人和动物都愿意为她效劳？她光着脚，在这世界上走了多远！她用不着从我们这儿知道她的力量。她的力量就在她心里，因为她是一个可爱的、天真的孩子。": ["I can give her no more power than what she has already. Don’t you see how great it is? Don’t you see how men and animals are glad to serve her; how far she has come through the world barefooted? She must not learn of her power from us; that power lies in her heart, because she is a sweet and innocent child.", "Je ne peux pas lui donner plus de pouvoir qu’elle n’en a déjà. Tu ne vois pas comme il est grand ? Tu ne vois pas comme les hommes et les bêtes sont contents de la servir, et jusqu’où elle est venue pieds nus à travers le monde ? Ce n’est pas de nous qu’elle doit apprendre son pouvoir : ce pouvoir est dans son cœur, parce que c’est une enfant douce et innocente."],
+"我可怜的老奶奶！她一定在想我，为我难过，就像为小加伊难过一样。": ["My poor old grandmother! Yes, she is longing for me, no doubt; she is sorrowing for me, as she did for little Kay.", "Ma pauvre vieille grand-mère ! Elle doit languir après moi, elle a du chagrin pour moi, comme elle en a eu pour le petit Kay."],
+"我在家待腻了，要出去走走。要是哪天我路过你们住的地方，就去看你们。": ["I was tired of being at home, so I’m off to see the world. If some day I pass by the place where you live, I’ll come and visit you.", "J’en avais assez de rester à la maison, alors je pars voir le monde. Si un jour je passe par chez vous, je viendrai vous voir."],
+"我得到准许了，要到船尾那条长坡道去，跟别的孩子一块儿玩雪橇！": ["I have permission to go out to the long ramp at the stern, where the others are playing!", "J’ai la permission d’aller à la grande rampe de la poupe, où jouent les autres !"],
+"我总是拿着刀睡觉。谁知道会出什么事呢。你再给我讲一遍小加伊的事，讲讲你为什么一个人跑到这大千世界里来。": ["I always sleep with the knife. There is no knowing what may happen. But tell me now, once more, all about little Kay, and why you have started off in the wide world alone.", "Je dors toujours avec mon couteau. On ne sait jamais ce qui peut arriver. Mais raconte-moi encore une fois tout sur le petit Kay, et pourquoi tu es partie toute seule dans le vaste monde."],
+"我想它已经出来了。": ["I think it is out now.", "Je crois que c’est parti."],
+"我把我的红鞋送给你，你把他还给我吧。": ["I will make you a present of my red shoes, if you will give him back to me.", "Je te fais cadeau de mes souliers rouges, si tu veux bien me le rendre."],
+"我早就盼着有一个你这样可爱的小姑娘了。你瞧着吧，我们俩会处得很好的。": ["I have often longed for such a dear little girl. Now you shall see how well we agree together.", "J’ai souvent désiré une gentille petite fille comme toi. Tu vas voir comme nous allons bien nous entendre."],
+"我真想再拿尖刀给你多挠几回痒，那时候你可好玩了。不过算了，我把你解开，放你回冷舱去。可你得好好使唤你那几条腿，替我把这小姑娘驮到冰雪女王的宫殿里去，她的小伙伴在那儿。她说的话你都听见了吧，她嗓门够大的，你又一直竖着耳朵。": ["I should very much like to give you still many a tickling with the sharp knife, for then you are so amusing; however, I will untether you, and help you out, so that you may go back to the cold vault. But you must make good use of your legs, and take this little girl for me to the palace of the Snow Queen, where her playfellow is. You have heard, I suppose, all she said; for she spoke loud enough, and you were listening.", "J’aurais bien aimé te chatouiller encore souvent avec mon couteau pointu, tu es si drôle alors ; mais je vais te détacher et t’aider à sortir, pour que tu retournes à la cale froide. Seulement, tu dois bien te servir de tes jambes et emmener cette petite pour moi jusqu’au palais de la Reine des neiges, où est son camarade. Tu as tout entendu, je suppose : elle parlait assez fort, et toi, tu écoutais."],
+"我给你在一条鳕鱼干上写几个字，因为我没有纸。你把它带给芬兰老太太，她能告诉你的比我多。": ["I will write you a few words on a dried cod, for paper I have none. Take it to the Finn woman, and she will be able to give you more information than I can.", "Je vais t’écrire quelques mots sur une morue séchée, car je n’ai pas de papier. Porte-la à la Finnoise ; elle pourra t’en dire plus que moi."],
+"我能看见我自己！我能看见我自己！啊，我多香啊！上面的小阁楼里，站着一个穿了一半衣裳的小舞女，一会儿用一只脚站着，一会儿用两只脚站着，她瞧不起整个世界，可她只活在自己的想象里。那件白裙子挂在钩子上，是用茶壶洗的，在屋顶上晾干的。她穿上它，脖子上系一条橘黄的围巾，裙子就显得更白了。我能看见我自己！我能看见我自己！": ["I can see myself—I can see myself! Oh, how sweet I smell! Up in the little garret there stands, half-dressed, a little dancer. She stands now on one leg, now on both; she despises the whole world; yet she lives only in imagination. The white dress is hanging on the hook; it was washed in the teapot, and dried on the roof. She puts it on, ties a saffron-coloured kerchief round her neck, and then the gown looks whiter. I can see myself—I can see myself!", "Je me vois ! Je me vois ! Oh, que je sens bon ! Là-haut, dans la petite mansarde, se tient une petite danseuse à moitié habillée. Elle se tient tantôt sur une jambe, tantôt sur les deux ; elle méprise le monde entier, et pourtant elle ne vit qu’en imagination. La robe blanche est pendue au crochet ; on l’a lavée dans la théière et séchée sur le toit. Elle la met, noue un fichu couleur safran autour de son cou, et la robe paraît plus blanche encore. Je me vois ! Je me vois !"],
+"我见不得你哭哭啼啼的。这时候你应该高兴才对。": ["I can’t bear to see you fretting. This is just the time when you ought to look pleased.", "Je ne supporte pas de te voir pleurnicher. C’est maintenant que tu devrais être contente."],
+"我讲的是我的故事，我的梦。": ["I am speaking about my story—about my dream.", "Je parle de mon histoire, de mon rêve."],
+"我顺着管子爬到最高处。那儿有一道旧栏杆，一个可爱的姑娘靠在栏杆上，朝下面望着。挂在枝头的玫瑰也没有她鲜嫩，被风吹走的苹果花也没有她轻盈。她的绸衣裳沙沙地响：“他还没有来吗？”": ["I climbed up the pipe to the very top. There is an old railing, and a lovely maiden is standing there; she bends over the railing and looks down. No fresher rose hangs on the branches than she; no apple-blossom carried away by the wind is more buoyant! How her silken robe is rustling! “Is he not yet come?”", "J’ai grimpé le long du tuyau tout en haut. Il y a là une vieille rambarde, et une ravissante jeune fille s’y penche pour regarder en bas. Aucune rose sur sa branche n’est plus fraîche qu’elle, aucune fleur de pommier emportée par le vent n’est plus légère ! Comme sa robe de soie bruisse ! « N’est-il pas encore venu ? »"],
+"房梁上那些鸽子全是我的。这儿是我亲爱的老伙计，我们得把它锁着，不然它就跑了。每天晚上我都拿我的尖刀在它脖子上挠痒痒，它可怕这个了！": ["Those pigeons up in the rafters are all mine. And here is my dear old fellow; we are obliged to lock him in too, or he would make his escape. Every evening I tickle his neck with my sharp knife; he is so frightened at it!", "Les pigeons là-haut sur la poutre sont tous à moi. Et voici mon cher vieux compagnon ; il faut l’enfermer, lui aussi, sinon il se sauverait. Chaque soir, je lui chatouille le cou avec mon couteau pointu ; il en a tellement peur !"],
+"手笼我要留着自己用，它太好看了。不过我也不想让你冻着。这是我妈妈的一双大手套，正好套到你胳膊肘。戴上！现在你这双手跟我那个丑老妈一模一样了！": ["The muff I shall keep for myself, for it is so very pretty. But I do not wish you to be cold. Here is a pair of lined gloves of my mother’s; they just reach up to your elbow. On with them! Now you look about the hands just like my ugly old mother!", "Le manchon, je le garde pour moi, il est trop joli. Mais je ne veux pas que tu aies froid. Voici une paire de grosses moufles de ma mère ; elles te montent jusqu’au coude. Mets-les ! Maintenant, tu as les mains de ma vilaine vieille mère !"],
+"早上，格尔达把鸽子说的话全告诉了小强盗女孩。小强盗女孩一脸严肃，点了点头。": ["In the morning Gerda told the little robber girl all that the pigeons had said; and the girl looked very serious, but she nodded her head.", "Le matin, Gerda raconta à la petite brigande tout ce qu’avaient dit les pigeons ; la petite prit un air très sérieux, mais elle hocha la tête."],
+"早春的头几天，小院子里的太阳灯亮堂堂的。光顺着邻居家的白墙滑下来，墙边长着新鲜的黄花，在暖和的光里像金子一样亮。一位老奶奶坐在外面，她的孙女，一个又穷又好看的小女佣，回来看她一会儿，亲了亲她。那一吻里有金子，纯纯的金子。": ["In a small court the bright sun lamps were shining in the first days of spring. The beams glided down the white walls of a neighbour’s house, and close by the fresh yellow flowers were growing, shining like gold in the warm light. An old grandmother was sitting outside; her granddaughter, the poor and lovely servant girl, came for a short visit and kissed her. There was gold, pure virgin gold in that blessed kiss.", "Dans une petite cour, les lampes-soleil brillaient aux premiers jours du printemps. Les rayons glissaient le long des murs blancs de la maison voisine, et tout près poussaient de fraîches fleurs jaunes qui brillaient comme de l’or dans la lumière chaude. Une vieille grand-mère était assise dehors ; sa petite-fille, une pauvre et jolie servante, vint lui rendre une courte visite et l’embrassa. Il y avait de l’or, de l’or pur dans ce baiser béni."],
+"是我扔得不够远。": ["I did not throw them out far enough.", "Je ne les ai pas lancés assez loin."],
+"有一天，镜子裂了，碎成了一亿多片。有的碎片还没有一粒沙子大，顺着通风管飘遍了全船。它们一钻进人的眼睛，就留在那儿，那人看什么都是歪的，只看得见坏的一面。还有人心里扎进了一小片，那就可怕了：那颗心会变得像一块冰。": ["One day the mirror cracked, and was dashed in a hundred million and more pieces. Some of these pieces were hardly so large as a grain of sand, and they flew through the air vents all over the ship; when they got into people’s eyes, there they stayed, and then people saw everything perverted, or only had an eye for that which was evil. Some persons even got a splinter in their heart, and then it made one shudder, for their heart became like a lump of ice.", "Un jour, le miroir se fendit et vola en plus de cent millions de morceaux. Certains n’étaient pas plus gros qu’un grain de sable ; ils se répandirent dans tout le vaisseau par les conduits d’aération ; quand ils entraient dans les yeux des gens, ils y restaient, et ces gens voyaient tout de travers, ou ne voyaient plus que le mal. Quelques-uns reçurent même un éclat dans le cœur, et c’était terrible, car leur cœur devenait comme un bloc de glace."],
+"有的。蜂群挤得最密的地方，她就在那儿飞。她是所有蜜蜂里最大的一只，从来不肯安安静静待在地上，总要飞回黑云里去。好多个冬天的夜里，她飞过船上一条条走廊，往舷窗里张望，玻璃就冻出奇怪的花纹，像一朵一朵的花。": ["Yes. She flies where the swarm hangs in the thickest clusters. She is the largest of all; and she can never remain quietly on the ground, but goes up again into the black clouds. Many a winter’s night she flies through the corridors of the ship, and peeps in at the portholes; and they then freeze in so wondrous a manner that they look like flowers.", "Oui. Elle vole là où l’essaim est le plus serré. C’est la plus grande de toutes ; elle ne peut jamais rester tranquille sur le sol et remonte toujours dans les nuages noirs. Bien des nuits d’hiver, elle vole le long des couloirs du vaisseau et regarde par les hublots ; alors les vitres gèlent d’une façon si merveilleuse qu’on dirait des fleurs."],
+"来，告诉我你是谁，你是怎么到这儿来的。": ["Come and tell me who you are, and how you came here.", "Viens me dire qui tu es et comment tu es arrivée ici."],
+"格尔达亲他的脸颊，脸颊就红润起来；亲他的眼睛，眼睛就跟她的一样亮；亲他的手和脚，他又健康快活了。两个人手拉着手，走出了大殿。": ["Gerda kissed his cheeks, and they grew quite blooming; she kissed his eyes, and they shone like her own; she kissed his hands and feet, and he was again well and merry. They took each other by the hand and wandered forth out of the great hall.", "Gerda lui embrassa les joues, et elles reprirent leurs couleurs ; elle lui embrassa les yeux, et ils brillèrent comme les siens ; elle lui embrassa les mains et les pieds, et il redevint sain et joyeux. Ils se prirent par la main et sortirent de la grande salle."],
+"格尔达亲着玫瑰，想起了家里那些可爱的玫瑰，也想起了小加伊。": ["Gerda kissed the roses, thought of her own dear roses at home, and with them of little Kay.", "Gerda embrassa les roses, pensa à ses chères roses de la maison, et avec elles au petit Kay."],
+"格尔达哭了，乌鸦也哭了。乌鸦飞上一根管子，拍着黑翅膀，一直拍到再也看不见那辆车。那车远远地亮着，像一道阳光。": ["Gerda wept, and the crow wept. It flew up onto a pipe and beat its black wings as long as it could see the cart, which shone from afar like a sunbeam.", "Gerda pleura, et la corneille pleura aussi. Elle se percha sur un tuyau et battit de ses ailes noires tant qu’elle put voir la voiture, qui brillait au loin comme un rayon de soleil."],
+"格尔达把她遇到的事，还有她多么惦记小加伊，全讲给小强盗女孩听。小强盗女孩一本正经地看着她，轻轻点了点头。": ["Gerda told the little robber girl all that had happened to her, and how much she cared about little Kay. The robber girl looked at her with a serious air and nodded her head slightly.", "Gerda raconta à la petite brigande tout ce qui lui était arrivé, et combien elle tenait au petit Kay. La petite brigande la regarda d’un air sérieux et hocha légèrement la tête."],
+"格尔达搂住他的脖子。他眨了眨眼睛，什么也看不见了。": ["Gerda put her arms around his neck. He winked his eyes; now there was nothing to be seen.", "Gerda lui passa les bras autour du cou. Il cligna des yeux ; on ne voyait plus rien."],
+"格尔达朝小强盗女孩伸出戴着大手套的手，说了声“再见！”驯鹿就驮着她，飞也似地跑了。": ["Gerda stretched out her hands with the large wadded gloves towards the robber girl, and said, “Farewell!” and the reindeer flew on with her, as fast as he could go.", "Gerda tendit vers la petite brigande ses mains dans les grosses moufles et dit : « Adieu ! » Et le renne l’emporta aussi vite qu’il put."],
+"格尔达看着老太太那顶画满了花的草帽，觉得所有的花里最美的是一朵玫瑰。老太太让别的玫瑰沉进土里的时候，忘了把帽子上这一朵去掉。一个人心不在焉的时候，就是这样。": ["While Gerda was looking at the old woman’s hat painted with flowers, the most beautiful of them all seemed to her to be a rose. The old woman had forgotten to take it from her hat when she made the others vanish in the earth. But so it is when one’s thoughts are not collected.", "En regardant le chapeau de la vieille, peint de fleurs, Gerda trouva que la plus belle de toutes était une rose. La vieille avait oublié de l’enlever de son chapeau quand elle avait fait disparaître les autres sous la terre. C’est ce qui arrive quand on a la tête ailleurs."],
+"格尔达高兴得哭了。": ["And Gerda wept for joy.", "Et Gerda pleura de joie."],
+"格尔达！亲爱的小格尔达！你这么久上哪儿去了？我又在哪儿呀？": ["Gerda, sweet little Gerda! Where have you been so long? And where have I been?", "Gerda, ma petite Gerda ! Où étais-tu tout ce temps ? Et moi, où étais-je ?"],
+"格尔达，你从这块放大镜里看。": ["Look through this glass, Gerda.", "Regarde à travers cette loupe, Gerda."],
+"每一片雪花都变大了，像一朵华丽的花，又像一颗十个角的星星，好看极了。": ["And every flake seemed larger, and appeared like a magnificent flower, or a ten-pointed star; it was splendid to look at!", "Chaque flocon paraissait plus grand, comme une fleur magnifique ou une étoile à dix branches ; c’était superbe à voir !"],
+"没关系，没关系。": ["That’s no matter—that’s no matter.", "Ça ne fait rien, ça ne fait rien."],
+"然后她把鳕鱼干上的字读了三遍，读熟了，就把鱼丢进汤锅里。鱼还能吃，她从来不浪费东西。": ["Then she read what was written on the cod. She read it three times; she then knew it by heart; so she put the fish into the soup pot, for it might very well be eaten, and she never threw anything away.", "Puis elle lut ce qui était écrit sur la morue. Elle le lut trois fois, le sut par cœur, et mit le poisson dans la marmite, car il était encore bon à manger et elle ne jetait jamais rien."],
+"现在讲讲你们都干了些什么，你是怎么把他弄回来的。": ["Now tell me what you’ve been doing, and how you managed to catch him.", "Maintenant, racontez-moi ce que vous avez fait, et comment tu as réussi à le rattraper."],
+"现在走吧！可要好好照顾这个小姑娘！": ["Now, off with you; but take good care of the little girl!", "Et maintenant, file ! Mais prends bien soin de la petite !"],
+"白蜜蜂也有蜂王吗？": ["Do the white bees choose a queen?", "Les abeilles blanches ont-elles une reine ?"],
+"真的是你把我的小伙伴带走了吗？": ["Is it true that you have taken my little playfellow?", "Est-il vrai que tu as emporté mon petit camarade ?"],
+"第一批嫩芽冒出来了，第一批小鸟开始啾啾地叫。废弃区的管子上也爬满了绿芽。": ["And the first green buds appeared, the first little birds began to chirrup; green shoots crept all over the pipes of the derelict deck.", "Les premiers bourgeons apparurent, les premiers petits oiseaux se mirent à gazouiller ; des pousses vertes couvraient les tuyaux du pont désaffecté."],
+"等船上的灯一盏一盏都熄了，乌鸦领着小格尔达来到半开着的后门。格尔达的心怦怦直跳，又害怕，又盼望，好像要去做什么坏事似的，其实她只想知道小加伊在不在那儿。": ["When the lights on the ship had all gradually gone out, the crow led little Gerda to the back door, which stood half open. Oh, how Gerda’s heart beat with anxiety and longing! It was just as if she had been about to do something wrong; and yet she only wanted to know if little Kay was there.", "Quand les lumières du vaisseau se furent éteintes une à une, la corneille conduisit la petite Gerda jusqu’à la porte de derrière, qui était entrouverte. Oh, comme le cœur de Gerda battait d’angoisse et d’impatience ! C’était comme si elle allait faire quelque chose de mal ; et pourtant elle voulait seulement savoir si le petit Kay était là."],
+"老太太把草帽挂在门边，走进园子，朝玫瑰丛伸出她那根弯拐杖。玫瑰开得正好，可是一下子全沉进了土里，谁也看不出它们原先长在哪儿。老太太怕格尔达看见玫瑰，就会想起自己家的玫瑰，想起小加伊，从她这儿跑掉。": ["The old woman hung her straw hat by the door, went out into the garden, and stretched out her crooked stick towards the rose-bushes, which, beautifully as they were blowing, all sank into the earth, and no one could tell where they had stood. The old woman feared that if Gerda should see the roses, she would think of her own, would remember little Kay, and run away from her.", "La vieille accrocha son chapeau de paille près de la porte, alla au jardin et tendit sa canne crochue vers les rosiers ; tout fleuris qu’ils étaient, ils s’enfoncèrent tous dans la terre, et personne n’aurait pu dire où ils avaient été. La vieille craignait qu’en voyant des roses, Gerda ne pense aux siennes, ne se souvienne du petit Kay et ne s’enfuie."],
+"老太太用一把金梳子给她梳头。梳着梳着，格尔达把加伊忘得越来越多了，因为这老太太会魔法。不过她不是坏人，她只是为了自己开心，学过一点点魔法，现在她很想把小格尔达留下来。": ["The old woman combed her hair with a golden comb; and while she combed, the child forgot Kay more and more, for the old woman understood magic. But she was no evil being; she only practised witchcraft a little for her own private amusement, and now she wanted very much to keep little Gerda.", "La vieille la peignait avec un peigne d’or ; et pendant qu’elle la peignait, l’enfant oubliait Kay de plus en plus, car la vieille savait la magie. Mais ce n’était pas une méchante femme ; elle faisait un peu de sorcellerie pour son propre plaisir, et maintenant elle aurait bien voulu garder la petite Gerda."],
+"老太太走进水里，用弯拐杖勾住小船，把它拉到岸边，把小格尔达抱了上来。": ["The old woman went into the water, caught hold of the boat with her crooked stick, drew it to the bank, and lifted little Gerda out.", "La vieille entra dans l’eau, accrocha la barque avec sa canne crochue, la tira jusqu’à la berge et souleva la petite Gerda."],
+"舰桥上的女船长聪明得了不得，全船的航行日志她都读过，又全忘了，你看她有多聪明。大伙儿背地里都叫她公主。": ["The captain up on the bridge is extraordinarily clever; she has read all the logbooks of the whole ship, and has forgotten them again—so clever is she. Behind her back everyone calls her the princess.", "La capitaine, là-haut sur la passerelle, est extraordinairement savante : elle a lu tous les journaux de bord du vaisseau, et les a oubliés aussitôt, tant elle est intelligente. Dans son dos, tout le monde l’appelle la princesse."],
+"船尾有一面大镜子，早年间用来测星。后来有人在镜子上动了手脚：好的、美的东西照进去，就缩得几乎看不见；没用的、丑的东西照进去，倒放得又大又显眼。最美的风景照进去，像一摊煮烂的菠菜；最好的人照进去，样子吓人，脸扭得认不出来。": ["At the stern there was a great mirror, used in the early years to measure the stars. Later someone tampered with it, so that all that was good and beautiful, when it was reflected therein, shrank almost to nothing; but that which was good-for-nothing and looked ugly was shown magnified and increased in ugliness. In this mirror the most beautiful landscapes looked like boiled spinach, and the best persons were turned into frights, their faces so distorted that they were not to be recognised.", "À la poupe, il y avait un grand miroir qui servait autrefois à mesurer les étoiles. Plus tard, quelqu’un le trafiqua : tout ce qui était bon et beau s’y réduisait presque à rien, et tout ce qui était mauvais et laid y paraissait plus grand et plus laid encore. Les plus beaux paysages y ressemblaient à des épinards bouillis, et les meilleures gens y devenaient affreux, le visage si tordu qu’on ne les reconnaissait plus."],
+"船长喜欢他，他也喜欢船长。大伙儿就叫他们王子和公主。": ["She pleased him, and he pleased her. So people called them the prince and the princess.", "Elle lui plut, et il lui plut. Alors on les a appelés le prince et la princesse."],
+"芬兰老太太把小格尔达抱上鹿背，驯鹿撒开腿就跑。": ["The Finn woman lifted little Gerda onto the reindeer’s back, and off he ran with all imaginable speed.", "La Finnoise hissa la petite Gerda sur le dos du renne, et il partit à toute vitesse."],
+"要是她自己到不了冰雪女王那儿，把小加伊身上的玻璃弄出来，我们也帮不了她。从这儿往里两里地，就是冰雪女王的园子。把她放在雪地里那丛结着红果子的大灌木旁边，别站着说闲话，赶紧回来。": ["If she cannot get to the Snow Queen by herself, and rid little Kay of the glass, we cannot help her. Two miles hence the garden of the Snow Queen begins; thither you may carry the little girl. Set her down by the large bush with red berries, standing in the snow; don’t stay talking, but hasten back as fast as possible.", "Si elle ne peut pas arriver seule jusqu’à la Reine des neiges et débarrasser le petit Kay du verre, nous ne pouvons pas l’aider. À deux lieues d’ici commence le jardin de la Reine des neiges ; tu peux y porter la petite. Pose-la près du grand buisson aux baies rouges, dans la neige ; ne reste pas à bavarder, et reviens au plus vite."],
+"让她进来好了！我把她搁到暖气片上，她就化了。": ["Only let her come in! Then I’d put her on the radiator, and she’d melt.", "Qu’elle vienne donc ! Je la mettrais sur le radiateur, et elle fondrait."],
+"谁也不知道他到哪儿去了。大人们说，他准是掉进冷却河里淹死了。": ["Nobody knew where he was. The grown-ups say he must have been drowned in the coolant river.", "Personne ne savait où il était. Les grands disent qu’il a dû se noyer dans la rivière de refroidissement."],
+"谢谢你们！": ["Many thanks!", "Merci beaucoup !"],
+"跟我来。只要我不生你的气，他们就不会杀你。你一定是位公主吧？": ["Come with me. They shall not kill you as long as I am not displeased with you. You are, doubtless, a princess?", "Viens avec moi. Ils ne te tueront pas tant que je ne serai pas fâchée contre toi. Tu es sûrement une princesse ?"],
+"车在走廊里绕了两圈，越开越快，一直往船尾去了。赶车的人回过头来，亲亲热热地朝加伊点点头，就好像他们早就认识似的。": ["The cart drove round the corridor twice, faster and faster, and then away toward the stern. The driver turned round to Kay and nodded to him in a friendly manner, just as if they knew each other.", "Le chariot fit deux fois le tour du couloir, de plus en plus vite, puis fila vers la poupe. Celui qui conduisait se retourna vers Kay et lui fit un signe de tête amical, comme s’ils se connaissaient."],
+"轻点儿，轻点儿！我想我知道。我想那可能就是小加伊。可是他现在为了公主，已经把你忘了。": ["Gently, gently! I think I know; I think that it may be little Kay. But now he has forgotten you for the princess.", "Doucement, doucement ! Je crois que je sais ; je crois que ça pourrait être le petit Kay. Mais maintenant, il t’a oubliée pour la princesse."],
+"这儿多冷啊！多空，多冷啊！": ["How cold it is here! How empty and cold!", "Qu’il fait froid ici ! Que c’est vide et froid !"],
+"这太美了，连冰块都高兴得跳起舞来。跳累了，它们就躺下来，正好拼成了冰雪女王要他拼的那两个字。这下他可以自己做主了。": ["It was so beautiful that even the blocks of ice danced about for joy; and when they were tired and laid themselves down, they formed exactly the letters which the Snow Queen had told him to find out. So now he was his own master.", "C’était si beau que même les morceaux de glace se mirent à danser de joie ; et quand ils furent fatigués et se couchèrent, ils formèrent exactement les lettres que la Reine des neiges lui avait demandé de trouver. Maintenant, il était son propre maître."],
+"这时来了一大队雪花。它们不是从天上落下来的，是贴着地面跑过来的，越近就越大。它们是冰雪女王的前哨，样子稀奇古怪：有的像又大又丑的豪猪，有的像缠成一团、伸着脑袋的蛇，有的像毛都竖起来的胖胖的小熊。它们全都白得耀眼，全都是活的雪花。": ["There then came a whole regiment of snowflakes, but they did not fall from above; they ran along the ground, and the nearer they came the larger they grew. They were the outposts of the Snow Queen. They had the most wondrous shapes; some looked like large ugly porcupines; others like snakes knotted together, with their heads sticking out; and others, again, like small fat bears, with the hair standing on end. All were of dazzling whiteness—all were living snowflakes.", "Alors arriva tout un régiment de flocons de neige ; ils ne tombaient pas du ciel, ils couraient sur le sol, et plus ils approchaient, plus ils grandissaient. C’étaient les avant-postes de la Reine des neiges. Ils avaient les formes les plus étranges : certains ressemblaient à de grands porcs-épics hideux, d’autres à des nœuds de serpents qui dressaient la tête, d’autres encore à de petits ours gras au poil hérissé. Tous étaient d’une blancheur éblouissante : c’étaient des flocons vivants."],
+"这是我的老北极光，你瞧它们多亮！": ["These are my old northern lights. Look how they gleam!", "Ce sont mes vieilles aurores boréales. Regarde comme elles brillent !"],
+"这跟我没关系。这跟我一点关系也没有。": ["That’s nothing to me. That does not concern me.", "Ça m’est égal. Ça ne me regarde pas."],
+"这跟我没关系！": ["That’s nothing to me!", "Ça m’est égal !"],
+"那一定是加伊！我知道他有一双新靴子，我在奶奶屋里听见它们咯吱咯吱地响过。": ["That’s Kay for certain! I know he had on new boots; I have heard them creaking in Grandma’s room.", "C’est Kay, c’est sûr ! Je sais qu’il avait des bottes neuves ; je les ai entendues grincer dans la chambre de Grand-mère."],
+"那你就不能给小格尔达一点什么，让她能对付这一切吗？": ["But can you give little Gerda nothing to take, which will give her power over all this?", "Mais tu ne peux rien donner à la petite Gerda qui lui donne pouvoir sur tout cela ?"],
+"那儿有冰有雪！那儿可真是又美又好！在那些亮晶晶的大冰原上，可以尽情地跳！冰雪女王在那边有一座夏天住的帐篷，可她真正的宫殿在最里头，冷舱最深的地方。": ["Ice and snow is there! There it is, glorious and beautiful! One can spring about in the large shining fields of ice! The Snow Queen has her summer tent there; but her fixed abode is right at the far end, in the deepest part of the cold vault.", "Là-bas, il y a de la glace et de la neige ! C’est magnifique ! On peut gambader dans les grands champs de glace qui brillent ! La Reine des neiges y a sa tente d’été ; mais sa vraie demeure est tout au fond, dans la partie la plus profonde de la cale froide."],
+"那只不过是梦。它们来把大人物的心思接出去打猎。这样正好，你可以趁他们睡着，看得更清楚。": ["They are only dreams. They come to fetch the thoughts of the high personages to the chase; ’tis well, for now you can observe them in bed all the better.", "Ce ne sont que des rêves. Ils viennent chercher les pensées des grands personnages pour les emmener à la chasse ; c’est très bien, tu pourras mieux les observer dans leur lit."],
+"那地方谁能比我更熟呢？我是在那边的牧场舱生、牧场舱长大的，在冰原上跳来跳去。": ["Who should know better than I? I was born and bred in the pasture deck over there; there I leapt about on the fields of ice.", "Qui le saurait mieux que moi ? Je suis né et j’ai grandi là-bas, au pont des pâturages ; je bondissais sur les champs de glace."],
+"那是加伊！啊，我可找到他了！": ["That was Kay! Oh, now I’ve found him!", "C’était Kay ! Oh, je l’ai trouvé !"],
+"那是白蜜蜂在成群地飞呢。": ["It is the white bees that are swarming.", "Ce sont les abeilles blanches qui essaiment."],
+"鞋落在离岸不远的地方，小浪一下子就把它们送回了岸上。好像水渠不肯收下她最心爱的东西，因为它确实没有带走小加伊。": ["The shoes fell close to the bank, and the little waves bore them immediately to land; it was as if the canal would not take what was dearest to her; for in reality it had not got little Kay.", "Les souliers tombèrent tout près de la rive, et les petites vagues les ramenèrent aussitôt à terre ; c’était comme si le canal ne voulait pas prendre ce qu’elle avait de plus cher ; car en réalité, il n’avait pas pris le petit Kay."],
+"领航员起来，把自己的床让给格尔达睡，他能做的也就这么多了。格尔达合起小手想：“人和动物都多么好啊！”然后就睡着了，睡得很香。": ["The navigator got up and let Gerda sleep in his bed, and more than this he could not do. She folded her little hands and thought, “How good people and animals are!” and then she fell asleep and slept soundly.", "Le navigateur se leva et laissa Gerda dormir dans son lit ; il ne pouvait pas faire plus. Elle joignit ses petites mains et pensa : « Comme les hommes et les bêtes sont bons ! » Puis elle s’endormit et dormit profondément."],
+"驯鹿一直跑到那丛结着红果子的大灌木旁边，把格尔达放下来，亲了亲她的嘴，大颗大颗亮晶晶的眼泪从它眼睛里流下来，然后它就拼命往回跑了。": ["The reindeer ran on till he came to the great bush with the red berries, and there he set Gerda down, kissed her mouth, while large bright tears flowed from his eyes, and then back he went as fast as possible.", "Le renne courut jusqu’au grand buisson aux baies rouges ; il y déposa Gerda, l’embrassa sur la bouche, tandis que de grosses larmes brillantes coulaient de ses yeux, puis il repartit aussi vite qu’il put."],
+"驯鹿和小母鹿在他们身边跳着跑着，一直把他们送到冷舱的边界。那儿冒出了第一撮绿芽。": ["The reindeer and the young doe leaped along beside them, and went with them to the edge of the cold vault. Here the first green shoots peeped forth.", "Le renne et la jeune renne bondirent à côté d’eux et les accompagnèrent jusqu’à la limite de la cale froide. Là, les premières pousses vertes pointaient."],
+"驯鹿高兴得一下子蹦了起来。": ["The reindeer gave a bound for joy.", "Le renne fit un bond de joie."]
 };</script>
 <script>
 (() => {
@@ -965,8 +993,8 @@ function glow(c, x, y, r, col) { const g = c.createRadialGradient(x, y, 2, x, y,
 
 // ---------- 回忆 ----------
 const MEMS = [
-  { id: 'm1', title: '窗上的小孔', text: '冬天，窗子冻上了。你们把铜钱放在暖气片上烤热，按在玻璃上，烫出一个圆孔。孔那头有一只眼睛眨了一下，是加伊。' },
-  { id: 'm2', title: '玫瑰箱', text: '夏天，两只小板凳摆在玫瑰箱旁边。奶奶说，这株玫瑰是从地球上带来的那一株分出来的，传到你们手里，已经是第四代了。' },
+  { id: 'm1', title: '窗上的小孔', text: '冬天，窗子常常冻上。你们就把铜钱放在暖气片上烤热，按在玻璃上，烫出一个圆圆的小孔。每个小孔里都有一只温和、亲切的眼睛往外看，一只是你的，一只是加伊的。' },
+  { id: 'm2', title: '玫瑰箱', text: '夏天，你们常常得到准许，从窗子爬出去，坐在玫瑰中间的小板凳上，玩得开心极了。奶奶说，这株玫瑰是从地球上带来的那一株分出来的，传到你们手里，已经是第四代了。' },
   { id: 'm3', title: '雪橇', text: '加伊有一架小雪橇，是他爸爸拿旧货架改的。在船尾那条长坡道上，他拉着你往下滑，你一路尖叫，他笑得从雪橇上翻了下去。' },
   { id: 'm4', title: '玻璃珠', text: '你七岁生日那天，加伊送你一颗玻璃珠，说是从舷窗外面捞上来的星星。你知道是假的，还是揣在兜里揣了一整年。' },
   { id: 'm5', title: '门缝里的画', text: '有一年你发高烧，加伊每天放学都从门缝里塞一张画进来。第三张画的是你，头顶冒着热气，像一壶刚烧开的水。' },
@@ -1331,12 +1359,13 @@ function showDialog(name, text, isNarr) {
   dlgName.textContent = t(name || ''); dlgFull = t(text); dlgShown = 0; dlgText.textContent = '';
   dlgTyping = true; dlg.classList.add('typing'); dlgAt = performance.now();
 }
-function finishType() { dlgShown = dlgFull.length; dlgText.textContent = dlgFull; dlgTyping = false; dlg.classList.remove('typing'); }
+function finishType() { dlgShown = dlgFull.length; dlgText.textContent = dlgFull; dlgTyping = false; dlg.classList.remove('typing'); if (dlgText.scrollHeight > dlgText.clientHeight) dlgText.scrollTop = dlgText.scrollHeight; }
 function typeStep(dt) {
   if (!dlgTyping) return;
   dlgShown += dt * (reduced ? 600 : lang === 'zh' ? 44 : 80);
   const n = Math.min(dlgFull.length, Math.floor(dlgShown));
   dlgText.textContent = dlgFull.slice(0, n);
+  if (dlgText.scrollHeight > dlgText.clientHeight) dlgText.scrollTop = dlgText.scrollHeight;
   if (n >= dlgFull.length) finishType();
 }
 function hideDialog() { dlg.hidden = true; }
@@ -1571,9 +1600,9 @@ async function grannyTalk() {
   if (!f.event) {
     if (!f.grannyTold) {
       f.grannyTold = true;
-      await say('奶奶', '又跟窗户较劲呢？外头飘的那些冰屑，是白蜜蜂。');
-      await say('格尔达', '白蜜蜂也有蜂后吗？');
-      await say('奶奶', '有啊，冰雪女王。哪儿冰屑多，她就往哪儿飞。夜里她贴着舷窗往里看，看一眼，窗上就结一层冰花。');
+      await say('奶奶', '那是白蜜蜂在成群地飞呢。');
+      await say('格尔达', '白蜜蜂也有蜂王吗？');
+      await say('奶奶', '有的。蜂群挤得最密的地方，她就在那儿飞。她是所有蜜蜂里最大的一只，从来不肯安安静静待在地上，总要飞回黑云里去。好多个冬天的夜里，她飞过船上一条条走廊，往舷窗里张望，玻璃就冻出奇怪的花纹，像一朵一朵的花。');
     } else if (!f.kayCalled) await say('奶奶', '窗子冻得厚，多哈几口气。');
     else await say('奶奶', '去吧，加伊在外头等你呢。');
   } else if (!f.told) await say('奶奶', '加伊这孩子，今天是怎么了。');
@@ -1582,25 +1611,26 @@ async function grannyTalk() {
 async function kayEvent() {
   const f = state.flags, kay = find('kay');
   kay.face = player.x < kay.x ? -1 : 1;
-  await say('加伊', '奶奶又讲冰雪女王了吧？她要是敢进来，我就把她搁暖气片上，烤化她。');
-  await say('格尔达', '你小点声，她会听见的。');
-  await say('加伊', '听见就听见。你看这朵，开得多……');
+  await say('格尔达', '冰雪女王能进来吗？');
+  await say('加伊', '让她进来好了！我把她搁到暖气片上，她就化了。');
+  await say('加伊', '你看这朵，开得多……');
   f.splinter = true; sfx.prick(); sparkle(kay.x + 6 * kay.face, FLOOR - 52, '#e4f7ff');
-  await say('加伊', '哎！');
-  await say('加伊', '心口扎了一下。眼睛里也进东西了。');
-  await say('格尔达', '我看看。……什么也没有啊。');
-  await say('加伊', '好像出来了。');
-  await wait(500);
-  await say('加伊', '你哭丧着脸干什么？难看死了。');
-  await say('格尔达', '我没哭。');
+  await say('加伊', '哎哟！心口猛地扎了一下！眼睛里也进去什么东西了！');
+  await narr('格尔达搂住他的脖子。他眨了眨眼睛，什么也看不见了。');
+  await say('加伊', '我想它已经出来了。');
+  await narr('其实并没有出来。那正是魔镜的一粒碎片。可怜的加伊，心里也扎进了一片，那颗心很快就会变得像一块冰。现在已经不疼了，可碎片还在那儿。');
+  await wait(400);
+  await say('加伊', '你哭什么？这样子真难看！我又没怎么样。');
+  await say('加伊', '呸！这朵玫瑰被虫咬了！你看，这一朵长得多歪！说到底，这些玫瑰丑得很，跟种它们的箱子一个样！');
   f.kicked = true; sfx.thud();
-  await say('加伊', '这朵被虫咬了，那朵长歪了。这箱破玫瑰，跟装它的箱子一样丑。');
+  await narr('他朝箱子狠狠踢了一脚，扯下了一朵玫瑰。');
   f.vent = true; await wait(1100); kay.mag = true; kay.face = 1;
-  await say('加伊', '过来看。冰花，一个毛病都没有，六个角一样长。比真花强多了。');
-  await say('加伊', '要是它们不化就好了。');
+  await say('加伊', '格尔达，你从这块放大镜里看。');
+  await narr('每一片雪花都变大了，像一朵华丽的花，又像一颗十个角的星星，好看极了。');
+  await say('加伊', '你看，多巧妙！比真花有意思多了！一点毛病都没有，规规矩矩的，只要它们不化就好了！');
   await say('格尔达', '加伊……');
   kay.mag = false; f.vent = false;
-  await say('加伊', '别跟着我。我去船尾玩雪橇了，那边才有意思。');
+  await say('加伊', '我得到准许了，要到船尾那条长坡道去，跟别的孩子一块儿玩雪橇！');
   hideDialog();
   await walkNpc(kay, Math.min(2650, cam.x + VWZ() + 60), 120); kay.visible = false;
   f.event = true;
@@ -1615,9 +1645,9 @@ async function kayEvent() {
 }
 async function anoTalk() {
   const f = state.flags;
-  await say('阿诺', '你找加伊？他昨天把雪橇挂在一辆白色的货车后头，跟着走了。');
-  await say('阿诺', '那车一直往船尾开，开得飞快。车上坐着一个穿白衣服的高个子女人，回头冲他点了点头。');
-  await say('阿诺', '后来就没人见过他了。大人们说，他是掉进冷却河里了。');
+  await say('阿诺', '你找加伊？我们只看见他把小雪橇拴在一辆又大又漂亮的货车后头。那车涂得雪白，里面坐着一个人，裹着粗糙的白毛皮斗篷，戴着白毛皮帽子。');
+  await say('阿诺', '车在走廊里绕了两圈，越开越快，一直往船尾去了。赶车的人回过头来，亲亲热热地朝加伊点点头，就好像他们早就认识似的。');
+  await say('阿诺', '谁也不知道他到哪儿去了。大人们说，他准是掉进冷却河里淹死了。');
   await say('格尔达', '我不信。');
   f.told = true; goal('去船尾找加伊（一直往右走）');
 }
@@ -1667,43 +1697,47 @@ function splash(x) { for (let i = 0; i < 10; i++) parts.push({ k: 'drop', x, y: 
 async function shoesScript() {
   const f = state.flags;
   await walkPlayer(470, 120); player.face = 1;
-  await say('格尔达', '水渠，是你把加伊带走了吗？');
-  await say('格尔达', '我把我的新红鞋给你，你把他还给我。');
+  await say('格尔达', '真的是你把我的小伙伴带走了吗？');
+  await say('格尔达', '我把我的红鞋送给你，你把他还给我吧。');
+  await narr('她觉得蓝色的水波好像古怪地朝她点了点头。她脱下红鞋，这是她最宝贵的东西，把两只都扔进了水渠。');
   hideDialog(); take('红鞋');
   f.shoe = { x: player.x + 8, y: FLOOR - 10, vx: 110, vy: -170, phase: 'fly' };
   await wait(1900);
-  await narr('水把鞋推回了岸边，像是不肯收。');
-  await say('格尔达', '是我扔得太近了。');
+  await narr('鞋落在离岸不远的地方，小浪一下子就把它们送回了岸上。好像水渠不肯收下她最心爱的东西，因为它确实没有带走小加伊。');
+  await say('格尔达', '是我扔得不够远。');
   f.shoes = true; goal('上船，把鞋扔远一点');
 }
 async function boatScript() {
   const f = state.flags;
   await walkPlayer(500, 120);
   f.boat = true; state.mode = 'boat'; player.x = 590; f.shoe = null;
-  await narr('格尔达爬上一条小船，站在船尾，把鞋使劲扔了出去。');
+  await narr('于是她爬进芦苇丛里的一条小船，走到最远的那一头，把鞋扔了出去。');
   hideDialog();
   f.shoe = { x: player.x + 10, y: FLOOR - 30, vx: 260, vy: -230, phase: 'fly2' };
   await wait(1500);
-  await narr('系船的绳子本来就没拴紧。鞋落进水里的时候，小船也离了岸，顺着水往船尾漂。');
+  await narr('可是小船没有拴住，她这么一动，船就离了岸。她发觉了，赶紧想回去，可是还没来得及，船已经离岸一米多，顺着水很快地往船尾漂去。');
+  await narr('小格尔达害怕极了，哭了起来。可是除了麻雀，谁也听不见她。麻雀沿着岸飞，唱着，好像在安慰她：“我们在这儿！我们在这儿！”');
+  await say('格尔达', '也许水渠会把我带到小加伊那儿去。');
   toast('红鞋给了水渠。光着脚，冷得快一些。', 3.6);
   await wait(300);
   goal('顺着水渠往船尾漂');
   setTimeout(() => toast(touchy ? '按住 ◀ 扶住墙，船就停下；停在窗下哈气' : '按住 ← 扶住墙，船就停下；停在窗下哈气', 6), 3800 / timeScale);
 }
 async function oldWomanMeet() {
-  await say('老太太', '哎哟，可怜的小东西，你怎么一个人漂到这么远的水上来了？');
-  await narr('一个戴大草帽的老太太拿拐杖勾住船头，把船拉到了岸边。她的草帽上画满了花。');
-  await say('老太太', '上来吧，到我园子里坐坐。告诉我你是谁，从哪儿来。');
+  await narr('一个老太太拄着一根弯弯的拐杖走出来。她头上戴着一顶宽边大草帽，帽子上画满了最漂亮的花。');
+  await say('老太太', '可怜的小孩子！你怎么会跑到这条又宽又急的水渠上，让水推着在这大千世界里乱漂呢？');
+  await narr('老太太走进水里，用弯拐杖勾住小船，把它拉到岸边，把小格尔达抱了上来。');
+  await say('老太太', '来，告诉我你是谁，你是怎么到这儿来的。');
   await gotoScene('s3', { soft: true });
 }
 
 // 第三个故事：花园
 const FLOWERS = [
-  { x: 1020, kind: 'morning', name: '牵牛花', line: '我顺着管子爬到最高的地方往下看。有个姑娘靠在栏杆上，手里攥着一封信。她等的人一直没来，灯都熄了，她还站着。', fog: '……她在等谁呢？', fogBack: ['牵牛花', '我只说我看见的。'], clear: '那不是加伊。' },
-  { x: 1270, kind: 'snowdrop', name: '雪花莲', line: '两根绳子拴着一块木板，两个小孩站在上面荡秋千，一边荡一边吹肥皂泡。一个泡泡飞进了通风口，啪，没了。两个小孩笑得从板子上掉了下来。', fog: '两个小孩……', clear: '你讲的是你自己看见的，我知道。' },
-  { x: 1520, kind: 'buttercup', name: '毛茛', line: '早上太阳灯一亮，门口坐着一个老奶奶晒太阳。她孙女从外头跑回来，在她脸上亲了一下。那一下，比我身上的黄颜色还亮。', fog: '奶奶……', hint: '你要是在找什么，别往地里找了。老太太把玫瑰全按进了土里，就她自己草帽上画的那一朵，她忘了。', clear: '我奶奶也在等我。我会回去的。' },
+  { x: 1020, kind: 'morning', name: '牵牛花', line: '我顺着管子爬到最高处。那儿有一道旧栏杆，一个可爱的姑娘靠在栏杆上，朝下面望着。挂在枝头的玫瑰也没有她鲜嫩，被风吹走的苹果花也没有她轻盈。她的绸衣裳沙沙地响：“他还没有来吗？”', fog: '你说的是加伊吗？', fogBack: ['牵牛花', '我讲的是我的故事，我的梦。'], clear: '那不是加伊。' },
+  { x: 1270, kind: 'snowdrop', name: '雪花莲', line: '两棵树中间挂着一块长木板，那是秋千。两个小姑娘坐在上面荡来荡去，衣服白得像雪，帽子上飘着长长的绿绸带。她们的哥哥站在秋千上，一只手拿着小杯子，一只手拿着泥烟斗，在吹肥皂泡。秋千荡着，泡泡飘着，变出各种好看的颜色。一只小黑狗想跳上秋千，秋千一荡，它摔了下来，汪汪地叫。泡泡破了！一架秋千，一个破掉的泡泡，这就是我的歌。', fog: '你讲的也许很好听，可是你讲得这么伤心，一句也没提到加伊。', clear: '你讲的是你自己看见的，我知道。' },
+  { x: 1520, kind: 'buttercup', name: '毛茛', line: '早春的头几天，小院子里的太阳灯亮堂堂的。光顺着邻居家的白墙滑下来，墙边长着新鲜的黄花，在暖和的光里像金子一样亮。一位老奶奶坐在外面，她的孙女，一个又穷又好看的小女佣，回来看她一会儿，亲了亲她。那一吻里有金子，纯纯的金子。', fog: '我可怜的老奶奶！她一定在想我，为我难过，就像为小加伊难过一样。', hint: '你要是在找什么，别往地里找了。老太太把玫瑰全按进了土里，就她自己草帽上画的那一朵，她忘了。', clear: '可是我很快就会回家的，还要把加伊一起带回去。' },
   { x: 1770, kind: 'dandelion', name: '蒲公英', line: '通风口一开，我就把孩子们全送出去了，一个也没留。它们飞到哪儿去了，我也不知道。', fog: '……', clear: '它们会落在好地方的。' },
-  { x: 2010, kind: 'narcissus', name: '水仙', line: '我能看见我自己。水里那个是我。真好看，真好看。', fog: '我问的不是这个……', clear: '我问的不是这个！' },
+  { x: 2010, kind: 'narcissus', name: '水仙', line: '我能看见我自己！我能看见我自己！啊，我多香啊！上面的小阁楼里，站着一个穿了一半衣裳的小舞女，一会儿用一只脚站着，一会儿用两只脚站着，她瞧不起整个世界，可她只活在自己的想象里。那件白裙子挂在钩子上，是用茶壶洗的，在屋顶上晾干的。她穿上它，脖子上系一条橘黄的围巾，裙子就显得更白了。我能看见我自己！我能看见我自己！', fog: '这跟我没关系。这跟我一点关系也没有。', clear: '这跟我没关系！' },
 ];
 SCENES.s3 = {
   id: 's3', chapter: '第三个故事 · 会魔法的老太太的花园', kicker: '第三个故事', title: '会魔法的老太太的花园', width: 2800, start: 230, cold: -14, music: 'morning',
@@ -1718,7 +1752,7 @@ SCENES.s3 = {
       Npc({ id: 'oldwoman', x: 560, face: -1, prompt: '和老太太说话', draw: (e, t) => drawOldWoman(e.x, e.face, t, f.hatOff, e.walking, e.walk), when: () => f.forget,
         run: async () => { if (!f.remember) await say('老太太', '再吃颗樱桃吧，孩子。这儿多好，一年到头都是夏天。'); else await say('老太太', '你要走啦？……那就走吧。路上当心。'); } }),
       Exit(2700, 's4', () => f.remember, async () => { await say('格尔达', '外面好冷。我……我出去干什么来着？'); },
-        async () => { await narr('门边挂着一块船历牌。格尔达跑出园门，才看见上面写的是：秋。园子里的灯一直是夏天，她在里面待了整整三个月。'); await gotoScene('s4'); }),
+        async () => { await narr('园门锁着，她使劲摇那根生锈的门闩，摇松了，门开了。小格尔达光着脚跑进了大千世界。她跑不动了，坐在一块大石头上往四周一看，才发现夏天已经过去，已经是晚秋了。园子里一年到头都是太阳和花，所以看不出来。'); await say('格尔达', '哎呀，我耽搁得太久了！秋天都来了，我不能再歇着了。'); await gotoScene('s4'); }),
     ];
     FLOWERS.forEach(fl => list.push(Use({ x: fl.x, reach: 60, prompt: () => t('听{n}说话').replace('{n}', lang === 'fr' ? t(fl.name).replace(/^./, ch => ch.toLowerCase()) : t(fl.name)), draw: (e, t) => drawFlower(e.x, fl.kind, t, e.talk), when: () => f.forget,
       run: async function () { const self = this; self.talk = true; await say(fl.name, fl.line); self.talk = false;
@@ -1728,14 +1762,14 @@ SCENES.s3 = {
   },
   async enter() {
     const f = state.flags, ow = find('oldwoman');
-    await narr('园子里的灯一年到头都是夏天。花开得比格尔达见过的所有花都大。');
-    await say('老太太', '我一直想要一个你这样的小姑娘。吃樱桃吧。');
+    await narr('人能想得到的每一种花、每一个季节的花，都在这里开得正盛，哪本画册也没有这么鲜艳、这么好看。园子里的灯一年到头都是夏天。');
+    await say('老太太', '我早就盼着有一个你这样可爱的小姑娘了。你瞧着吧，我们俩会处得很好的。');
     await say('格尔达', '您见过一个男孩吗？叫加伊，穿蓝外套……');
-    await say('老太太', '没见过。可他总会路过这儿的，别着急。先坐下，我给你梳梳头。');
-    await narr('她拿一把金梳子给格尔达梳头。梳一下，格尔达就忘掉一点。');
+    await say('老太太', '他没打这儿过。不过他准会来的，你别难过。尝尝我的樱桃，看看我的花吧，我的花比画册里的还好看，每一朵都能讲一整个故事。');
+    await narr('老太太用一把金梳子给她梳头。梳着梳着，格尔达把加伊忘得越来越多了，因为这老太太会魔法。不过她不是坏人，她只是为了自己开心，学过一点点魔法，现在她很想把小格尔达留下来。');
     f.forget = true; f.forgetT = 0; hud();
     f.hatOff = true;
-    await narr('老太太把草帽挂在门边，拄着拐杖进了园子。她拿拐杖朝玫瑰丛一指，玫瑰就一株一株沉进了土里。她怕格尔达看见玫瑰，会想起什么来。');
+    await narr('老太太把草帽挂在门边，走进园子，朝玫瑰丛伸出她那根弯拐杖。玫瑰开得正好，可是一下子全沉进了土里，谁也看不出它们原先长在哪儿。老太太怕格尔达看见玫瑰，就会想起自己家的玫瑰，想起小加伊，从她这儿跑掉。');
     hideDialog();
     state.camFocus = 2250; await wait(900); await tween(f, 'roseH', 0, 1600); await wait(500); state.camFocus = null;
     walkNpc(ow, 1640, 70);
@@ -1774,21 +1808,20 @@ function drawGate(x) {
 }
 async function rememberScript() {
   const f = state.flags;
-  await narr('老太太的草帽挂在门边。帽檐上画满了花，最中间是一朵玫瑰。');
-  await narr('格尔达盯着那朵玫瑰看了很久。');
-  await say('格尔达', '玫瑰……家里的玫瑰箱……');
-  await say('格尔达', '加伊！');
-  hideDialog(); f.remember = true;
-  for (const id of [...state.faded]) { state.faded.delete(id); hud(); sparkle(player.x, FLOOR - 70, '#ffe7b0'); await wait(200); }
-  sfx.chime(); hud();
-  await say('格尔达', '我在这儿待了多久了？加伊还在等我！');
+  await narr('格尔达看着老太太那顶画满了花的草帽，觉得所有的花里最美的是一朵玫瑰。老太太让别的玫瑰沉进土里的时候，忘了把帽子上这一朵去掉。一个人心不在焉的时候，就是这样。');
+  await say('格尔达', '怎么！这儿一朵玫瑰也没有吗？');
   hideDialog();
   await walkPlayer(2178, 200); player.face = 1;
   player.cry = true;
-  await narr('她跑到玫瑰沉下去的那块地上，蹲下来哭了。眼泪落进土里，土里一下子冒出一丛玫瑰，跟沉下去以前一模一样。');
+  await narr('她在花坛中间跑来跑去，找了又找，一朵也没找到。她坐下来哭了。她的热泪正好落在一株玫瑰沉下去的地方，眼泪一润湿泥土，那株玫瑰就一下子冒了出来，开得跟沉下去的时候一样鲜艳。');
   hideDialog(); await tween(f, 'roseH', 1, 1500); player.cry = false;
-  await say('玫瑰', '我们在土底下待了好久。死了的人都在底下，加伊不在那儿。');
-  await say('格尔达', '那他还活着！谢谢你们！');
+  await narr('格尔达亲着玫瑰，想起了家里那些可爱的玫瑰，也想起了小加伊。');
+  hideDialog(); f.remember = true;
+  for (const id of [...state.faded]) { state.faded.delete(id); hud(); sparkle(player.x, FLOOR - 70, '#ffe7b0'); await wait(200); }
+  sfx.chime(); hud();
+  await say('格尔达', '啊，我耽搁了多久啊！我是出来找加伊的！你们知道他在哪儿吗？你们觉得他已经死了吗？');
+  await say('玫瑰', '他肯定没有死。我们在土底下待过，死了的人都在那儿，加伊不在。');
+  await say('格尔达', '谢谢你们！');
   await narr('她还想起了奶奶。');
   hideDialog(); collect('m6');
   goal('从园门出去，接着往船尾走');
@@ -1810,10 +1843,10 @@ SCENES.s4 = {
       Use({ x: 2775, reach: 70, prompt: '掀开红色的那片花瓣', when: () => f.crowLed && !f.petal, run: bedroomScript, draw: (e, t) => drawLilies(2700, t) }),
       crow,
       Trig(250, crowTalk),
-      Trig(1890, async () => { await say('乌鸦', '别怕，墙上那些是梦。它们来接睡着的人的心思，带出去玩一夜。'); }, () => f.following),
+      Trig(1890, async () => { await say('乌鸦', '那只不过是梦。它们来把大人物的心思接出去打猎。这样正好，你可以趁他们睡着，看得更清楚。'); }, () => f.following),
     ];
   },
-  async enter() { await narr('外面已经很冷了。格尔达光着脚，一步一步往前走。'); goal('往前走'); },
+  async enter() { await narr('啊，她的一双小脚多么柔嫩，多么累啊！四周又冷又阴湿，到处都那么黑暗，那么凄凉。'); goal('往前走'); },
   update(dt) {
     const f = state.flags, crow = find('crow'), WP = [330, 820, 1320, 1830, 2320, 2640], WY = [268, 268, 268, 268, 268, 312];
     if (crow && f.following && !crow.flying && crow.wp < WP.length - 1 && player.x > crow.x - 130) {
@@ -1847,37 +1880,45 @@ function drawLilies(x, t) {
 }
 async function crowTalk() {
   const f = state.flags, crow = find('crow');
-  await say('乌鸦', '嘎！小姑娘，光着脚上哪儿去？');
-  await say('格尔达', '我在找一个男孩，叫加伊。你见过他吗？');
-  await say('乌鸦', '也许见过，也许。');
-  await say('乌鸦', '舰桥上的女船长，是全船最聪明的人，大伙儿背地里叫她公主。前些日子她说要找个领航员，得是能跟她说上话的。');
-  await say('乌鸦', '来了好多人，一进舰桥就说不出话了。最后来了个半大孩子，谁也不怕，船长问什么他都答得上。他走路的时候，靴子咯吱咯吱响。');
-  await say('格尔达', '是加伊！他有一双新靴子，走起来就咯吱咯吱响！');
-  await say('乌鸦', '正门你进不去，穿制服的人会把你轰出来。夜里我带你走后面的楼梯。');
-  await narr('等到船上熄了灯，乌鸦来接她。大伙儿叫那两个人王子和公主，叫着叫着，就忘了他们本来叫什么。');
+  await say('乌鸦', '嘎！嘎！你好！你好！你一个人上哪儿去呀？');
+  await narr('“一个人”这几个字，格尔达听得很明白，也觉得这里头的意思有多深。她把自己的事全告诉了乌鸦，问它有没有看见加伊。');
+  await say('乌鸦', '可能是，可能是！');
+  await say('格尔达', '什么，你真的这么想吗？');
+  await say('乌鸦', '轻点儿，轻点儿！我想我知道。我想那可能就是小加伊。可是他现在为了公主，已经把你忘了。');
+  await say('乌鸦', '舰桥上的女船长聪明得了不得，全船的航行日志她都读过，又全忘了，你看她有多聪明。大伙儿背地里都叫她公主。');
+  await say('乌鸦', '前些日子她说，她要找一个领航员，得是别人跟他说话、他答得上来的那种，不能光是看上去神气。光看上去神气的人，太没意思了。');
+  await say('乌鸦', '人一群一群地来，挤得要命。在走廊里一个个都能说会道，可是一进舰桥，看见穿制服的卫兵、亮堂堂的大厅，一站到船长面前，就只会把自己说过的最后一个字重复一遍。');
+  await say('乌鸦', '到了第三天，来了一个小个子，没车也没马，大摇大摆地走上了舰桥。他的眼睛跟你的一样亮，长着漂亮的长头发，可是衣服很破旧。');
+  await say('格尔达', '那是加伊！啊，我可找到他了！');
+  await say('乌鸦', '他走进去的时候，靴子咯吱咯吱响得厉害，可他一点儿也不怕。');
+  await say('格尔达', '那一定是加伊！我知道他有一双新靴子，我在奶奶屋里听见它们咯吱咯吱地响过。');
+  await say('乌鸦', '船长喜欢他，他也喜欢船长。大伙儿就叫他们王子和公主。');
+  await say('乌鸦', '你光着脚，进不了舰桥，穿制服的卫兵不会让你进去的。可是别哭，你还是能进去。我知道一条小小的后楼梯，能一直通到卧室。');
+  await narr('等船上的灯一盏一盏都熄了，乌鸦领着小格尔达来到半开着的后门。格尔达的心怦怦直跳，又害怕，又盼望，好像要去做什么坏事似的，其实她只想知道小加伊在不在那儿。');
   hideDialog(); await fadeOut(500); f.night = true; await fadeIn(500);
   f.following = true; crow.face = 1; goal('跟着乌鸦');
 }
 async function bedroomScript() {
   const f = state.flags;
-  await narr('两张床像两朵百合，挂在一根金色的茎上。一朵白的，一朵红的。格尔达掀开红色的那一片，看见一截褐色的脖子。');
+  await narr('屋子中间，一根粗粗的金茎上挂着两张床，每一张都像一朵百合花。一张是白的，公主睡在里面；一张是红的，格尔达要在这里找小加伊。她把一片红花瓣往后一掀，看见了一截褐色的脖子。');
   f.petal = true;
-  await say('格尔达', '加伊！');
-  await narr('她把灯举近了些。床上的人醒了，转过头来。');
-  await narr('不是加伊。');
+  await say('格尔达', '啊，那是加伊！');
+  await narr('她大声叫他的名字，把灯朝他举过去，那些梦又呼啦一下涌回了屋里。他醒了，转过头来——');
+  await narr('不是小加伊！');
   player.cry = true;
-  await say('领航员', '你是谁？半夜跑到这儿来干什么？');
-  await narr('白色的那朵也醒了。格尔达一边哭，一边把事情从头讲了一遍：玫瑰箱，碎片，白色的货车，水渠，花园。');
+  await narr('他只有脖子像加伊，不过他年轻，也很英俊。公主从白百合花瓣里探出头来，问出了什么事。小格尔达哭了起来，把她的事，还有乌鸦帮她的事，从头到尾讲了一遍。');
   player.cry = false;
-  await say('女船长', '可怜的孩子。今晚就睡在这儿吧。');
+  await say('女船长', '可怜的小东西！');
+  await narr('领航员起来，把自己的床让给格尔达睡，他能做的也就这么多了。格尔达合起小手想：“人和动物都多么好啊！”然后就睡着了，睡得很香。');
   hideDialog(); await fadeOut(600);
   await narr('第二天早上。');
   hideDialog(); f.night = false; f.petal = false; await fadeIn(600);
+  await narr('他们留她在舰桥上住下，过快活的日子。可是她只求要一辆小车、一双小鞋，她说，她还要到大千世界里去找加伊。');
   await say('女船长', '你要去船尾，那一路越走越冷。这双靴子你穿上，这个手笼也拿着。');
   give('靴子'); give('手笼'); toast('得到靴子和手笼。冷得慢一些了。', 3.4);
   await say('领航员', '有辆送补给的车要去废弃区，我让他们捎你一段。再往后，就没有车了。');
-  await say('乌鸦', '嘎。一路小心。');
-  await narr('乌鸦飞上一根管子，冲着车子拍了好一会儿翅膀。');
+  await say('乌鸦', '再见！再见！');
+  await narr('格尔达哭了，乌鸦也哭了。乌鸦飞上一根管子，拍着黑翅膀，一直拍到再也看不见那辆车。那车远远地亮着，像一道阳光。');
   await gotoScene('s5');
 }
 
@@ -1903,10 +1944,10 @@ SCENES.s5 = {
   async enter() {
     const f = state.flags, girl = find('girl');
     await narr('补给车开进废弃区，灯一盏比一盏少。车停了，几个人从黑地方钻出来，把车围住了。');
-    await say('老强盗婆', '这靴子不错，手笼也不错。小东西细皮嫩肉的，拿去换点吃的正好。');
-    await say('小强盗女孩', '她是我的！她得陪我玩！');
-    await narr('小强盗女孩一口咬在她妈耳朵上。老强盗婆疼得直跳，换东西的事就没再提。');
-    await say('小强盗女孩', '跟我来。只要我不生你的气，他们就不敢碰你。');
+    await say('老强盗婆', '她多胖、多好看啊！准是吃核桃仁长大的。跟一只养肥了的小羊一样好，一定好吃得很！');
+    await say('小强盗女孩', '她得陪我玩！她要把手笼、把漂亮衣服都给我，还要跟我睡一张床！');
+    await narr('小强盗女孩在她妈妈耳朵上咬了一口，又咬了一口，老强盗婆疼得直跳，绕着圈子跑。强盗们哈哈大笑：“瞧，她跟她的小丫头跳舞呢！”');
+    await say('小强盗女孩', '跟我来。只要我不生你的气，他们就不会杀你。你一定是位公主吧？');
     hideDialog(); walkNpc(girl, 1980, 80);
     goal('跟着小强盗女孩，去她的窝');
   },
@@ -1932,45 +1973,47 @@ async function girlTalk() {
   if (girl.walking) { await say('小强盗女孩', '走快点！'); return; }
   if (f.morning) { await freeDeer(); return; }
   if (!f.night) {
-    await say('小强盗女孩', '你一个人走到这儿的？');
-    await say('格尔达', '我在找加伊。'); await narr('格尔达又把她的事讲了一遍。');
-    await say('小强盗女孩', '鞋呢？你来的时候光着脚？');
-    await say('格尔达', '鞋给水渠了。这双是船长给的。');
-    await say('小强盗女孩', '傻。');
-    await say('小强盗女孩', '房梁上那几只鸽子是我的，柱子上拴的那头鹿也是我的。鹿老想跑，我每天晚上拿刀背在它脖子上刮一刮，它就老实了。');
-    await say('小强盗女孩', '我困了。你睡我旁边。');
+    await narr('格尔达把她遇到的事，还有她多么惦记小加伊，全讲给小强盗女孩听。小强盗女孩一本正经地看着她，轻轻点了点头。');
+    await say('小强盗女孩', '他们不会杀你的，就算我生你的气也不会。到那时候，我自己动手。');
+    await say('小强盗女孩', '今天晚上你跟我睡，跟我所有的动物一起。');
+    await say('小强盗女孩', '房梁上那些鸽子全是我的。这儿是我亲爱的老伙计，我们得把它锁着，不然它就跑了。每天晚上我都拿我的尖刀在它脖子上挠痒痒，它可怕这个了！');
+    await say('格尔达', '你睡觉的时候也拿着刀吗？');
+    await say('小强盗女孩', '我总是拿着刀睡觉。谁知道会出什么事呢。你再给我讲一遍小加伊的事，讲讲你为什么一个人跑到这大千世界里来。');
     hideDialog(); await fadeOut(600); f.night = true; bgm('lullaby');
-    await narr('小强盗女孩一手搂着格尔达，一手攥着刀，没一会儿就打起了呼噜。格尔达睡不着。');
+    await narr('小强盗女孩一只胳膊搂着格尔达的脖子，一只手攥着刀，呼噜打得谁都听得见。格尔达却合不上眼，她不知道自己是活还是死。');
     hideDialog(); await fadeIn(600); goal('和房梁上的鸽子说话');
   } else await narr('小强盗女孩睡得正香，手里还攥着刀。');
 }
 async function freeDeer() {
   const f = state.flags;
-  {
-    await say('小强盗女孩', '你们夜里说话那么大声，我全听见了。');
-    await narr('她拿刀割断了拴鹿的绳子。');
-    await say('小强盗女孩', '走吧，你。好好驮着她，一直驮到冷舱去。');
-    await say('小强盗女孩', '手笼我留下了，太好看了。你戴我妈的手套，大是大了点，暖和。');
-    take('手笼'); give('大手套'); toast('手笼留给了小强盗女孩，换来她妈妈的大手套。', 3.6);
-    await say('小强盗女孩', '别哭了。我最见不得人哭。');
-    await narr('格尔达爬上鹿背。小强盗女孩打开门，在后面喊了一句什么，风太大，没听清。');
-    f.freed = true; f.left = true; goal('骑着驯鹿往船尾去');
-    hideDialog(); await gotoScene('s6');
-  }
+  await narr('早上，格尔达把鸽子说的话全告诉了小强盗女孩。小强盗女孩一脸严肃，点了点头。');
+  await say('小强盗女孩', '没关系，没关系。');
+  await say('小强盗女孩', '我真想再拿尖刀给你多挠几回痒，那时候你可好玩了。不过算了，我把你解开，放你回冷舱去。可你得好好使唤你那几条腿，替我把这小姑娘驮到冰雪女王的宫殿里去，她的小伙伴在那儿。她说的话你都听见了吧，她嗓门够大的，你又一直竖着耳朵。');
+  await narr('驯鹿高兴得一下子蹦了起来。');
+  await say('小强盗女孩', '手笼我要留着自己用，它太好看了。不过我也不想让你冻着。这是我妈妈的一双大手套，正好套到你胳膊肘。戴上！现在你这双手跟我那个丑老妈一模一样了！');
+  take('手笼'); give('大手套'); toast('手笼留给了小强盗女孩，换来她妈妈的大手套。', 3.6);
+  await narr('格尔达高兴得哭了。');
+  await say('小强盗女孩', '我见不得你哭哭啼啼的。这时候你应该高兴才对。');
+  await narr('她拿刀割断了拴鹿的绳子。');
+  await say('小强盗女孩', '现在走吧！可要好好照顾这个小姑娘！');
+  await narr('格尔达朝小强盗女孩伸出戴着大手套的手，说了声“再见！”驯鹿就驮着她，飞也似地跑了。');
+  f.freed = true; f.left = true; goal('骑着驯鹿往船尾去');
+  hideDialog(); await gotoScene('s6');
 }
 async function pigeonsTalk() {
   const f = state.flags;
-  await say('鸽子', '咕咕，咕咕。我们见过加伊。');
-  await say('鸽子', '一辆白色的货车从我们窝顶上开过去，冰雪女王坐在车上，加伊坐在她旁边，脸冻得发青。');
-  await say('鸽子', '车往船尾的冷舱开去了。那边一年到头都是冰。问问那头鹿吧，它知道。');
+  await say('鸽子', '咕咕！咕咕！我们看见过小加伊！一只白母鸡驮着他的雪橇，他自己坐在冰雪女王的车里，从我们窝顶上低低地开过去。');
+  await say('鸽子', '她朝我们这些小家伙吹了一口气，除了我们俩，全都死了。咕咕！咕咕！');
+  await say('格尔达', '你们在上面说什么？冰雪女王到哪儿去了？你们知道吗？');
+  await say('鸽子', '她准是到冷舱去了，那边一年到头都是冰雪。问问拴在那儿的驯鹿吧。');
   f.pigeons = true; goal('问问驯鹿');
 }
 async function deerTalk() {
   const f = state.flags;
-  await say('驯鹿', '冷舱那边我熟。我是在那边的牧场舱生的，冰原上我能跑一整天。');
-  await say('驯鹿', '冰雪女王的宫殿在最里头，冷舱最深的地方。');
-  await say('格尔达', '你能带我去吗？');
-  await say('驯鹿', '只要绳子解开。');
+  await say('驯鹿', '那儿有冰有雪！那儿可真是又美又好！在那些亮晶晶的大冰原上，可以尽情地跳！冰雪女王在那边有一座夏天住的帐篷，可她真正的宫殿在最里头，冷舱最深的地方。');
+  await say('格尔达', '啊，加伊！可怜的小加伊！');
+  await say('小强盗女孩', '你给我安静点！不然我叫你安静！');
+  await say('驯鹿', '那地方谁能比我更熟呢？我是在那边的牧场舱生、牧场舱长大的，在冰原上跳来跳去。');
   f.deerTalked = true;
   hideDialog(); await fadeOut(600); await narr('天亮了。'); hideDialog(); f.night = false; f.morning = true; bgm('mountain'); await fadeIn(600);
   goal('去找小强盗女孩');
@@ -1992,6 +2035,8 @@ SCENES.s6 = {
   },
   async enter() {
     await narr('驯鹿驮着格尔达跑进了船尾。这里是一整片冰原，发动机的光从冰底下透上来，一会儿绿，一会儿紫。');
+    await narr('“嚓——嚓——”天上传来一阵声音，好像有人在打喷嚏。');
+    await say('驯鹿', '这是我的老北极光，你瞧它们多亮！');
     goal('往船尾去'); toast('骑着鹿走得快，鹿身上也暖和。', 4);
   },
 };
@@ -2018,22 +2063,25 @@ function drawFinnHut(x, t) {
   for (let i = 0; i < 4; i++) { const yy = FLOOR - 150 - mod(t * 30 + i * 25, 100); c.fillStyle = 'rgba(255,255,255,' + (.35 - (FLOOR - 150 - yy) / 300).toFixed(2) + ')'; circ(c, x + 40 + Math.sin(t + i) * 6, yy, 10 + (FLOOR - 150 - yy) * .08); c.fill(); }
 }
 async function lappScript() {
-  await narr('驯鹿在一间矮棚子前停下。棚子里只有一个老太太，守着一盏灯烤鱼。');
-  await say('拉普兰老太太', '哎哟，可怜的孩子，你们还有好远的路要走。冰雪女王在最里头，每天晚上都放那种青光。');
-  await say('拉普兰老太太', '我没有纸，给你在这条鳕鱼干上写几个字。往前走，有个芬兰老太太，她知道得比我多。');
+  await narr('他们在一座小屋前停下来。那屋子寒碜得很，屋顶一直垂到地上，门矮得一家人进出都得趴着爬。屋里只有一个拉普兰老太太，守着一盏油灯在收拾鱼。格尔达冻得话都说不出来了。');
+  await say('拉普兰老太太', '可怜的孩子，你们还有好远好远的路要跑呢。冰雪女王在最里头，每天晚上都点起蓝色的烟火。');
+  await say('拉普兰老太太', '我给你在一条鳕鱼干上写几个字，因为我没有纸。你把它带给芬兰老太太，她能告诉你的比我多。');
   give('鳕鱼干'); toast('得到一条写了字的鳕鱼干。', 3);
 }
 async function finnScript() {
-  await narr('芬兰老太太的屋子热得像蒸笼。格尔达一进门，就把手套和靴子都脱了。');
-  await narr('老太太把鳕鱼干上的字读了三遍，记住了，就把鱼丢进了汤锅。鱼还能吃，她从来不浪费东西。');
+  await narr('屋里热得要命，芬兰老太太自己几乎什么都没穿。她个子矮小，脏兮兮的。她马上解开小格尔达的衣服，脱下她的大手套和靴子，不然会热坏的；又往驯鹿头上放了一块冰。');
+  await narr('然后她把鳕鱼干上的字读了三遍，读熟了，就把鱼丢进汤锅里。鱼还能吃，她从来不浪费东西。');
   take('鳕鱼干');
-  await say('驯鹿', '你那么有本事，一根线能拴住全船的风。你就不能给这孩子一点力气，让她打得过冰雪女王吗？');
-  await narr('芬兰老太太把驯鹿拉到墙角，小声说话。');
-  await say('芬兰老太太', '加伊确实在冰雪女王那儿。他样样称心，觉得那是全船最好的地方。那是因为他眼睛里有一粒碎片，心里也有一粒。不把碎片弄出来，他就做不回原来的加伊了。');
-  await say('芬兰老太太', '我给不了她更多的本事了。你看看，人肯帮她，鹿肯驮她，她光着脚走了大半条船。这本事是她自己的。');
-  await say('芬兰老太太', '从这儿往里两里地，就是冰雪女王的园子。把她放在那丛红果子旁边，别站着说闲话，赶紧回来。');
-  await narr('她把格尔达抱上鹿背。驯鹿撒开腿就跑。');
-  await narr('跑出去好远，格尔达才想起来：靴子和手套都落在那间屋子里了。');
+  await say('驯鹿', '你那么聪明，我知道你能用一根线把全船的风都系起来。水手解开第一个结，就有顺风；解开第二个，风就刮得猛了；解开第三个、第四个，就会狂风大作，连树林都刮倒。你能不能给这小姑娘喝一点什么，让她有十二个人的力气，打败冰雪女王？');
+  await say('芬兰老太太', '十二个人的力气！那有什么用！');
+  await narr('可是驯鹿一个劲地替格尔达求情，格尔达也含着泪，可怜巴巴地望着她。芬兰老太太眨眨眼睛，把驯鹿拉到墙角，小声说起话来。');
+  await say('芬兰老太太', '小加伊确实在冰雪女王那儿。他觉得那里样样称心，以为那是世界上最好的地方。可那是因为他眼睛里有一粒镜子碎片，心里也有一粒。得先把它们弄出来，不然他永远回不到人群里来，冰雪女王会一直管着他。');
+  await say('驯鹿', '那你就不能给小格尔达一点什么，让她能对付这一切吗？');
+  await say('芬兰老太太', '我不能给她比她现在更大的力量了。你难道看不出她的力量有多大？你看不出人和动物都愿意为她效劳？她光着脚，在这世界上走了多远！她用不着从我们这儿知道她的力量。她的力量就在她心里，因为她是一个可爱的、天真的孩子。');
+  await say('芬兰老太太', '要是她自己到不了冰雪女王那儿，把小加伊身上的玻璃弄出来，我们也帮不了她。从这儿往里两里地，就是冰雪女王的园子。把她放在雪地里那丛结着红果子的大灌木旁边，别站着说闲话，赶紧回来。');
+  await narr('芬兰老太太把小格尔达抱上鹿背，驯鹿撒开腿就跑。');
+  await say('格尔达', '哎呀！我没穿靴子！我没戴手套！');
+  await narr('冷得刀割一样，她这才发觉。可是驯鹿不敢停下来，一直跑着。');
   take('靴子'); take('大手套');
   await gotoScene('s7');
 }
@@ -2055,9 +2103,9 @@ SCENES.s7 = {
     ];
   },
   async enter() {
-    await narr('驯鹿把她放在一丛结着红果子的灌木旁边，亲了亲她，掉下几颗大眼泪，转身跑了回去。');
-    await narr('格尔达站在那里，没有鞋，也没有手套。');
-    await narr('冰雪女王的雪花卫兵朝她飘过来。有的像竖起刺的刺猬，有的像缠成一团的蛇，有的像毛都炸开的小熊。');
+    await narr('驯鹿一直跑到那丛结着红果子的大灌木旁边，把格尔达放下来，亲了亲她的嘴，大颗大颗亮晶晶的眼泪从它眼睛里流下来，然后它就拼命往回跑了。');
+    await narr('可怜的格尔达站在那里，没有鞋，也没有手套，站在这又可怕、又冰冷的冷舱正中间。');
+    await narr('这时来了一大队雪花。它们不是从天上落下来的，是贴着地面跑过来的，越近就越大。它们是冰雪女王的前哨，样子稀奇古怪：有的像又大又丑的豪猪，有的像缠成一团、伸着脑袋的蛇，有的像毛都竖起来的胖胖的小熊。它们全都白得耀眼，全都是活的雪花。');
     hideDialog();
     const n = availMem().length;
     toast(n ? '冷舱里没有暖和的地方。你一路看到的回忆，每一段都能哈出一口热气。{breath}。' : '你没带回忆进来。小口哈气也能化开冰，只是慢一点。{breath}。', 7);
@@ -2083,27 +2131,27 @@ function drawKayOnLake(e, t) {
 }
 async function finale() {
   const f = state.flags, kay = find('kay');
-  await narr('加伊坐在冰湖中间，冻得发青，自己却一点也觉不出来。他在用冰块拼字，拼了拆，拆了又拼。');
-  await narr('冰雪女王不在。宝座上空空的。');
-  await say('加伊', '冰雪女王说，我要是拼得出“永恒”两个字，我就能自己做主了。新世界归我，她还送我一双新冰鞋。');
+  await narr('小加伊冻得发青，差不多都发黑了，可他自己一点也觉不出来，因为冰雪女王的吻已经吻走了他身上所有的寒意，他的心也差不多成了一块冰。他拖着一些又尖又平的冰块，用各种各样的法子把它们拼在一起，想拼出点什么来。');
+  await narr('冰雪女王飞到暖和的地方去了。加伊一个人坐在好几里长的、空荡荡的冰殿里，看着那些冰块，想啊想，想得脑袋都快裂开了。他坐在那儿，僵硬得一动不动，别人准会以为他已经冻死了。');
+  await say('加伊', '冰雪女王说，要是我能拼出“永恒”这两个字，我就能自己做主，她就把整个新世界和一双新冰鞋都送给我。');
   await say('加伊', '冷舱里的人都不会老。等船到了，我一醒来就能看见新世界。');
   hideDialog(); await walkPlayer(kay.x - 26, 90); player.face = 1;
-  await say('格尔达', '加伊！是我，格尔达！');
-  await narr('加伊一动不动，又硬又冷。');
+  await say('格尔达', '加伊，亲爱的小加伊！我总算找到你了！');
+  await narr('可是他坐着一动不动，又僵又冷。');
   bgm(null);
   player.hug = true; player.cry = true;
-  await narr('格尔达抱住他哭了。眼泪落在他胸口，渗了进去，把那一小块冰化开了，也把碎片冲了出来。');
+  await narr('小格尔达流下滚烫的眼泪。眼泪落在他胸口，渗进他心里，融化了那块冰，也把镜子的碎片冲走了。');
   kay.cry = true;
-  await narr('加伊看着她，忽然也哭起来，哭得那么厉害，眼睛里那粒碎片跟着眼泪滚了出来。');
+  await narr('他看着她，忽然哭了起来，哭得那么厉害，眼睛里那粒碎片也跟着眼泪滚了出来。他认出了她。');
   f.freedKay = true; player.cry = false;
-  await say('加伊', '格尔达！你上哪儿去了，去了这么久？我这又是在哪儿？');
-  await say('加伊', '这儿好冷。怎么这么空。');
+  await say('加伊', '格尔达！亲爱的小格尔达！你这么久上哪儿去了？我又在哪儿呀？');
+  await say('加伊', '这儿多冷啊！多空，多冷啊！');
   kay.cry = false; player.hug = false;
   hideDialog();
   state.camFocus = 3030; startEternity(3030, 250); await wait(4200);
-  await narr('冰块高兴得跳起舞来。跳累了，它们自己躺下来，正好拼成了那两个字。');
+  await narr('这太美了，连冰块都高兴得跳起舞来。跳累了，它们就躺下来，正好拼成了冰雪女王要他拼的那两个字。这下他可以自己做主了。');
   bgm('largo');
-  await narr('加伊什么都不用拼了。两个人手拉着手，往船头走。');
+  await narr('格尔达亲他的脸颊，脸颊就红润起来；亲他的眼睛，眼睛就跟她的一样亮；亲他的手和脚，他又健康快活了。两个人手拉着手，走出了大殿。');
   state.camFocus = null;
   await gotoScene('r1');
 }
@@ -2228,15 +2276,15 @@ SCENES.r1 = {
     ];
   },
   async enter() {
-    await narr('两个人手拉着手走出冷舱。他们走到哪儿，哪儿的风就停下来，冰底下的光一点一点暖了。');
+    await narr('他们手拉着手走出大殿，一路谈着老奶奶，谈着屋顶上的玫瑰。他们走到哪儿，哪儿的风就停了，光就亮起来。');
     goal('往船头走（一直往左）'); toast('回去的路往左走。', 4);
   },
 };
 async function deerReunion() {
   const f = state.flags, deer = find('deer'), doe = find('doe'), kay = find('kay');
-  await narr('红果子灌木旁边，驯鹿还在那儿等着。它身边多了一头小母鹿，奶胀得鼓鼓的。');
+  await narr('他们走到那丛结着红果子的灌木旁边，驯鹿正在那儿等着他们。它还带来了一头小母鹿，奶胀得鼓鼓的。');
   await say('驯鹿', '我就知道你们会出来。');
-  await narr('小母鹿让两个孩子喝了热乎乎的奶，又在他们嘴上各亲了一下。');
+  await narr('小母鹿把热乎乎的奶给两个孩子喝，又亲了亲他们的嘴。');
   state.W = 100; sparkle(player.x, FLOOR - 60, '#ffe7b0'); sfx.give();
   await say('驯鹿', '两个都上来。先去芬兰老太太那儿。');
   hideDialog(); await fadeOut(350);
@@ -2266,7 +2314,7 @@ async function lappBack() {
 }
 async function borderBye() {
   const f = state.flags, deer = find('deer'), doe = find('doe'), kay = find('kay'), bx = player.x;
-  await narr('冰原走到了头，地上冒出来第一撮绿芽。');
+  await narr('驯鹿和小母鹿在他们身边跳着跑着，一直把他们送到冷舱的边界。那儿冒出了第一撮绿芽。');
   await say('驯鹿', '我就送到这儿了。再往前，不是我们鹿走的地方。');
   hideDialog(); await fadeOut(400);
   state.mode = 'walk'; f.riding = false; f.kayRide = false;
@@ -2307,7 +2355,7 @@ SCENES.r2 = {
     ];
   },
   async enter() {
-    await narr('废弃区的管子上冒出了嫩芽。房梁上有鸟在叫，不知道是谁家的。');
+    await narr('第一批嫩芽冒出来了，第一批小鸟开始啾啾地叫。废弃区的管子上也爬满了绿芽。');
     goal('接着往船头走'); toast('对着花苞{breath}，哈一口气看看。', 5);
   },
   update(dt) {
@@ -2319,20 +2367,20 @@ async function robberRide() {
   const girl = find('girl');
   girl.x = cam.x - 140; girl.visible = true; girl.face = 1;
   await walkNpc(girl, player.x - 130, 240);
-  await narr('前面嗒嗒嗒跑过来一匹马。马上坐着一个姑娘，头上戴一顶亮红的帽子，腰里别着一把刀。');
+  await narr('前面跑来一匹好马。马上坐着一个年轻姑娘，头上戴着亮红的帽子，腰里别着刀。是那个小强盗女孩，她在家里待腻了，想出去走走。');
   await say('格尔达', '是你！');
   await say('小强盗女孩', '是你！');
-  await narr('一个在马上，一个在马下，两个人拉着手直嚷嚷。');
+  await narr('她一眼就认出了格尔达，格尔达也认出了她。两个人见了面，高兴极了。');
   await narr('小强盗女孩拿马鞭朝加伊一指。');
-  await say('小强盗女孩', '你倒好，满船乱跑。我倒想知道，你值不值得人家光着脚跑到船尾去找你。');
+  await say('小强盗女孩', '你倒是挺会到处乱跑的！我倒真想知道，你值不值得别人为你从世界的这一头跑到那一头。');
   await narr('格尔达拍拍她的脸，问船长和领航员怎么样了。');
-  await say('小强盗女孩', '出船外修天线去了，说要好几个月才回来。走之前托人捎话，靴子不用还了。');
+  await say('小强盗女孩', '出船外去了。');
   await say('格尔达', '乌鸦呢？');
   await say('小强盗女孩', '老了，飞不大动了。天天蹲在舰桥底下的暖气管上，逢人就讲它领过一个光脚的小姑娘，一天讲八遍。');
-  await say('小强盗女孩', '该你们讲了。你是怎么把他弄回来的？');
+  await say('小强盗女孩', '现在讲讲你们都干了些什么，你是怎么把他弄回来的。');
   await narr('格尔达和加伊你一句我一句，从头讲了一遍。');
-  await narr('小强盗女孩听完，拍着巴掌喊了一串谁也听不懂的话，大概是她们强盗家说“好”的意思。');
-  await say('小强盗女孩', '我在家闷坏了，要往船尾那头去看看。哪天路过你们船头，我去找你们玩。');
+  await narr('“斯尼普，斯纳普，斯努尔，巴塞卢勒！”小强盗女孩说。');
+  await say('小强盗女孩', '我在家待腻了，要出去走走。要是哪天我路过你们住的地方，就去看你们。');
   await narr('她弯下腰，一手拉住格尔达，一手拉住加伊，使劲握了握，一拨马头，跑进了废弃区。');
   hideDialog();
   await walkNpc(girl, cam.x + VWZ() + 180, 260); girl.visible = false;
@@ -2368,7 +2416,7 @@ SCENES.r3 = {
     ];
   },
   async enter() {
-    await narr('水渠里的冰全化了，水哗哗地往船头流。他们每走一步，脚边就冒出一朵花来。');
+    await narr('加伊和格尔达手拉着手往前走。这是美好的春天，到处是花，到处是绿。水渠里的冰全化了，他们每走一步，脚边就冒出一朵花来。');
     goal('顺着水渠往船头走');
   },
 };
@@ -2387,7 +2435,7 @@ async function bellsHome() {
   const f = state.flags;
   sfx.bell();
   await narr('船头的钟响了。');
-  await narr('他们认出了那一排舷窗，认出了走廊尽头那扇门。是奶奶家。');
+  await narr('他们认出了那一排舷窗，认出了这个大船舱，这就是他们住的地方。');
   f.bells = true; goal('回家');
 }
 
@@ -2408,9 +2456,9 @@ SCENES.end = {
   },
   async enter() {
     state.used.clear();
-    await narr('奶奶家的门没锁。屋里的东西都跟原来一样，挂钟嘀嗒嘀嗒地走。');
-    await narr('玫瑰箱里的玫瑰正开着。奶奶坐在阳光灯底下，照着念一本旧书。');
-    await narr('他们在玫瑰箱旁边的小板凳上坐下来，膝盖顶到了下巴。这才发现，两个人都长高了。');
+    await narr('他们走进去，赶紧上楼到奶奶屋里。屋里的东西都还摆在老地方，挂钟嘀嗒嘀嗒地走，指针一圈一圈地转。可是一进门，他们就发现自己已经长大了。');
+    await narr('屋顶上的玫瑰开着花，从开着的窗子垂进来。那两把孩子坐的小凳子还在，加伊和格尔达就在上面坐下，手拉着手。冰雪女王那里冷冰冰、空荡荡的豪华，他们都忘了，像忘了一场梦。奶奶坐在明亮的阳光灯下，大声念着一本旧书。');
+    await narr('两个大人坐在那里，长大了，却还是孩子，至少心还是孩子的。这是夏天，温暖的、美好的夏天。');
     await narr('船历二一三年，夏。离抵达还有一百零七年。');
     hideDialog(); await wait(2600); showEnd();
   },
@@ -2770,9 +2818,10 @@ async function prologue() {
   await showCard('第一个故事', '镜子和碎片', '', false);
   $('cardKicker').textContent = ''; $('cardTitle').textContent = '';
   for (const text of [
+    '好，我们现在开始讲吧。等讲到故事的结尾，我们知道的就会比现在多。',
     '白鹳号是一艘世代船。从出发到抵达，要开三百二十年。船上的人在船上出生，在船上长大，一代一代往下传。',
-    '船尾有一面大镜子，早年间用来测星。后来有人在镜面上动了手脚：玫瑰照进去，只看得见虫眼；人脸照进去，只看得见斑。',
-    '有一天，镜子裂了。碎片比灰还细，顺着通风管飘遍了全船。进了眼睛，看什么都只看得见毛病。扎进心口，心就慢慢凉成一块冰。',
+    '船尾有一面大镜子，早年间用来测星。后来有人在镜子上动了手脚：好的、美的东西照进去，就缩得几乎看不见；没用的、丑的东西照进去，倒放得又大又显眼。最美的风景照进去，像一摊煮烂的菠菜；最好的人照进去，样子吓人，脸扭得认不出来。',
+    '有一天，镜子裂了，碎成了一亿多片。有的碎片还没有一粒沙子大，顺着通风管飘遍了全船。它们一钻进人的眼睛，就留在那儿，那人看什么都是歪的，只看得见坏的一面。还有人心里扎进了一小片，那就可怕了：那颗心会变得像一块冰。',
   ]) { $('cardText').textContent = t(text); $('cardHint').hidden = false; await new Promise(res => { dlgAt = performance.now(); dlgPending = () => { res(); return true; }; }); }
   state.fade = 1; await hideCard();
   await gotoScene('s1');
