@@ -76,7 +76,7 @@ button{font:inherit;color:inherit}
 @keyframes bob{50%{transform:translateY(2px)}}
 
 /* 章节卡、标题、结尾 */
-.card{position:absolute;inset:0;background:var(--night);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;opacity:0;transition:opacity .9s ease;cursor:pointer}
+.card{position:absolute;inset:0;background:var(--night);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;opacity:0;transition:opacity .6s ease;cursor:pointer}
 .card.on{opacity:1}
 .card-kicker{font-family:var(--f-title);color:var(--ember);letter-spacing:.3em;font-size:.95em}
 .card-title{font-family:var(--f-title);font-size:2em;letter-spacing:.12em;text-wrap:balance}
@@ -1348,13 +1348,13 @@ async function showCard(kicker, title, text, waitKey) {
   $('cardKicker').textContent = t(kicker || ''); $('cardTitle').textContent = t(title || ''); $('cardText').textContent = t(text || '');
   $('cardHint').hidden = !waitKey; card.hidden = false; await nextFrame(); card.classList.add('on');
   if (waitKey) { await new Promise(res => { dlgAt = performance.now(); dlgPending = () => { res(); return true; }; }); }
-  else await wait(3000);
+  else await wait(2300);
 }
-async function hideCard() { card.classList.remove('on'); await wait(reduced ? 50 : 900); card.hidden = true; }
+async function hideCard() { card.classList.remove('on'); await wait(reduced ? 50 : 600); card.hidden = true; }
 async function chapter(kicker, title) { await showCard(kicker, title, '', false); await hideCard(); }
 
 const toastEl = $('toast'); let toastT = 0;
-function toast(text, sec) { toastEl.textContent = t(text); toastEl.hidden = false; toastT = (sec || 3.2) * 1.35; }
+function toast(text, sec) { toastEl.textContent = t(text); toastEl.hidden = false; toastT = sec || 3.2; }
 const memPop = $('memPop'); let memPopT = 0;
 function collect(id) {
   if (state.mem.has(id)) return;
@@ -1388,9 +1388,8 @@ async function run(fn) {
 }
 function walkNpc(e, toX, speed) { e.walking = true; e.face = toX > e.x ? 1 : -1; return tween(e, 'x', toX, Math.abs(toX - e.x) / (speed || 90) * 1000, linear).then(() => { e.walking = false; }); }
 function walkPlayer(toX, speed) { player.face = toX > player.x ? 1 : -1; player.auto = true; return tween(player, 'x', toX, Math.abs(toX - player.x) / (speed || 150) * 1000, linear).then(() => { player.auto = false; }); }
-const PACE = 1.35;
-async function fadeOut(ms) { await tween(state, 'fade', 1, (ms || 650) * PACE); }
-async function fadeIn(ms) { await tween(state, 'fade', 0, (ms || 650) * PACE); }
+async function fadeOut(ms) { await tween(state, 'fade', 1, ms || 650); }
+async function fadeIn(ms) { await tween(state, 'fade', 0, ms || 650); }
 
 // ---------- 实体 ----------
 const Win = (x, y, r, mem, o) => Object.assign({ type: 'win', x, y, r, mem, frost: 1, thick: 1, revealed: false, glow: 0 }, o || {});
@@ -2688,7 +2687,7 @@ function update(dt) {
   // 镜头
   const target = state.camFocus != null ? state.camFocus - vw / 2 : player.x - vw * (sc.dir < 0 ? .58 : .42);
   const cmax = Math.max(0, sc.width - vw);
-  cam.x += (clamp(target, 0, cmax) - cam.x) * Math.min(1, dt * (state.camFocus != null ? 1.8 : 4));
+  cam.x += (clamp(target, 0, cmax) - cam.x) * Math.min(1, dt * (state.camFocus != null ? 2.5 : 6));
   if (sc.width < vw) cam.x = -(vw - sc.width) / 2;
   // 暖和条
   const wi = $('warmI'); wi.style.width = state.W.toFixed(0) + '%';
