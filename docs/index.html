@@ -121,7 +121,8 @@ button{font:inherit;color:inherit}
 .pad{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex:none}
 .pad.overlay{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;pointer-events:none}
 .pad.overlay button{pointer-events:auto;background:rgba(14,20,34,.45)}
-.pad.overlay button.big{background:rgba(234,164,92,.18)}
+.pad.overlay button.big{background:rgba(128,74,30,.55)}
+.pad.overlay button{text-shadow:0 1px 2px rgba(0,0,0,.45)}
 .pad-l,.pad-r{display:flex;gap:10px;align-items:center}
 .pad button{width:var(--pad-btn);height:var(--pad-btn);border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(14,20,34,.72);font-size:16px;touch-action:none;cursor:pointer}
 .pad button.big{width:var(--pad-big);height:var(--pad-big);background:rgba(234,164,92,.22);border-color:rgba(234,164,92,.6);font-family:var(--f-title);letter-spacing:.1em}
@@ -795,7 +796,7 @@ html[lang=ja] .pad button[data-k="act"]{font-size:13px;letter-spacing:0}
 "加长版": ["Extended", "Version longue", "ロング版"],
 "版本": ["Version", "Version", "バージョン"],
 "原版：短一些，七个故事一口气走完。": ["Original: shorter, all seven stories in one go.", "Version courte : les sept histoires d’une seule traite.", "ショート版：少し短め。七つのお話を一気に遊べます。"],
-"加长版：多几段安徒生原文，冷舱里要亲手拼一次“永恒”。": ["Extended: more of Andersen’s own words, and in the cold vault you try to spell “Eternity” yourself.", "Version longue : davantage de passages d’Andersen, et dans la cale froide, tu essaies toi-même de former « Éternité ».", "ロング版：アンデルセンの原作の文章がいくつか増え、冷凍睡眠室では「永遠」を自分の手で組み立てます。"],
+"加长版：多几段安徒生原文和冷舱里的细节，还要亲手拼一次“永恒”。": ["Extended: more of Andersen’s own words and more of the cold vault, and you try to spell “Eternity” yourself.", "Version longue : davantage de passages d’Andersen et de détails dans la cale froide, et tu essaies toi-même de former « Éternité ».", "ロング版：アンデルセンの原作の文章と冷凍睡眠室の場面が増え、「永遠」を自分の手で組み立てます。"],
 "（加长版）": [" (extended)", " (version longue)", "（ロング版）"],
 "配乐是公开授权的真人录音：Stefano Ligoratti（莫扎特，CC BY 3.0，有剪辑）、美国空军乐团（帕赫贝尔、德沃夏克）、Musopen（格里格、佩措尔德）、石坂纪美子（巴赫）、Robin Alciatore（萨蒂），勃拉姆斯那首是八音盒。来源见 README。": ["The music is openly licensed recordings by real players: Stefano Ligoratti (Mozart, CC BY 3.0, edited), the United States Air Force Band (Pachelbel, Dvořák), Musopen (Grieg, Petzold), Kimiko Ishizaka (Bach) and Robin Alciatore (Satie); the Brahms is a music box. Sources in the README.", "La musique : des enregistrements sous licence libre, joués par de vrais musiciens : Stefano Ligoratti (Mozart, CC BY 3.0, montage), l’orchestre de l’US Air Force (Pachelbel, Dvořák), Musopen (Grieg, Petzold), Kimiko Ishizaka (Bach) et Robin Alciatore (Satie) ; le Brahms est une boîte à musique. Sources dans le README.", "音楽には、オープンライセンスで公開されている、実際の演奏家による録音を使っています：Stefano Ligoratti（モーツァルト、CC BY 3.0、編集あり）、アメリカ空軍軍楽隊（パッヘルベル、ドヴォルザーク）、Musopen（グリーグ、ペツォールト）、Kimiko Ishizaka（バッハ）、Robin Alciatore（サティ）。ブラームスの曲はオルゴールです。出典は README をご覧ください。"],
 "记录": ["Log", "Journal", "履歴"],
@@ -825,7 +826,20 @@ html[lang=ja] .pad button[data-k="act"]{font-size:13px;letter-spacing:0}
 "取消": ["Cancel", "Annuler", "キャンセル"],
 "游戏里随时能回到主页。": ["You can go back to the title screen at any time.", "On peut revenir à l’écran d’accueil à tout moment.", "ゲーム中いつでもタイトル画面にもどれるようにしました。"],
 "去主页": ["Back to title", "Retour à l’accueil", "タイトルへもどる"],
-"要去主页吗？": ["Back to the title screen?", "Revenir à l’écran d’accueil ?", "タイトル画面にもどりますか？"]
+"要去主页吗？": ["Back to the title screen?", "Revenir à l’écran d’accueil ?", "タイトル画面にもどりますか？"],
+"加伊（学奶奶）": ["Kay (as Grandma)", "Kay (imitant Grand-mère)", "カイ（おばあさんのまね）"],
+"他现在学谁都学得像：戴上奶奶的眼镜学她说话的腔调；走廊里谁走路有什么毛病，就跟在人家后头学。大家看了都笑，说这孩子脑子真灵。其实是他眼睛里那粒碎片、心里那片碎片在作怪。": ["Now he could imitate anyone. He put on Grandmother’s spectacles and mimicked her way of talking; if anyone in the corridor had something odd about the way they walked, he followed behind and copied it. Everyone who saw it laughed and said, “That boy has a remarkable head!” But it was the splinter in his eye and the splinter in his heart that made him do it.", "Désormais, il imitait tout le monde à la perfection : il mettait les lunettes de Grand-mère et singeait sa façon de parler ; si quelqu’un, dans le couloir, avait une manie en marchant, il le suivait pour l’imiter. Tous ceux qui le voyaient riaient et disaient : « Ce garçon a une tête remarquable ! » Mais c’étaient l’éclat dans son œil et l’éclat dans son cœur qui le faisaient agir ainsi.", "いまでは、カイはだれのまねでもじょうずにできました。おばあさんのめがねをかけて、その話し方をまねしたり、廊下を歩く人に何かくせがあれば、うしろについていってまねをしたりしました。見た人はみんな笑って、「あの子は頭がいい」と言いました。けれども、そうさせていたのは、目の中のかけらと、心にささったかけらだったのです。"],
+"那天我把雪橇拴在白色货车后头。车越开越快，我想解开，解不开。我想背奶奶教的那首歌，一句也想不起来，脑子里只剩乘法表。": ["That day I tied my sledge to the back of the white cart. It went faster and faster. I wanted to untie it, but I couldn’t. I tried to say the song Grandma taught me, and I couldn’t remember a single line. All that was left in my head was the multiplication table.", "Ce jour-là, j’ai attaché ma luge derrière le chariot blanc. Il allait de plus en plus vite. J’ai voulu la détacher, je n’y suis pas arrivé. J’ai voulu réciter la chanson que Grand-mère m’avait apprise, je ne me rappelais plus un seul vers. Il ne me restait que la table de multiplication.", "あの日、ぼくはそりを白い貨物車のうしろに結びつけたんだ。車はどんどん速くなって、ほどこうとしても、ほどけなかった。おばあちゃんに教わった歌をうたおうとしたけど、一行も思い出せなかった。頭の中には、九九しか残ってなかったんだ。"],
+"有几扇玻璃的霜底下，隐隐约约露出纸条的一角。": ["Under the frost on a few of the panes, the corner of a note shows faintly.", "Sous le givre de quelques vitres, on devine le coin d’un billet.", "いくつかのガラスの霜の下に、紙きれの端がうっすらとのぞいていました。"],
+"霜化开了。里面的人睡得很沉。玻璃外面贴着两张纸条，一张压着一张。\n“入睡：船历四十一年。”\n“爸爸，我今天十岁了。妈妈说，等你醒过来，我已经比你还老了。”": ["The frost has melted. The person inside is sound asleep. Two notes are stuck to the outside of the glass, one on top of the other.\n“Went to sleep: ship’s year 41.”\n“Dad, I’m ten today. Mum says that by the time you wake up, I’ll be older than you.”", "Le givre a fondu. La personne à l’intérieur dort profondément. Deux billets sont collés sur la vitre, l’un par-dessus l’autre.\n« Endormi : an 41 du vaisseau. »\n« Papa, j’ai dix ans aujourd’hui. Maman dit que quand tu te réveilleras, j’aurai déjà dépassé ton âge. »", "霜がとけました。中の人はぐっすり眠っています。ガラスの外側に、紙きれが二枚、重ねて貼ってありました。\n「入眠：船暦四十一年」\n「お父さん、ぼく、今日で十歳になったよ。お母さんが言ってた。お父さんが目をさますころには、ぼくのほうが年上になってるって。」"],
+"这一格贴得满满的，一张比一张新。\n“妈妈，我当上领航员了。”\n“妈妈，我也当妈妈了。”\n最上面一张，字写得歪歪扭扭：“外婆你好，我叫小鹳，我七岁。”": ["This one is covered in notes, each one newer than the last.\n“Mum, I’ve become a navigator.”\n“Mum, I’m a mum now too.”\nThe one on top is in wobbly handwriting: “Hello Grandma, my name is Little Stork, I’m seven.”", "Celle-ci est couverte de billets, chacun plus récent que le précédent.\n« Maman, je suis devenue navigatrice. »\n« Maman, moi aussi, je suis maman maintenant. »\nCelui du dessus est d’une écriture tremblée : « Bonjour Mamie, je m’appelle Petite Cigogne, j’ai sept ans. »", "このガラスには紙きれがびっしり貼ってあって、上にいくほど新しいものでした。\n「お母さん、わたし、航海士になったよ。」\n「お母さん、わたしもお母さんになったよ。」\nいちばん上の一枚は、がたがたの字で書いてありました。「おばあちゃん、こんにちは。わたしはコウちゃん、七さいです。」"],
+"玻璃上贴着一张画，画的是一大片绿草地。\n底下写着：“爷爷，到了以后，替我看看草是不是这个颜色。”": ["A drawing is stuck to the glass: a wide field of green grass.\nUnderneath it says: “Grandpa, when you get there, look for me and see if grass really is this colour.”", "Un dessin est collé sur la vitre : un grand pré tout vert.\nEn dessous, il est écrit : « Papi, quand tu seras arrivé, regarde pour moi si l’herbe est vraiment de cette couleur. »", "ガラスに一枚の絵が貼ってありました。一面の緑の草原の絵です。\nその下に書いてありました。「おじいちゃん、着いたら、草がほんとうにこの色かどうか、わたしのかわりに見てね。」"],
+"大殿最里头有一扇舷窗，朝着船来的方向。加伊拉着格尔达走了过去。": ["At the very back of the great hall there was a porthole that faced the way the ship had come. Kay led Gerda over to it.", "Tout au fond de la grande salle, il y avait un hublot tourné vers l’endroit d’où venait le vaisseau. Kay y conduisit Gerda.", "大広間のいちばん奥に、船がやってきた方角を向いた丸窓がひとつありました。カイはゲルダの手を引いて、そこへ行きました。"],
+"从这儿往外看，就是我们来的那边。太阳就在那边。": ["If you look out from here, that’s where we came from. The Sun is out there.", "Si on regarde d’ici, c’est par là qu’on est venus. Le Soleil est par là.", "ここから外を見ると、ぼくたちが来たほうなんだ。太陽はあっちにある。"],
+"他踮起脚，把脸贴在玻璃上看了很久。外面的星星密密麻麻，每一颗都差不多亮。": ["He stood on tiptoe and pressed his face to the glass, and looked for a long time. Outside, the stars were packed close together, and every one of them was about as bright as the next.", "Il se mit sur la pointe des pieds, colla son visage contre la vitre et regarda longtemps. Dehors, les étoiles fourmillaient, et elles brillaient toutes à peu près autant.", "カイはつま先立ちになって、ガラスに顔をおしつけ、長いあいだ見ていました。外には星がびっしりとならんでいて、どれもみんな同じくらいの明るさでした。"],
+"我背得出它离这儿有多远，背得出它有多重。可我认不出是哪一颗。": ["I can tell you how far away it is, and how heavy it is. But I can’t tell which one it is.", "Je sais par cœur à quelle distance il est, et combien il pèse. Mais je ne sais pas lequel c’est.", "ここからどれだけ遠いかも、どれだけ重いかも、そらで言える。でも、どれがそうなのか、わからないんだ。"],
+"认不出也不要紧。我们回家去。": ["It doesn’t matter if you can’t tell. Let’s go home.", "Ce n’est pas grave si tu ne le reconnais pas. Rentrons à la maison.", "わからなくても、だいじょうぶ。おうちに帰ろう。"],
+"加长版又多了几段：加伊学人、雪橇上只剩乘法表、冷舱玻璃上的便条、认不出太阳的舷窗。": ["The extended version gains a few more scenes: Kay mimicking people, the times table on the sledge, notes on the sleeping pods, and a porthole where Kay can’t find the Sun.", "La version longue s’enrichit : Kay qui imite les gens, la table de multiplication dans la luge, les billets sur les caissons de sommeil, et le hublot où Kay ne retrouve pas le Soleil.", "ロング版に場面を追加しました。人のまねをするカイ、そりの上で九九しか思い出せなかった話、冷凍睡眠室のガラスの紙きれ、太陽が見つからない丸窓。"]
 };</script>
 <script>
 (() => {
@@ -2045,7 +2059,11 @@ async function kayEvent() {
   await say('加伊', '呸！这朵玫瑰被虫咬了！你看，这一朵长得多歪！说到底，这些玫瑰丑得很，跟种它们的箱子一个样！');
   f.kicked = true; sfx.thud();
   await narr('他朝箱子狠狠踢了一脚，扯下了一朵玫瑰。');
-  if (LONG) { await narr('格尔达把画册拿给他看。'); await say('加伊', '这都是些什么丑八怪？'); }
+  if (LONG) {
+    await narr('格尔达把画册拿给他看。'); await say('加伊', '这都是些什么丑八怪？');
+    await say('加伊（学奶奶）', '窗子冻得厚，多哈几口气。');
+    await narr('他现在学谁都学得像：戴上奶奶的眼镜学她说话的腔调；走廊里谁走路有什么毛病，就跟在人家后头学。大家看了都笑，说这孩子脑子真灵。其实是他眼睛里那粒碎片、心里那片碎片在作怪。');
+  }
   f.vent = true; await wait(1100); kay.mag = true; kay.face = 1;
   await say('加伊', '格尔达，你从这块放大镜里看。');
   await narr('每一片雪花都变大了，像一朵华丽的花，又像一颗十个角的星星，好看极了。');
@@ -2527,11 +2545,15 @@ SCENES.s7 = {
         Prop(1925, e => drawTeaTable(e.x)),
         Trig(1880, async () => { await narr('这里从来没有热闹过。从来没开过一次舞会，连白狐狸小姐们的小茶会也没有过。冰雪女王的大殿又大，又空，又冷。'); }),
         Prop(3046, () => { if (state.flags.skates) drawSkates(3046); }),
+        // 冷舱玻璃上家里人留的便条：三格冷舱上有霜，哈开才看得清
+        ...POD_NOTES.map(n => Win(n.x, FLOOR - 100, 26, null, { thick: .5, paint: paintPod, notes: n.notes, onReveal: () => narr(n.text) })),
+        // 大殿最里头那扇朝来路的舷窗
+        Prop(STERN_WIN.x, (e, t) => drawWin(STERN_WIN, t)),
         Use({ x: 3004, reach: 60, prompt: () => (state.flags.puzzle || 0) < 3 ? '帮加伊拼冰块' : '抱住加伊', when: () => state.flags.puzzle != null && !state.flags.freedKay, run: () => (state.flags.puzzle || 0) < 3 ? iceTry() : reunion() }),
       ] : []),
       Guard(720, 'hedgehog'), Guard(980, 'snake'), Guard(1240, 'bear'), Guard(1520, 'flake'), Guard(1800, 'hedgehog'),
       Npc({ id: 'kay', x: 3030, face: -1, warm: false, draw: (e, t) => drawKayOnLake(e, t) }),
-      Trig(2060, async () => { await narr('两边是一排一排的冷舱，玻璃上结满了霜。里面的人都睡着，等船到的那一天。'); }),
+      Trig(2060, async () => { await narr('两边是一排一排的冷舱，玻璃上结满了霜。里面的人都睡着，等船到的那一天。'); if (LONG) await narr('有几扇玻璃的霜底下，隐隐约约露出纸条的一角。'); }),
       Trig(2880, LONG ? finaleLong : finale),
     ];
   },
@@ -2551,6 +2573,30 @@ SCENES.s7 = {
   },
 };
 function drawBush(x) { const c = ctx; paper(true); c.fillStyle = '#4b6b5a'; ell(c, x, FLOOR - 26, 50, 30); c.fill(); paper(false); c.fillStyle = 'rgba(255,255,255,.6)'; ell(c, x - 6, FLOOR - 50, 36, 8); c.fill(); c.fillStyle = '#c4303f'; for (let i = 0; i < 12; i++) { circ(c, x - 38 + (i * 23) % 76, FLOOR - 14 - (i * 17) % 36, 3); c.fill(); } }
+// 加长版：冷舱玻璃上家里人留的便条。纸条在霜底下隐约露一角，哈开霜才看得清；位置对着 drawPods 里的第 2、5、8 格
+const POD_NOTES = [
+  { x: 2107, notes: [[-4, -112, -.12], [5, -94, .1]], text: '霜化开了。里面的人睡得很沉。玻璃外面贴着两张纸条，一张压着一张。\n“入睡：船历四十一年。”\n“爸爸，我今天十岁了。妈妈说，等你醒过来，我已经比你还老了。”' },
+  { x: 2323, notes: [[-6, -120, .08], [4, -106, -.06], [-3, -92, .12], [6, -78, -.1, '#fff6e0']], text: '这一格贴得满满的，一张比一张新。\n“妈妈，我当上领航员了。”\n“妈妈，我也当妈妈了。”\n最上面一张，字写得歪歪扭扭：“外婆你好，我叫小鹳，我七岁。”' },
+  { x: 2539, notes: [[0, -100, .04, 'pic']], text: '玻璃上贴着一张画，画的是一大片绿草地。\n底下写着：“爷爷，到了以后，替我看看草是不是这个颜色。”' },
+];
+function paintPod(e, t) {
+  const c = ctx, x = e.x - 25, k = clamp((1 - e.frost) / .58, 0, 1);
+  if (k > 0) {
+    c.save(); c.globalAlpha = k; c.fillStyle = 'rgba(150,186,210,.92)'; rr(c, x + 6, FLOOR - 162, 38, 132, 18); c.fill();
+    c.fillStyle = '#7f95a8'; rr(c, x + 13, FLOOR - 120, 24, 82, 10); c.fill();
+    c.fillStyle = '#e9d6c2'; ell(c, x + 25, FLOOR - 131, 8, 9.5); c.fill(); c.restore();
+  }
+  for (const n of e.notes) {
+    c.save(); c.globalAlpha = .3 + .7 * k; c.translate(e.x + n[0], FLOOR + n[1]); c.rotate(n[2]);
+    if (n[3] === 'pic') { c.fillStyle = '#f4ecd8'; c.fillRect(-13, -10, 26, 20); c.fillStyle = '#d9ecf5'; c.fillRect(-11, -8, 22, 7); c.fillStyle = '#86b46a'; c.fillRect(-11, -1, 22, 9); c.fillStyle = '#5f8f4a'; for (let i = 0; i < 5; i++) c.fillRect(-10 + i * 5, -2, 1, 3); }
+    else { c.fillStyle = n[3] || '#f4ecd8'; c.fillRect(-10, -7, 20, 14); c.fillStyle = 'rgba(90,76,64,.6)'; for (let l = 0; l < 3; l++) c.fillRect(-7, -3.5 + l * 3.5, 13 - l * 3, 1); }
+    c.restore();
+  }
+  if (!e.revealed) { c.save(); c.globalAlpha = .16 + .12 * Math.sin(t * 2.2 + e.x * .01); c.strokeStyle = '#ffffff'; c.lineWidth = 1.2; rr(c, x + 4, FLOOR - 164, 42, 136, 20); c.stroke(); c.restore(); }
+  if (e.glow > .01) glow(c, e.x, FLOOR - 96, 80 * e.glow, 'rgba(255,240,214,' + (.4 * e.glow).toFixed(3) + ')');
+}
+// 加长版：大殿最里头朝来路的舷窗（外面一片星，认不出哪颗是太阳）
+const STERN_WIN = { x: 3205, y: FLOOR - 112, r: 28, frost: 0 };
 function drawPods() {
   const c = ctx;
   for (let i = 0; i < 9; i++) { const x = 2010 + i * 72; paper(true); c.fillStyle = '#b8cfe0'; rr(c, x, FLOOR - 170, 50, 150, 22); c.fill(); paper(false); c.fillStyle = 'rgba(240,248,253,.85)'; rr(c, x + 6, FLOOR - 162, 38, 132, 18); c.fill(); c.fillStyle = 'rgba(120,150,175,.35)'; ell(c, x + 25, FLOOR - 128, 9, 11); c.fill(); c.fillRect(x + 15, FLOOR - 116, 20, 60); }
@@ -2600,6 +2646,7 @@ async function finaleLong() {
   await narr('冰雪女王走的时候说：“我要到暖和的地方去了，去看看那些黑锅炉。给它们刷一层白，本来就该这样；再说，这对温室里的橙子和葡萄也有好处。”');
   await narr('说完她就飞走了。加伊一个人坐在好几里长的、空荡荡的冰殿里，看着那些冰块，想啊想，想得脑袋都快裂开了。他坐在那儿，僵硬得一动不动，别人准会以为他已经冻死了。');
   await say('加伊', '冰雪女王说，要是我能拼出“永恒”这两个字，我就能自己做主，她就把整个新世界和一双新冰鞋都送给我。');
+  await say('加伊', '那天我把雪橇拴在白色货车后头。车越开越快，我想解开，解不开。我想背奶奶教的那首歌，一句也想不起来，脑子里只剩乘法表。');
   await say('加伊', '我跟她说，我会心算，连分数都会；我还知道每一层舱有多少平方米、住着多少人。她听着就笑。我就觉得，我会的那些都不够。');
   await say('加伊', '她亲了我一下，我就不冷了。又亲了一下，我就把……把什么都忘了。她说不能再亲了，再亲就要把我亲死了。');
   await say('加伊', '冷舱里的人都不会老。等船到了，我一醒来就能看见新世界。');
@@ -2638,10 +2685,20 @@ async function reunion() {
   await narr('这太美了，连冰块都高兴得跳起舞来。跳累了，它们就躺下来，正好拼成了冰雪女王要他拼的那两个字。这下他可以自己做主了。');
   await narr('按冰雪女王说过的话，整个新世界和一双新冰鞋，现在都归他了。');
   f.skates = true;
+  // 大殿最里头那扇朝来路的舷窗：加伊什么数都背得出，却认不出哪颗是太阳
+  await narr('大殿最里头有一扇舷窗，朝着船来的方向。加伊拉着格尔达走了过去。');
+  hideDialog(); state.camFocus = 3180;
+  walkNpc(kay, 3200, 70); await walkPlayer(3165, 70); player.face = 1; kay.face = 1;
+  await say('加伊', '从这儿往外看，就是我们来的那边。太阳就在那边。');
+  await narr('他踮起脚，把脸贴在玻璃上看了很久。外面的星星密密麻麻，每一颗都差不多亮。');
+  await say('加伊', '我背得出它离这儿有多远，背得出它有多重。可我认不出是哪一颗。');
+  kay.face = -1;
+  await say('格尔达', '认不出也不要紧。我们回家去。');
+  hideDialog();
   bgm('largo');
   await narr('格尔达亲他的脸颊，脸颊就红润起来；亲他的眼睛，眼睛就跟她的一样亮；亲他的手和脚，他又健康快活了。两个人手拉着手，走出了大殿。');
   hideDialog(); state.camFocus = null;
-  walkNpc(kay, kay.x - 300, 80); await walkPlayer(player.x - 300, 80);
+  walkNpc(kay, kay.x - 440, 80); await walkPlayer(player.x - 440, 80);
   await narr('那双新冰鞋就留在湖面上，谁也没有回头去拿。');
   await gotoScene('r1');
 }
@@ -3335,7 +3392,7 @@ function render(t) {
   ctx.save(); ctx.translate(-Math.round(cx), 0);
   for (const e of ents) {
     if (e.layer === 'front' || (!e.always && (e.x < cx - 700 || e.x > cx + VWZ() + 700))) continue;
-    if (e.type === 'win') drawWin(e, t);
+    if (e.type === 'win') (e.paint || drawWin)(e, t);
     else if (e.type === 'guard') { if (!e.open) drawGuard(e, t); }
     else if (e.type === 'npc') { if (e.visible !== false && e.draw) e.draw(e, t); }
     else if (e.draw) e.draw(e, t);
@@ -3423,7 +3480,7 @@ function startGame(from) {
 }
 // 更新记录：新的在上面。每一条都是中文原句，界面按语言去翻译表里查
 const NEWS = [
-  { v: '1.4', d: '2026-11-06', items: ['手机上横屏、竖屏的界面重新排了，字不会再和按钮叠在一起。', '对话框、章节卡、想起的回忆，都等你点一下才收起。', '加了「记录」，可以翻看前面说过的话。', '几处和飞船对不上的安徒生原文，删的删、改的改。', '加了日语版。', '开始页能看更新记录了。', '游戏里随时能回到主页。'] },
+  { v: '1.4', d: '2026-11-06', items: ['手机上横屏、竖屏的界面重新排了，字不会再和按钮叠在一起。', '对话框、章节卡、想起的回忆，都等你点一下才收起。', '加了「记录」，可以翻看前面说过的话。', '几处和飞船对不上的安徒生原文，删的删、改的改。', '加了日语版。', '开始页能看更新记录了。', '游戏里随时能回到主页。', '加长版又多了几段：加伊学人、雪橇上只剩乘法表、冷舱玻璃上的便条、认不出太阳的舷窗。'] },
   { v: '1.3', d: '2026-11-05', items: ['开始页可以选原版或加长版。', '配乐换成了公开授权的真人演奏录音。', '长台词可以分成几个对话框。'] },
   { v: '1.2', d: '2026-11-05', items: ['对话出字的节奏改回第一版。', '能对上原著的地方，换成了安徒生的原文。'] },
   { v: '1.1', d: '2026-11-02', items: ['手机上也能玩，横屏竖屏都行。', '加了英文版和法文版。', '网页能添加到手机主屏幕，没网也能打开。'] },
@@ -3473,7 +3530,7 @@ function applyLang() {
 }
 function applyVer() {
   for (const b of document.querySelectorAll('#verPick button')) { const on = (b.dataset.ver === '1') === LONG; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }
-  $('verHint').textContent = t(LONG ? '加长版：多几段安徒生原文，冷舱里要亲手拼一次“永恒”。' : '原版：短一些，七个故事一口气走完。');
+  $('verHint').textContent = t(LONG ? '加长版：多几段安徒生原文和冷舱里的细节，还要亲手拼一次“永恒”。' : '原版：短一些，七个故事一口气走完。');
 }
 $('verPick').addEventListener('click', e => {
   const b = e.target.closest('button[data-ver]'); if (!b) return;
