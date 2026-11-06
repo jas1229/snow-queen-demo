@@ -240,6 +240,19 @@ html[lang=ja] .btn{letter-spacing:.08em}
 .pad button{padding:0;white-space:nowrap}
 html[lang=ja] .pad button[data-k="act"]{font-size:13px;letter-spacing:0}
 
+/* 去主页前的确认：一张小纸条。注意：标题字体 ZCOOL XiaoWei 的「回」字是坏的（显示成黑方块），按钮、标题、人名、章节名里别用这个字 */
+.ask .book-in{width:min(380px,100%)}
+.ask-body{padding:16px 20px 4px}
+.ask-body h2{margin:0 0 6px;font-family:var(--f-title);font-weight:400;font-size:1.15em;letter-spacing:.08em}
+.ask-body p{margin:0;font-size:.86em;line-height:1.75;color:var(--paper-ink-2)}
+.ask-foot{gap:10px}
+.ask .btn.ghost{color:var(--paper-ink);box-shadow:inset 0 0 0 1px rgba(42,34,28,.35)}
+/* 竖屏顶栏五个按钮：暖和条窄一点、按钮瘦一点，放不下就折成两行 */
+#below .hud-right{flex-wrap:wrap;row-gap:6px;column-gap:6px}
+#below .chip,#below .warm{padding:6px 9px}
+#below .warm > span:first-child{display:none}
+#below .warm .bar{width:46px}
+
 @media (prefers-reduced-motion: reduce){ .card{transition:none} .dlg-more{animation:none} }
 </style>
 
@@ -256,6 +269,7 @@ html[lang=ja] .pad button[data-k="act"]{font-size:13px;letter-spacing:0}
         <button id="bookBtn" class="chip" type="button"><span data-i18n="小册子">小册子</span><b id="memCount">0</b></button>
         <button id="logBtn" class="chip" type="button" data-i18n="记录">记录</button>
         <button id="soundBtn" class="chip" type="button" aria-pressed="true">声音 开</button>
+        <button id="homeBtn" class="chip" type="button" data-i18n="主页">主页</button>
       </div>
     </div>
     <div id="prompt" class="prompt" hidden></div>
@@ -285,7 +299,7 @@ html[lang=ja] .pad button[data-k="act"]{font-size:13px;letter-spacing:0}
       <div class="s-kicker" data-i18n="demo 到这里结束">demo 到这里结束</div>
       <h2 class="s-name" data-i18n="船尾的冰雪女王">船尾的冰雪女王</h2>
       <p class="s-sub" id="endStat"></p>
-      <div class="s-actions"><button class="btn" id="btnAgain" type="button" data-i18n="从头再玩">从头再玩</button><button class="btn ghost" id="btnEndBook" type="button" data-i18n="翻开小册子">翻开小册子</button></div>
+      <div class="s-actions"><button class="btn" id="btnAgain" type="button" data-i18n="从头再玩">从头再玩</button><button class="btn ghost" id="btnEndBook" type="button" data-i18n="翻开小册子">翻开小册子</button><button class="btn ghost" id="btnHome" type="button" data-i18n="去主页">去主页</button></div>
       <div class="s-credit"><span data-i18n="改编自安徒生《冰雪女王》（1844）。画面、文字和声音都还是草稿。">改编自安徒生《冰雪女王》（1844）。画面、文字和声音都还是草稿。</span><br><span data-i18n="配乐是公开授权的真人录音：Stefano Ligoratti（莫扎特，CC BY 3.0，有剪辑）、美国空军乐团（帕赫贝尔、德沃夏克）、Musopen（格里格、佩措尔德）、石坂纪美子（巴赫）、Robin Alciatore（萨蒂），勃拉姆斯那首是八音盒。来源见 README。">配乐是公开授权的真人录音：Stefano Ligoratti（莫扎特，CC BY 3.0，有剪辑）、美国空军乐团（帕赫贝尔、德沃夏克）、Musopen（格里格、佩措尔德）、石坂纪美子（巴赫）、Robin Alciatore（萨蒂），勃拉姆斯那首是八音盒。来源见 README。</span></div>
     </div>
     <div id="book" class="book" hidden role="dialog" aria-label="格尔达的小册子" data-i18n-aria="格尔达的小册子">
@@ -300,6 +314,12 @@ html[lang=ja] .pad button[data-k="act"]{font-size:13px;letter-spacing:0}
         <div class="book-head"><h2 data-i18n="更新记录">更新记录</h2></div>
         <div class="news-list" id="newsList"></div>
         <div class="book-foot"><button class="btn" id="newsClose" type="button" data-i18n="合上">合上</button></div>
+      </div>
+    </div>
+    <div id="ask" class="book ask" hidden role="dialog" aria-label="要去主页吗？" data-i18n-aria="要去主页吗？">
+      <div class="book-in">
+        <div class="ask-body"><h2 data-i18n="要去主页吗？">要去主页吗？</h2><p id="askX"></p></div>
+        <div class="book-foot ask-foot"><button class="btn ghost" id="askNo" type="button" data-i18n="取消">取消</button><button class="btn" id="askYes" type="button" data-i18n="去主页">去主页</button></div>
       </div>
     </div>
     <div id="log" class="book" hidden role="dialog" aria-label="对话记录" data-i18n-aria="对话记录">
@@ -324,9 +344,9 @@ html[lang=ja] .pad button[data-k="act"]{font-size:13px;letter-spacing:0}
 "想全屏玩：在浏览器菜单里选「添加到主屏幕」": ["For full screen: choose “Add to Home screen” in the browser menu", "Pour jouer en plein écran : choisissez « Ajouter à l’écran d’accueil » dans le menu du navigateur", "全画面で遊ぶには：ブラウザのメニューから「ホーム画面に追加」を選択"],
 "左下角走路，右下角按住「哈气」，点「互动」说话、翻页": ["Walk with the buttons at bottom left, hold “Breathe” at bottom right, tap “Use” to talk or turn the page", "Marchez avec les boutons en bas à gauche, maintenez « Souffle » en bas à droite, touchez « Agir » pour parler ou tourner la page", "左下で移動、右下の「息」を長押し、「調べる」で会話・ページ送り"],
 "。手机横过来玩，画面更大。": [". Turn your phone sideways for a bigger view.", ". Tournez le téléphone à l’horizontale pour une image plus grande.", "。スマホを横向きにすると、画面が大きくなります。"],
-"声音 开": ["Sound on", "Son : oui", "サウンド オン"],
-"只留音效": ["Effects only", "Bruitages seuls", "効果音のみ"],
-"声音 关": ["Sound off", "Son : non", "サウンド オフ"],
+"声音 开": ["Sound on", "Son : oui", "音 オン"],
+"只留音效": ["Effects only", "Bruitages", "効果音"],
+"声音 关": ["Sound off", "Son : non", "音 オフ"],
 "窗上的小孔": ["The Peephole", "Le petit trou dans la vitre", "窓ののぞき穴"],
 "玫瑰箱": ["The Rose Box", "La caisse de roses", "バラの箱"],
 "雪橇": ["The Sled", "La luge", "そり"],
@@ -798,7 +818,14 @@ html[lang=ja] .pad button[data-k="act"]{font-size:13px;letter-spacing:0}
 "网页能添加到手机主屏幕，没网也能打开。": ["Can be added to your phone’s home screen and opened offline.", "Peut s’installer sur l’écran d’accueil du téléphone et s’ouvrir hors ligne.", "スマホのホーム画面に追加でき、オフラインでも開けます。"],
 "第一版：七个故事，加上三段回家的路。": ["First version: seven stories and three stretches of the way home.", "Première version : sept histoires et trois étapes du retour.", "最初の版：七つのお話と、帰り道の三つの場面。"],
 "配了经典曲子；在第七个故事里哈气，会冒出回忆的贴画。": ["Classical music; in the seventh story, breathing on the ice brings up memory stickers.", "Musique classique ; dans la septième histoire, souffler sur la glace fait apparaître des images-souvenirs.", "クラシックの音楽つき。第七のお話で息を吹きかけると、思い出のシールが現れます。"],
-"更新记录": ["Updates", "Mises à jour", "更新履歴"]
+"更新记录": ["Updates", "Mises à jour", "更新履歴"],
+"主页": ["Home", "Accueil", "タイトル"],
+"进度存在这一段的开头，下次点「接着玩」从这里继续。": ["Your progress is saved at the start of this section. Choose “Continue” next time to pick up from here.", "La progression est enregistrée au début de cette partie. Choisissez « Continuer » la prochaine fois pour reprendre ici.", "進行状況はこの場面のはじめに保存されています。次回は「つづきから」でここから再開できます。"],
+"现在回去，下次要从头开始。": ["If you go back now, you’ll start from the beginning next time.", "Si vous revenez maintenant, il faudra recommencer depuis le début.", "いまもどると、次回は最初からになります。"],
+"取消": ["Cancel", "Annuler", "キャンセル"],
+"游戏里随时能回到主页。": ["You can go back to the title screen at any time.", "On peut revenir à l’écran d’accueil à tout moment.", "ゲーム中いつでもタイトル画面にもどれるようにしました。"],
+"去主页": ["Back to title", "Retour à l’accueil", "タイトルへもどる"],
+"要去主页吗？": ["Back to the title screen?", "Revenir à l’écran d’accueil ?", "タイトル画面にもどりますか？"]
 };</script>
 <script>
 (() => {
@@ -3044,6 +3071,7 @@ addEventListener('keydown', e => {
   if (e.code === 'KeyM' && !e.repeat) { audioMode = audioMode === 0 ? 1 : 0; applyAudio(true); if (state.mode !== 'title') toast(audioMode === 0 ? '音乐 开' : '音乐 关', 1.6); }
   if (!newsEl.hidden) { if (e.code === 'Escape') { e.preventDefault(); closeNews(); } return; }
   if (!$('title').hidden || !$('end').hidden) return;
+  if (!askEl.hidden) { if (e.code === 'Escape') { e.preventDefault(); closeAsk(); } return; }
   if (!logEl.hidden) { if (e.code === 'Escape' || e.code === 'KeyL') { e.preventDefault(); closeLog(); } return; }
   if (!bookEl.hidden) { if (e.code === 'Escape' || e.code === 'KeyB' || e.code === 'Tab') { e.preventDefault(); closeBook(); } return; }
   const k = KEYMAP[e.code];
@@ -3070,6 +3098,10 @@ pad.querySelectorAll('button').forEach(b => {
 });
 $('bookBtn').addEventListener('click', () => { openBook(); });
 $('logBtn').addEventListener('click', e => { openLog(); e.currentTarget.blur(); });
+$('homeBtn').addEventListener('click', e => { askHome(); e.currentTarget.blur(); });
+$('askNo').addEventListener('click', closeAsk);
+$('askYes').addEventListener('click', goHome);
+$('btnHome').addEventListener('click', goHome);
 $('logClose').addEventListener('click', closeLog);
 $('bookClose').addEventListener('click', closeBook);
 $('soundBtn').addEventListener('click', e => { audioMode = (audioMode + 1) % 3; applyAudio(true); e.currentTarget.blur(); });
@@ -3093,6 +3125,29 @@ function openLog() {
   list.scrollTop = list.scrollHeight; $('logClose').focus({ preventScroll: true });
 }
 function closeLog() { logEl.hidden = true; if (document.activeElement) document.activeElement.blur(); }
+// 回主页：先问一句。进度是每一段开头存的，序章里回去就没有存档
+const askEl = $('ask');
+function askHome() {
+  if (state.mode === 'title') return;
+  $('askX').textContent = t(state.sceneId && state.sceneId !== 'end' ? '进度存在这一段的开头，下次点「接着玩」从这里继续。' : '现在回去，下次要从头开始。');
+  askEl.hidden = false; keys.left = keys.right = keys.breath = false; breathSound(false);
+  $('askYes').focus({ preventScroll: true });
+}
+function closeAsk() { askEl.hidden = true; if (document.activeElement) document.activeElement.blur(); }
+function goHome() {
+  askEl.hidden = true;
+  // 正在走的剧情脚本就此作废：它在等的计时器、动画、下一帧、对话框全清掉，它就不会再往下走
+  timers.length = 0; tweens.length = 0; frameWaiters.length = 0;
+  dlgPending = null; dlgTyping = false; scriptOn = false; state.lock = false; EDIT.cur = null; EDIT.restart = null;
+  hideDialog(); memPop.hidden = true; toastEl.hidden = true; setPrompt(''); card.classList.remove('on'); card.hidden = true;
+  bookEl.hidden = true; logEl.hidden = true;
+  keys.left = keys.right = keys.breath = false; breathSound(false); bgm(null);
+  state.mode = 'title'; state.sceneId = null; state.eter = null; state.camFocus = null; state.fade = 0;
+  scene = null; ents = []; parts.length = 0;
+  $('hud').hidden = true; $('end').hidden = true; $('title').hidden = false;
+  $('btnCont').hidden = !loadSave(); applyLang();
+  try { $('btnNew').focus({ preventScroll: true }); } catch (e) {}
+}
 function renderBook() {
   const list = $('bookList'); list.textContent = ''; let n = 0;
   for (const m of MEMS) {
@@ -3368,7 +3423,7 @@ function startGame(from) {
 }
 // 更新记录：新的在上面。每一条都是中文原句，界面按语言去翻译表里查
 const NEWS = [
-  { v: '1.4', d: '2026-11-06', items: ['手机上横屏、竖屏的界面重新排了，字不会再和按钮叠在一起。', '对话框、章节卡、想起的回忆，都等你点一下才收起。', '加了「记录」，可以翻看前面说过的话。', '几处和飞船对不上的安徒生原文，删的删、改的改。', '加了日语版。', '开始页能看更新记录了。'] },
+  { v: '1.4', d: '2026-11-06', items: ['手机上横屏、竖屏的界面重新排了，字不会再和按钮叠在一起。', '对话框、章节卡、想起的回忆，都等你点一下才收起。', '加了「记录」，可以翻看前面说过的话。', '几处和飞船对不上的安徒生原文，删的删、改的改。', '加了日语版。', '开始页能看更新记录了。', '游戏里随时能回到主页。'] },
   { v: '1.3', d: '2026-11-05', items: ['开始页可以选原版或加长版。', '配乐换成了公开授权的真人演奏录音。', '长台词可以分成几个对话框。'] },
   { v: '1.2', d: '2026-11-05', items: ['对话出字的节奏改回第一版。', '能对上原著的地方，换成了安徒生的原文。'] },
   { v: '1.1', d: '2026-11-02', items: ['手机上也能玩，横屏竖屏都行。', '加了英文版和法文版。', '网页能添加到手机主屏幕，没网也能打开。'] },
@@ -3436,7 +3491,7 @@ let last = performance.now();
 function loop(now) {
   flushFrames();
   const dt = Math.min(.05, (now - last) / 1000) * timeScale; last = now;
-  if (state.mode !== 'title' && bookEl.hidden && logEl.hidden) update(dt);  // 小册子、对话记录打开时暂停
+  if (state.mode !== 'title' && bookEl.hidden && logEl.hidden && askEl.hidden) update(dt);  // 小册子、对话记录、回主页的确认打开时暂停
   render(now / 1000); uiState();
   actHit = false; advHit = false;
   requestAnimationFrame(loop);
@@ -3444,7 +3499,7 @@ function loop(now) {
 function uiState() {
   const off = state.mode === 'title' || state.mode === 'end' || state.sceneId === 'end';
   pad.classList.toggle('off', off);
-  pad.classList.toggle('idle', !off && (!bookEl.hidden || !card.hidden || !logEl.hidden));
+  pad.classList.toggle('idle', !off && (!bookEl.hidden || !card.hidden || !logEl.hidden || !askEl.hidden));
   frame.classList.toggle('talk', !dlg.hidden || !memPop.hidden);
   const nb = state.mode !== 'title' || !newsEl.hidden; if (newsBtn.hidden !== nb) newsBtn.hidden = nb;
 }
@@ -3462,7 +3517,7 @@ const mc = new MessageChannel(); let mcRes = null; mc.port1.onmessage = () => { 
 const yieldTask = () => new Promise(r => { mcRes = r; mc.port2.postMessage(0); });
 async function pump(sec, step) {
   step = step || 1 / 30; const n = Math.max(1, Math.round(sec / step));
-  for (let i = 0; i < n; i++) { flushFrames(); if (state.mode !== 'title' && bookEl.hidden && logEl.hidden) update(step); actHit = false; advHit = false; await yieldTask(); }
+  for (let i = 0; i < n; i++) { flushFrames(); if (state.mode !== 'title' && bookEl.hidden && logEl.hidden && askEl.hidden) update(step); actHit = false; advHit = false; await yieldTask(); }
   render(performance.now() / 1000); uiState();
 }
 window.__sq = { state, player, cam, keys, get scene() { return scene; }, ents: () => ents, auto: false, pump,
