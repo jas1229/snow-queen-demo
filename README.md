@@ -4,12 +4,13 @@
 
 在线玩：https://jas1229.github.io/snow-queen-demo/
 
-开始页可以切换中文、English、Français，还可以选「原版」或「加长版」。加长版多几段安徒生原文：加伊看画册时说的话、冰雪女王空荡荡的大殿和“理智之镜”、她临走的话，冷舱里要亲手拼一次“永恒”，回忆里也多了些小毛病。
+开始页可以切换中文、English、Français、日本語，还可以选「原版」或「加长版」。右上角的「更新记录」列着每一版改了什么。加长版多几段安徒生原文：加伊看画册时说的话、冰雪女王空荡荡的大殿和“理智之镜”、她临走的话，冷舱里要亲手拼一次“永恒”，回忆里也多了些小毛病。
 
 ## 怎么玩
 
-- 电脑：← → 走路，按住空格哈气，E 说话、翻页，B 打开小册子，M 开关音乐
+- 电脑：← → 走路，按住空格哈气，E 说话、翻页，B 打开小册子，L 打开对话记录，M 开关音乐
 - 手机：屏幕下面有按钮，横过来玩画面更大
+- 对话框、章节卡和想起的回忆都会停在那儿，点一下才往下走；错过的话可以点顶上的「记录」翻回去看
 - 放到手机桌面：iPhone 用 Safari 打开，点「分享」→「添加到主屏幕」；安卓在浏览器菜单里选「添加到主屏幕」。之后从桌面图标打开是全屏的，没网也能玩
 - 进度存在浏览器里，下次打开可以接着玩
 
@@ -17,7 +18,7 @@
 
 ## 说明
 
-七个故事各做了一段，结局后面还有三段回家的路。画面、文字和声音都还是草稿。英文和法文是照中文翻的。
+七个故事各做了一段，结局后面还有三段回家的路。画面、文字和声音都还是草稿。英文、法文和日文是照中文翻的。
 
 配乐用的是公开授权的真人录音，都来自维基共享资源，剪掉了头尾静音、统一了响度、转成 MP3（在 `docs/audio/`）。文件加载不出来的时候，游戏会退回浏览器里的合成器版本。
 
@@ -37,11 +38,12 @@
 
 ## 文件
 
-- `index.html`：游戏源文件，英文和法文的译文表也在里面（按中文原句对应）
+- `index.html`：游戏源文件，英文、法文、日文的译文表也在里面（按中文原句对应）
+- `tools/i18n.py`：检查译文表，`python3 tools/i18n.py check` 列出代码里有、表里还没翻的句子
 - 原版和加长版是同一份代码，`index.html` 里的 `LONG` 开关决定走哪条线（开始页选，存档里也记着）
 - `docs/`：放在 GitHub Pages 上的那份，运行 `python3 build-local.py` 从源文件生成；里面还有添加到主屏幕用的图标、`manifest.webmanifest` 和离线缓存 `sw.js`
 - 一句台词可以分几个对话框：文字里的换行就是翻页。`build-local.py` 还会生成 `play-local-edit.html`（改稿模式：对话框上有「改这句」，能直接改台词、拆框）
 
 ---
 
-**The Snow Queen at the Stern** — a short browser game (about 20 minutes) based on Hans Christian Andersen's *The Snow Queen*, set on a generation starship. Walk from the bow to the stern, breathe on frosted portholes to uncover memories, and bring Kay home. Playable in Chinese, English and French, as the original cut or an extended one with more of Andersen's own text and a hands-on ice puzzle: https://jas1229.github.io/snow-queen-demo/
+**The Snow Queen at the Stern** — a short browser game (about 20 minutes) based on Hans Christian Andersen's *The Snow Queen*, set on a generation starship. Walk from the bow to the stern, breathe on frosted portholes to uncover memories, and bring Kay home. Playable in Chinese, English, French and Japanese, as the original cut or an extended one with more of Andersen's own text and a hands-on ice puzzle: https://jas1229.github.io/snow-queen-demo/
